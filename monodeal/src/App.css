@@ -1,38 +1,97 @@
-.App {
-  text-align: center;
+.App{
+    height:100vh;
+    width:100%;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.modal{
+    position:absolute;
+    z-index: 2;
+    width:100%;
+    height:100vh;
+    background-color: rgba(0, 0, 0, 0.671);
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.center{
+    background-color: white;
+    width:50%;
+    height:50%;
+    padding:10px;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.opponent{
+    width:100%;
+    height:33.3%;
+    padding:10px;
+    border:1px solid black;
+    display:flex;
 }
-
-.App-link {
-  color: #61dafb;
+.opProperty{
+    width:80%;
+    background-color: rgb(56, 159, 255);
+    display: flex;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.opMoney{
+    width:20%;
+    background-color: rgb(255, 255, 56);
+}
+.personal{
+    width:100%;
+    height:33.3%;
+    padding:10px;
+    border:1px solid black;
+    display: flex;
+}
+.personalProperty{
+    width:80%;
+    background-color: rgb(56, 159, 255);
+    display: flex;
+}
+.personalMoney{
+    width:20%;
+    background-color: rgb(255, 255, 56);
+    display:flex;
+}
+.draw{
+    width:100%;
+    height:33.3%;
+    padding:5px;
+    border:1px solid black;
+    display:flex;
+    background-color:rgb(255, 128, 128) ;
+}
+.drawn-cards{
+    width:75%;
+    display:flex;
+    align-items: center;
+}
+.card{
+    height:189px;
+    width:138px;
+    background-color: antiquewhite;
+    margin-left:10px;
+    position: relative;
+}
+.draw-from{
+    width:25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blanchedalmond;
+    position:relative;
+}
+.deck{
+    height:189px;
+    width:138px;
+    background-color: white;
+}
+.skip{
+    width:100px;
+    height:40px;
+    background-color: lightcyan;
+    position:absolute;
+    bottom:0px;
+    left:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
