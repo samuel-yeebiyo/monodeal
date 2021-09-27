@@ -15,7 +15,6 @@ const PropertyCard = (props) =>  {
         {show && !props.placed &&
           <div className="property-options" onClick={()=> toggleOptions()}>
             <div onClick={()=>{props.place(props.index, "none")}}>P</div>
-            <div>A</div>
           </div>
         }
         

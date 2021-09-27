@@ -33,6 +33,7 @@
 .opMoney{
     width:20%;
     background-color: rgb(255, 255, 56);
+    display:flex;
 }
 .personal{
     width:100%;

@@ -1,6 +1,6 @@
 
 
-const PopUp = (props)=> {
+const WildCardPopUp = (props)=> {
 
     return (
         <div className="center">
@@ -22,4 +22,4 @@ const PopUp = (props)=> {
     )
 }
 
-export default PopUp;
+export default WildCardPopUp;

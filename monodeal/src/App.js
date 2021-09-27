@@ -8,7 +8,10 @@ import MoneyCard from './components/MoneyCard';
 import RentCard from './components/Rent';
 import ActionCard from './components/ActionCard';
 import PropertyContainer from './components/PropertyContainer'
-import PopUp from './components/PopUp';
+
+//popups
+import WildCardPopUp from './components/WildCardPopUp';
+import RentPopUp from './components/RentPopUp';
 
 
 
@@ -165,6 +168,10 @@ const wild = {
 
 }
 
+const rent = {
+
+}
+
 const action = {
   passGo:{
     name:"Pass and Go",
@@ -210,6 +217,7 @@ function App(props) {
   //initialization
   const [deck, setDeck] = useState([])
   const [opProp, setOpProp] = useState([])
+  const [opMoney, setMoney] = useState([])
   const [update, setUpdate] = useState(0)
 
   const [drawn, setDrawn] = useState([])
@@ -220,8 +228,9 @@ function App(props) {
   const [joined, setJoined] = useState([])
   const [start, setStart] = useState(false)
 
-  const [popUp, showPopup] = useState(1);
+  const [wildpopUp, showWildPopup] = useState(1);
   const [action, setAction] = useState()
+  
 
 
   useEffect(()=>{
@@ -244,9 +253,86 @@ function App(props) {
     
     props.socket.emit("updateProperty", propTable, props.room)
 
+    props.socket.emit("updateMoney", moneyTable, props.room)
+
   }, [update])
 
 
+  //socket entries
+  props.socket.on("get-users", (users)=>{
+    console.log("got users")
+    console.log(users)
+    setJoined(users)
+  })
+
+  props.socket.on("when", fact =>{
+    setStart(fact)
+  })
+
+  props.socket.on("get-deck", roomDeck =>{
+    setDeck(roomDeck)
+  })
+
+  props.socket.on("getOpProp", table =>{
+    setOpProp(table)
+  })
+
+  props.socket.on("getMoney", money =>{
+    setMoney(money)
+  })
+
+/**************INITIALIZATION PROCESS*****************/
+const initGame = ()=>{
+  initDeck();
+ 
+  toggleUpdate()
+  setStart(true)
+
+  props.socket.emit("start", props.room, true)
+}
+
+const initDeck = ()=>{
+  let batch = deck;
+  Object.values(property).forEach(val => {
+    for(let i=0; i<val.nComplete; i++){
+      batch = [...batch, val]
+    }
+  })
+
+  Object.values(money).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
+
+  Object.values(wild).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
+
+  setDeck(batch);
+}
+
+const draw = () =>{
+  let n = Math.floor(Math.random() * deck.length);
+  let newA = [...drawn, deck[n]];
+  setDrawn(newA)
+
+  //update deck
+  let temp = deck;
+  temp.splice(n,1);
+  setDeck(temp);
+
+  toggleUpdate()
+}
+
+const checkTally = (table)=>{
+  console.log(table[0].stacked)
+}
+
+
+  //toggles
 
   const toggleUpdate = ()=>{
     if(update==1) setUpdate(0)
@@ -255,9 +341,9 @@ function App(props) {
     console.log("PropTable = ", propTable)
   }
 
-  const togglePopup = ()=>{
-    if(popUp==1) showPopup(0)
-    else showPopup(1)
+  const toggleWildPopup = ()=>{
+    if(wildpopUp==1) showWildPopup(0)
+    else showWildPopup(1)
   }
 
   const actionSet = (act, index, placed)=>{
@@ -285,77 +371,10 @@ function App(props) {
     toggleUpdate();
   }
 
-  const initDeck = ()=>{
-    let batch = deck;
-    Object.values(property).forEach(val => {
-      for(let i=0; i<val.nComplete; i++){
-        batch = [...batch, val]
-      }
-    })
-
-    Object.values(money).forEach(val => {
-      for(let i=0; i<val.num; i++){
-        batch = [...batch, val]
-      }
-    })
-
-    Object.values(wild).forEach(val => {
-      for(let i=0; i<val.num; i++){
-        batch = [...batch, val]
-      }
-    })
-
-    setDeck(batch);
-  }
+  
 
   
-  props.socket.on("get-users", (users)=>{
-    console.log("got users")
-    console.log(users)
-    setJoined(users)
-  })
-
-  props.socket.on("when", fact =>{
-    setStart(fact)
-  })
-
-  props.socket.on("get-deck", roomDeck =>{
-    setDeck(roomDeck)
-  })
-
-  props.socket.on("getOpProp", table =>{
-    setOpProp(table)
-  })
-
-
-  //game logic
-  const initGame = ()=>{
-    initDeck();
-   
-    toggleUpdate()
-    setStart(true)
-
-    props.socket.emit("start", props.room, true)
-  }
-
-  const draw = () =>{
-    let n = Math.floor(Math.random() * deck.length);
-    let newA = [...drawn, deck[n]];
-    setDrawn(newA)
-
-    //update deck
-    let temp = deck;
-    temp.splice(n,1);
-    setDeck(temp);
-
-    toggleUpdate()
-  }
-  
-  const checkTally = (table)=>{
-    console.log(table[0].stacked)
-  }
-
-  //Card logiv
+  //handle properties
   const flip = (index, selected)=>{
     let tempPropTable = propTable;
     tempPropTable[index].selected = selected;
@@ -436,7 +455,8 @@ function App(props) {
     setPropTable(newTable);
   }
 
-  const placeMoney = (index)=>{
+  //handle bank  
+  const placeBank = (index)=>{
     let tempMoneyTable = moneyTable;
 
     tempMoneyTable.push(drawn[index]);
@@ -488,9 +508,9 @@ function App(props) {
       </div>
       }
 
-      {!popUp &&
-        <div className="modal" onClick={()=>{togglePopup()}}>
-          <PopUp action={action} change={changeWildcard} place={placeProperty}/>
+      {!wildpopUp &&
+        <div className="modal" onClick={()=>{toggleWildPopup()}}>
+          <WildCardPopUp action={action} change={changeWildcard} place={placeProperty}/>
         </div>
       }
 
@@ -498,7 +518,13 @@ function App(props) {
       <div className="opponent">
 
         <div className="opMoney">
-          <p>Money Pile</p>
+        {opMoney.length > 0 ? (
+
+          opMoney.map((card, index)=>{
+            return <MoneyCard money={card} index={index} placed={true}/>    
+          }) ):( 
+          <p>No Money</p>  )
+        }
         </div>
         <div className="opProperty">
         {opProp.length > 0 ? ( 
@@ -554,7 +580,7 @@ function App(props) {
                   }
                 })
                 {
-                  return <PropertyContainer property={property} action={actionSet} pop={togglePopup} allCards={feed} flip={flip}/>
+                  return <PropertyContainer property={property} action={actionSet} pop={toggleWildPopup} allCards={feed} flip={flip}/>
                 }
               }
             }) ):( 
@@ -567,7 +593,7 @@ function App(props) {
           moneyTable.map((card, index)=>{
             return <MoneyCard money={card} index={index} placed={true}/>    
           }) ):( 
-          <p>No property</p>  )
+          <p>No Money</p>  )
         }
         </div>
       
@@ -580,15 +606,15 @@ function App(props) {
             
             drawn.map((card, index)=>{
               if(card.category ==="property"){
-                return <PropertyCard  place={placeProperty} property={card} index={index} placed={false}/>
+                return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
                 return <ActionCard action={card}/>
               }else if(card.category === "wildcard"){
-                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={togglePopup} action={actionSet}/>
+                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={actionSet}/>
               }else if(card.category === "rent"){
                 return <RentCard rent={card}/>
               }else {
-                return <MoneyCard index={index} place={placeMoney} money={card} placed={false}/>
+                return <MoneyCard index={index} place={placeBank} money={card} placed={false}/>
               }        
             }) ):( 
             
