@@ -8,6 +8,7 @@ import MoneyCard from './components/MoneyCard';
 import RentCard from './components/Rent';
 import ActionCard from './components/ActionCard';
 import PropertyContainer from './components/PropertyContainer'
+import PopUp from './components/PopUp';
 
 
 
@@ -52,7 +53,7 @@ const property = {
     value:3,
     color:"Purple",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}]
   },
   orange:{
     category:"property",
@@ -156,7 +157,10 @@ const wild = {
     value:1,
     selected:'None',
     stacked:false,
-    wild:true
+    wild:true,
+    message:"Choose color for wildcard",
+    choice:["Black","Light Blue","Green","Yellow","Red","Purple","Orange","Light Green","Blue","Brown" ],
+    color:'all'
   },
 
 }
@@ -216,6 +220,9 @@ function App(props) {
   const [joined, setJoined] = useState([])
   const [start, setStart] = useState(false)
 
+  const [popUp, showPopup] = useState(1);
+  const [action, setAction] = useState()
+
 
   useEffect(()=>{
     console.log("This is called everytime I place a property")
@@ -246,6 +253,36 @@ function App(props) {
     else setUpdate(1)
 
     console.log("PropTable = ", propTable)
+  }
+
+  const togglePopup = ()=>{
+    if(popUp==1) showPopup(0)
+    else showPopup(1)
+  }
+
+  const actionSet = (act, index, placed)=>{
+    console.log("Action set called")
+    let temp = {
+      action:act,
+      index:index,
+      placed:placed
+    }
+    setAction(temp)
+    console.log(temp)
+  }
+
+  const changeWildcard = (index, selected) =>{
+    let tempPropTable = propTable;
+    let color = tempPropTable[index].selected
+    tempPropTable[index].stacked = false;
+    tempPropTable[index].selected = selected;
+
+    tempPropTable.forEach((item, indexNow)=>{
+      item.stacked = false
+    })
+
+    setPropertyTable(tempPropTable);
+    toggleUpdate();
   }
 
   const initDeck = ()=>{
@@ -330,9 +367,7 @@ function App(props) {
     else color = tempPropTable[index].card.color1;
 
     tempPropTable.forEach((item, indexNow)=>{
-      if(item.card.color == color || item.selected == color && indexNow != index){
-        item.stacked = false
-      }
+     item.stacked = false;
     })
 
     setPropertyTable(tempPropTable);
@@ -453,6 +488,12 @@ function App(props) {
       </div>
       }
 
+      {!popUp &&
+        <div className="modal" onClick={()=>{togglePopup()}}>
+          <PopUp action={action} change={changeWildcard} place={placeProperty}/>
+        </div>
+      }
+
       {/* oppponent property section */}
       <div className="opponent">
 
@@ -467,7 +508,7 @@ function App(props) {
                 {card:card, index:index1}
               ]
               opProp.map((item, index2)=>{
-                if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.card.selected && card.selected != undefined)|| (card.card.color == item.card.selected && item.card.selected != undefined)) && index1!=index2){
+                if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.selected && card.selected != undefined)|| (card.card.color == item.selected && item.card.selected != undefined)) && index1!=index2){
                   console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
                   
                   opProp[index2].stacked = true;
@@ -479,7 +520,7 @@ function App(props) {
                 }
               })
               {
-                return <PropertyContainer allCards={feed} flip={flip}/>
+                return <PropertyContainer property={property} allCards={feed} flip={flip}/>
               }
             }
           }) ):(
@@ -500,8 +541,9 @@ function App(props) {
                   {card:card, index:index1}
                 ]
                 propTable.map((item, index2)=>{
-                  if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.card.selected && card.selected != undefined)|| (card.card.color == item.card.selected && item.card.selected != undefined)) && index1!=index2){
-                    console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
+                  console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
+                  if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.selected && card.selected != undefined)|| (card.card.color == item.selected && item.card.selected != undefined)) && index1 !=index2){
+                   console.log("Matched")
                     
                     propTable[index2].stacked = true;
                     let sample = {
@@ -512,7 +554,7 @@ function App(props) {
                   }
                 })
                 {
-                  return <PropertyContainer allCards={feed} flip={flip}/>
+                  return <PropertyContainer property={property} action={actionSet} pop={togglePopup} allCards={feed} flip={flip}/>
                 }
               }
             }) ):( 
@@ -542,7 +584,7 @@ function App(props) {
               }else if(card.category === "action"){
                 return <ActionCard action={card}/>
               }else if(card.category === "wildcard"){
-                return <WildCard index={index} wild={card} place={placeProperty} placed={false}/>
+                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={togglePopup} action={actionSet}/>
               }else if(card.category === "rent"){
                 return <RentCard rent={card}/>
               }else {

@@ -29,7 +29,11 @@ const WildCard = (props) =>  {
 
       {show && props.wild.wild &&
         <div className="property-options" onClick={()=> toggleOptions()}>
-          <div>Play</div>
+          <div onClick={() =>{
+            console.log("played")
+            props.pop()
+            props.action(props.wild, props.index, props.placed)
+          }}>Play</div>
         </div>
       }
 
