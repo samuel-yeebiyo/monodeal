@@ -10,15 +10,17 @@ const PropertyContainer = (props) =>  {
         //house
         //hotel
 
+    console.log("feeed", props.allCards)
+
     return (
       <div>
         {props.allCards.map((card)=>{
-            if(card.card.category ==="property"){
+            if(card.card.card.category ==="property"){
                 return <div>
-                    <PropertyCard property={card.card} placed={true}/>
+                    <PropertyCard property={card.card.card} placed={true}/>
                 </div>
-            }else if(card.card.category === "wildcard"){
-                return <WildCard wild={card} placed={true}/>
+            }else if(card.card.card.category === "wildcard"){
+                return <WildCard wild={card.card.card} index={card.index} selected={card.card.selected} placed={true} flip={props.flip}/>
             }
         })}
 

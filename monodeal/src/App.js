@@ -155,7 +155,8 @@ const wild = {
     category:'wildcard',
     value:1,
     selected:'None',
-    stacked:false
+    stacked:false,
+    wild:true
   },
 
 }
@@ -318,13 +319,42 @@ function App(props) {
   }
 
   //Card logiv
+  const flip = (index, selected)=>{
+    let tempPropTable = propTable;
+    tempPropTable[index].selected = selected;
 
-  const placeProperty = (index)=>{
+    let color = "";
+    if(tempPropTable[index].card.color1 == selected){
+      color = tempPropTable[index].card.color2;
+    }
+    else color = tempPropTable[index].card.color1;
+
+    tempPropTable.forEach((item, indexNow)=>{
+      if(item.card.color == color || item.selected == color && indexNow != index){
+        item.stacked = false
+      }
+    })
+
+    setPropertyTable(tempPropTable);
+    toggleUpdate();
+  }
+
+  const placeProperty = (index, selected)=>{
     let tempPropTable = propTable;
     if(tempPropTable.length !=0){
-      let placedProp = {
-        card:drawn[index],
-        stacked:false
+
+      let placedProp;
+      if(selected == "none"){
+        placedProp = {
+          card:drawn[index],
+          stacked:false
+        }
+      }else{
+        placedProp = {
+          card:drawn[index],
+          stacked:false,
+          selected:selected
+        }
       }
       tempPropTable.push(placedProp);
 
@@ -337,10 +367,21 @@ function App(props) {
       toggleUpdate()
       
     }else{
-      let placedProp = {
-        card:drawn[index],
-        stacked:false
+
+      let placedProp;
+      if(selected == "none"){
+        placedProp = {
+          card:drawn[index],
+          stacked:false
+        }
+      }else{
+        placedProp = {
+          card:drawn[index],
+          stacked:false,
+          selected:selected
+        }
       }
+
       tempPropTable.push(placedProp);
 
       console.log("Placed ", drawn[index].color)
@@ -422,15 +463,23 @@ function App(props) {
         {opProp.length > 0 ? ( 
           opProp.map((card, index1)=>{
             if(card.stacked == false){
-              let feed =[card]
+              let feed =[
+                {card:card, index:index1}
+              ]
               opProp.map((item, index2)=>{
-                if(card.card.color == item.card.color && index1!=index2){
+                if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.card.selected && card.selected != undefined)|| (card.card.color == item.card.selected && item.card.selected != undefined)) && index1!=index2){
+                  console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
+                  
                   opProp[index2].stacked = true;
-                  feed.push(item)
+                  let sample = {
+                    card:item, index:index2
+                  }
+                  
+                  feed.push(sample)
                 }
               })
               {
-                return <PropertyContainer allCards={feed}/>
+                return <PropertyContainer allCards={feed} flip={flip}/>
               }
             }
           }) ):(
@@ -446,20 +495,26 @@ function App(props) {
         <div className="personalProperty">
           {propTable.length > 0 ? ( 
             propTable.map((card, index1)=>{
-              if(card.card.category ==="property"){
-                if(card.stacked == false){
-                  let feed = [card]
-                  propTable.map((item, index2)=>{
-                    if(card.card.color == item.card.color && index1!=index2){
-                      propTable[index2].stacked = true;
-                      feed.push(item)
+              if(card.stacked == false){
+                let feed =[
+                  {card:card, index:index1}
+                ]
+                propTable.map((item, index2)=>{
+                  if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.card.selected && card.selected != undefined)|| (card.card.color == item.card.selected && item.card.selected != undefined)) && index1!=index2){
+                    console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
+                    
+                    propTable[index2].stacked = true;
+                    let sample = {
+                      card:item, index:index2
                     }
-                  })
-                  {
-                    return <PropertyContainer allCards={feed}/>
+                    
+                    feed.push(sample)
                   }
+                })
+                {
+                  return <PropertyContainer allCards={feed} flip={flip}/>
                 }
-              }       
+              }
             }) ):( 
             <p>No property</p>  )
           }
