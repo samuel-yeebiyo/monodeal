@@ -211,7 +211,6 @@ const money = {
 }
 
 
-
 function App(props) {
 
   //initialization
