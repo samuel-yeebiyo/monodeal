@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import WildCard from './WildCard';
 import PropertyCard from './PropertyCard'
+import WildCardPopUp from './WildCardPopUp';
 
 const PropertyContainer = (props) =>  {
 
@@ -12,47 +13,39 @@ const PropertyContainer = (props) =>  {
     const [rent, setRent] = useState()
     const [complete, setComplete] = useState(false)
 
-    console.log("feeed", props.allCards)
-
     useEffect(()=>{
-        let numberSolid = 0;
-        let color;
-        let card = props.allCards[0];
-        if(card.card.card.category ==="property"){
-            color = card.card.card.color;
-            numberSolid += props.allCards.filter( item =>item.card.card.color == color).length
-            numberSolid += props.allCards.filter( item => item.card.selected == color).length
-        }else if (card.card.card.category === "wildcard"){
-            color = card.card.selected
-            numberSolid += props.allCards.filter( item =>item.card.card.color == color).length
-            numberSolid += props.allCards.filter( item => item.card.selected == color).length
-        } 
-            
-
+        let rentChart = [] ;
         Object.values(props.property).map((item)=>{
-            if(item.color == color){
-                numberSolid -= 1
-                setRent(item.each[numberSolid].price)
-                numberSolid += 1
-                if(numberSolid == item.nComplete){
-                    console.log("completed a set")
-                    setComplete(true)
-                }
+            if(item.color == props.contains.color){
+                rentChart = item.each
             }
         })
+
+        let number = rentChart[props.contains.cards.length-1].price
+        setRent(number);
+        if(props.contains.cards.length == props.contains.nComplete){
+            setComplete(true)
+        }
+        
+        console.log("Called")
+        console.log("Passed", props.contains)
     })
+
+    useEffect(()=>{
+        props.completion(props.index, complete)
+    }, [complete])
 
     return (
       <div>
-        {props.allCards.map((card)=>{
-            if(card.card.card.category ==="property"){
-                return <div>
-                    <PropertyCard property={card.card.card} placed={true}/>
-                </div>
-            }else if(card.card.card.category === "wildcard"){
-                return <WildCard action={props.action} pop={props.pop} wild={card.card.card} index={card.index} selected={card.card.selected} placed={true} flip={props.flip}/>
-            }
-        })}
+        {
+            props.contains.cards.map((card, index)=>{
+                if(card.category == "property"){
+                    return <PropertyCard property={card} placed={true}/>
+                }else{
+                    return <WildCard action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/>
+                }
+            })
+        }
         <p>{rent}</p>
 
       </div>

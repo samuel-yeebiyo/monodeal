@@ -95,8 +95,7 @@ const wild = {
     color2:'Orange',
     category:'wildcard',
     value:2,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'red and yellow':{
     num:2,
@@ -104,8 +103,7 @@ const wild = {
     color2:'Yellow',
     category:'wildcard',
     value:1,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'light blue and brown':{
     num:1,
@@ -113,8 +111,7 @@ const wild = {
     color2:'Brown',
     category:'wildcard',
     value:2,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'light blue and black':{
     num:1,
@@ -122,8 +119,7 @@ const wild = {
     color2:'Black',
     category:'wildcard',
     value:2,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'blue and green':{
     num:1,
@@ -131,8 +127,7 @@ const wild = {
     color2:'Green',
     category:'wildcard',
     value:1,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'black and green':{
     num:1,
@@ -140,8 +135,7 @@ const wild = {
     color2:'Green',
     category:'wildcard',
     value:2,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'ligh green and black':{
     num:1,
@@ -149,8 +143,7 @@ const wild = {
     color2:'Black',
     category:'wildcard',
     value:1,
-    selected:'None',
-    stacked:false
+    selected:'None'
   },
   'wild property':{
     num:2,
@@ -159,7 +152,6 @@ const wild = {
     category:'wildcard',
     value:1,
     selected:'None',
-    stacked:false,
     wild:true,
     message:"Choose color for wildcard",
     choice:["Black","Light Blue","Green","Yellow","Red","Purple","Orange","Light Green","Blue","Brown" ],
@@ -168,8 +160,62 @@ const wild = {
 
 }
 
-const rent = {
+// - 2 Purple and Orange rent cards,
+// - 2 Railroad and Utility rent cards,
+// - 2 Green and Dark Blue rent cards,
+// - 2 Brown and Light Blue rent cards,
+// - 2 Red and Yellow rent cards, and
+// - 3 ten color wild rent cards
 
+const rent = {
+  "purple and orange":{
+    color1: "Purple",
+    color2: "Orange",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:2,
+    value:2
+  },
+  "black and light green":{
+    color1: "Black",
+    color2: "Light Green",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:2,
+    value:2
+  },
+  "green and blue":{
+    color1: "Green",
+    color2: "Blue",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:2,
+    value:2
+  },
+  "brown and light blue":{
+    color1: "Brown",
+    color2: "Light Blue",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:2,
+    value:2
+  },
+  "red and yellow":{
+    color1: "Red",
+    color2: "Yellow",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:2,
+    value:2
+  },
+  "wild rent":{
+    color1: "all",
+    color2: "all",
+    message: "Pick a property to apply rent",
+    category:"rent",
+    num:3,
+    value:2
+  }
 }
 
 const action = {
@@ -214,28 +260,38 @@ const money = {
 function App(props) {
 
   //initialization
-  const [deck, setDeck] = useState([])
-  const [opProp, setOpProp] = useState([])
-  const [opMoney, setMoney] = useState([])
-  const [update, setUpdate] = useState(0)
-
-  const [drawn, setDrawn] = useState([])
-  
-  const [propTable, setPropTable] = useState([])
-  const [moneyTable, setMoneyTable] = useState([])
-  
   const [joined, setJoined] = useState([])
   const [start, setStart] = useState(false)
 
+
+  //common
+  const [deck, setDeck] = useState([])
+  const [drawn, setDrawn] = useState([])
+
+
+  //Current player
+  const [moneyTable, setMoneyTable] = useState([])
+  const [container, setContainer] = useState([])
+
+
+  //opponent
+  const [opCont, setOpCont] = useState([])
+  const [opMoney, setMoney] = useState([])
+
+  const [update, setUpdate] = useState(0)
+
   const [wildpopUp, showWildPopup] = useState(1);
-  const [action, setAction] = useState()
+  const [rentpopUp, showRentPopup] = useState(1);
+  
+  const [colorRent, setRent] = useState([])
+  const [wildAction, setWildAction] = useState()
   
 
 
   useEffect(()=>{
     console.log("This is called everytime I place a property")
     
-  }, [propTable])
+  }, [container])
 
 
   useEffect(()=>{
@@ -250,9 +306,11 @@ function App(props) {
   useEffect(()=>{
     props.socket.emit("updateDeck", deck, props.room)
     
-    props.socket.emit("updateProperty", propTable, props.room)
+    props.socket.emit("updateProperty", container, props.room)
 
     props.socket.emit("updateMoney", moneyTable, props.room)
+
+    console.log(container)
 
   }, [update])
 
@@ -273,14 +331,16 @@ function App(props) {
   })
 
   props.socket.on("getOpProp", table =>{
-    setOpProp(table)
+    setOpCont(table)
   })
 
   props.socket.on("getMoney", money =>{
     setMoney(money)
   })
 
-/**************INITIALIZATION PROCESS*****************/
+
+
+  /**************INITIALIZATION PROCESS*****************/
 const initGame = ()=>{
   initDeck();
  
@@ -310,6 +370,12 @@ const initDeck = ()=>{
     }
   })
 
+  Object.values(rent).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
+
   setDeck(batch);
 }
 
@@ -331,13 +397,14 @@ const checkTally = (table)=>{
 }
 
 
-  //toggles
+  
 
+//toggles
   const toggleUpdate = ()=>{
     if(update==1) setUpdate(0)
     else setUpdate(1)
 
-    console.log("PropTable = ", propTable)
+    console.log(container)
   }
 
   const toggleWildPopup = ()=>{
@@ -345,73 +412,255 @@ const checkTally = (table)=>{
     else showWildPopup(1)
   }
 
-  const actionSet = (act, index, placed)=>{
-    console.log("Action set called")
-    let temp = {
-      action:act,
-      index:index,
-      placed:placed
-    }
-    setAction(temp)
-    console.log(temp)
-  }
-
-  const changeWildcard = (index, selected) =>{
-    let tempPropTable = propTable;
-    let color = tempPropTable[index].selected
-    tempPropTable[index].stacked = false;
-    tempPropTable[index].selected = selected;
-
-    tempPropTable.forEach((item, indexNow)=>{
-      item.stacked = false
-    })
-
-    setPropertyTable(tempPropTable);
-    toggleUpdate();
+  const toggleRentPopup = ()=>{
+    if(rentpopUp==1) showRentPopup(0)
+    else showRentPopup(1)
   }
 
   
 
   
   //handle properties
-  const flip = (index, selected)=>{
-    let tempPropTable = propTable;
-    tempPropTable[index].selected = selected;
+  const flip = (containerIndex, index, selected)=>{
+    let tempContainer = container;
+    let card = tempContainer[containerIndex].cards[index]
 
-    let color = "";
-    if(tempPropTable[index].card.color1 == selected){
-      color = tempPropTable[index].card.color2;
+    tempContainer[containerIndex].cards.splice(index, 1);
+    if(tempContainer[containerIndex].cards == 0){
+      tempContainer.splice(containerIndex, 1)
     }
-    else color = tempPropTable[index].card.color1;
 
-    tempPropTable.forEach((item, indexNow)=>{
-     item.stacked = false;
-    })
+    if(!selected){
+      if(card.selected == card.color1){
+        card.selected = card.color2
+      }else{
+        card.selected = card.color1
+      }
+    }else{
+      card.selected = selected
+    }
+    
 
-    setPropertyTable(tempPropTable);
+    setContainer(tempContainer)
+
+    placeFlip(card)
+    
     toggleUpdate();
   }
 
+  const placeFlip = (card)=>{
+    let tempContainer = container;
+    if(tempContainer.length !=0){
+
+      let placedProp;
+      let exists = false;
+      tempContainer.map((cont)=>{
+        if(cont.color == card.selected && cont.set == 1){
+          exists = true
+          if(cont.complete == true){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == card.selected && cont.set == 2){
+                cont.cards.push(card)
+                found=true;
+              }
+            })
+            if(found == false){
+              let n;
+              Object.values(property).forEach(val => {
+                if(val.color == card.selected){
+                  n = val.nComplete
+                }
+              })
+
+              placedProp = {
+                color:card.selected,
+                cards:[card],
+                complete:false,
+                set:2,
+                nComplete:n,
+                rent:0,
+                house:0,
+                hotel:0
+              }
+
+              tempContainer.push(placedProp);
+            }
+          }else{
+            cont.cards.push(card)
+          }
+        }
+      })
+      if(exists == false){
+        let n;
+        Object.values(property).forEach(val => {
+          if(val.color == card.selected){
+            n = val.nComplete
+          }
+        })
+
+        placedProp = {
+          color:card.selected,
+          cards:[card],
+          complete:false,
+          set:1,
+          nComplete:n,
+          rent:0,
+          house:0,
+          hotel:0
+        }
+
+        tempContainer.push(placedProp);
+
+      }
+
+      setContainer(tempContainer)
+      toggleUpdate()
+      
+    }else{
+
+      let placedProp;
+      let n;
+      Object.values(property).forEach(val => {
+        if(val.color == card.selected){
+          n = val.nComplete
+        }
+      })
+
+      placedProp = {
+        color:card.selected,
+        cards:[card],
+        complete:false,
+        set:1,
+        nComplete:n,
+        rent:0,
+        house:0,
+        hotel:0
+      }
+      
+      tempContainer.push(placedProp);
+
+      setContainer(tempContainer)
+
+      toggleUpdate()
+    }
+  }
+
   const placeProperty = (index, selected)=>{
-    let tempPropTable = propTable;
-    if(tempPropTable.length !=0){
+    let tempContainer = container;
+    if(tempContainer.length !=0){
 
       let placedProp;
       if(selected == "none"){
-        placedProp = {
-          card:drawn[index],
-          stacked:false
+        let exists = false;
+        tempContainer.map((cont)=>{
+          if(cont.color == drawn[index].color && cont.set == 1){
+            exists = true
+            if(cont.complete == true){
+              let found = false;
+              tempContainer.map((cont)=>{
+                if(cont.color == drawn[index].color && cont.set == 2){
+                  cont.cards.push(drawn[index])
+                  found=true;
+                }
+              })
+              if(found == false){
+                placedProp = {
+                  color:drawn[index].color,
+                  cards:[drawn[index]],
+                  complete:false,
+                  set:2,
+                  nComplete:drawn[index].nComplete,
+                  rent:0,
+                  house:0,
+                  hotel:0
+                }
+
+                tempContainer.push(placedProp);
+              }
+            }else{
+              cont.cards.push(drawn[index])
+            }
+          }
+        })
+        if(exists == false){
+          placedProp = {
+            color:drawn[index].color,
+            cards:[drawn[index]],
+            complete:false,
+            set:1,
+            nComplete:drawn[index].nComplete,
+            rent:0,
+            house:0,
+            hotel:0
+          }
+
+          tempContainer.push(placedProp);
         }
       }else{
-        placedProp = {
-          card:drawn[index],
-          stacked:false,
-          selected:selected
+        drawn[index].selected = selected;
+        let exists = false;
+        tempContainer.map((cont)=>{
+          if(cont.color == drawn[index].selected && cont.set == 1){
+            exists = true
+            if(cont.complete == true){
+              let found = false;
+              tempContainer.map((cont)=>{
+                if(cont.color == drawn[index].selected && cont.set == 2){
+                  cont.cards.push(drawn[index])
+                  found=true;
+                }
+              })
+              if(found == false){
+                let n;
+                Object.values(property).forEach(val => {
+                  if(val.color == drawn[index].selected){
+                    n = val.nComplete
+                  }
+                })
+                placedProp = {
+                  color:drawn[index].selected,
+                  cards:[drawn[index]],
+                  complete:false,
+                  set:2,
+                  nComplete:n,
+                  rent:0,
+                  house:0,
+                  hotel:0
+                }
+
+                tempContainer.push(placedProp);
+              }
+            }else{
+              cont.cards.push(drawn[index])
+            }
+          }
+        })
+        if(exists == false){
+          let n;
+          Object.values(property).forEach(val => {
+            if(val.color == drawn[index].selected){
+              n = val.nComplete
+            }
+          })
+
+          placedProp = {
+            color:drawn[index].selected,
+            cards:[drawn[index]],
+            complete:false,
+            set:1,
+            nComplete:n,
+            rent:0,
+            house:0,
+            hotel:0
+          }
+
+          tempContainer.push(placedProp);
+
         }
       }
-      tempPropTable.push(placedProp);
 
-      setPropertyTable(tempPropTable)
+      setContainer(tempContainer)
       
       let hand = drawn;
       hand.splice(index, 1)
@@ -424,22 +673,40 @@ const checkTally = (table)=>{
       let placedProp;
       if(selected == "none"){
         placedProp = {
-          card:drawn[index],
-          stacked:false
+          color:drawn[index].color,
+          cards:[drawn[index]],
+          complete:false,
+          set:1,
+          nComplete:drawn[index].nComplete,
+          rent:0,
+          house:0,
+          hotel:0
         }
       }else{
+        let n;
+        Object.values(property).forEach(val => {
+          if(val.color == drawn[index].selected){
+            n = val.nComplete
+          }
+        })
+
+        drawn[index].selected = selected;
+
         placedProp = {
-          card:drawn[index],
-          stacked:false,
-          selected:selected
+          color:selected,
+          cards:[drawn[index]],
+          complete:false,
+          set:1,
+          nComplete:n,
+          rent:0,
+          house:0,
+          hotel:0
         }
       }
 
-      tempPropTable.push(placedProp);
+      tempContainer.push(placedProp);
 
-      console.log("Placed ", drawn[index].color)
-
-      setPropertyTable(tempPropTable)
+      setContainer(tempContainer)
 
       let hand = drawn;
       hand.splice(index, 1)
@@ -447,13 +714,49 @@ const checkTally = (table)=>{
       setDrawn(hand)
       toggleUpdate()
     }
+    console.log("Temp: ", tempContainer)
   }
 
-  const setPropertyTable = (newTable) =>{
-    checkTally(newTable);
-    setPropTable(newTable);
+  const wildActionSet = (act, index, placed, cont)=>{
+    console.log("Action set called")
+    let temp;
+    if(!placed){
+      temp = {
+        placed: placed,
+        action:act,
+        index:index
+      }
+    }else{
+      temp = {
+        placed: placed,
+        action:act,
+        index:index,
+        cont: cont
+      }
+    }
+    
+
+    setWildAction(temp)
+    console.log(temp)
+  }
+  
+  const complete = (containerIndex, bool) => {
+    let tempContainer = container;
+
+    tempContainer[containerIndex].complete = bool;
+
+    setContainer(tempContainer);
+    toggleUpdate()
+
   }
 
+  //handle rent
+  const getRent = (color, rent)=>{
+    
+  }
+
+
+ 
   //handle bank  
   const placeBank = (index)=>{
     let tempMoneyTable = moneyTable;
@@ -467,7 +770,6 @@ const checkTally = (table)=>{
     console.log("setting drawn")
 
     setDrawn(hand)
-    console.log("setting proptable")
 
     setMoneyTable(tempMoneyTable)
 
@@ -509,7 +811,13 @@ const checkTally = (table)=>{
 
       {!wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
-          <WildCardPopUp action={action} change={changeWildcard} place={placeProperty}/>
+          <WildCardPopUp action={wildAction} change={flip} place={placeProperty}/>
+        </div>
+      }
+
+      {!rentpopUp &&
+        <div className="modal" onClick={()=>{toggleRentPopup()}}>
+          <RentPopUp />
         </div>
       }
 
@@ -526,32 +834,13 @@ const checkTally = (table)=>{
         }
         </div>
         <div className="opProperty">
-        {opProp.length > 0 ? ( 
-          opProp.map((card, index1)=>{
-            if(card.stacked == false){
-              let feed =[
-                {card:card, index:index1}
-              ]
-              opProp.map((item, index2)=>{
-                if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.selected && card.selected != undefined)|| (card.card.color == item.selected && item.card.selected != undefined)) && index1!=index2){
-                  console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
-                  
-                  opProp[index2].stacked = true;
-                  let sample = {
-                    card:item, index:index2
-                  }
-                  
-                  feed.push(sample)
-                }
-              })
-              {
-                return <PropertyContainer property={property} allCards={feed} flip={flip}/>
-              }
-            }
-          }) ):(
-            <p>Opponent has not placed any property yet</p>
-          )
-          }
+        {opCont.length > 0 ? (
+          opCont.map((cont, index)=>{
+            return <PropertyContainer completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+          })
+        ):(
+          <p>No property placed</p>
+        )}
         </div>
         
       </div>
@@ -559,32 +848,13 @@ const checkTally = (table)=>{
       {/* personal property section */}
       <div className="personal">
         <div className="personalProperty">
-          {propTable.length > 0 ? ( 
-            propTable.map((card, index1)=>{
-              if(card.stacked == false){
-                let feed =[
-                  {card:card, index:index1}
-                ]
-                propTable.map((item, index2)=>{
-                  console.log(card.card.color, " & ", card.selected, " & ", item.card.color, " & ", item.selected)
-                  if(((card.card.color == item.card.color && item.card.color != undefined) || (card.selected == item.card.color && item.card.color != undefined) || (card.selected == item.selected && card.selected != undefined)|| (card.card.color == item.selected && item.card.selected != undefined)) && index1 !=index2){
-                   console.log("Matched")
-                    
-                    propTable[index2].stacked = true;
-                    let sample = {
-                      card:item, index:index2
-                    }
-                    
-                    feed.push(sample)
-                  }
-                })
-                {
-                  return <PropertyContainer property={property} action={actionSet} pop={toggleWildPopup} allCards={feed} flip={flip}/>
-                }
-              }
-            }) ):( 
-            <p>No property</p>  )
-          }
+          {container.length > 0 ? (
+            container.map((cont, index)=>{
+              return <PropertyContainer completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+            })
+          ):(
+            <p>No property placed</p>
+          )}
         </div>
         <div className="personalMoney">
         {moneyTable.length > 0 ? (
@@ -609,9 +879,9 @@ const checkTally = (table)=>{
               }else if(card.category === "action"){
                 return <ActionCard action={card}/>
               }else if(card.category === "wildcard"){
-                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={actionSet}/>
+                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
-                return <RentCard rent={card}/>
+                return <RentCard rent={card} pop={toggleRentPopup}/>
               }else {
                 return <MoneyCard index={index} place={placeBank} money={card} placed={false}/>
               }        

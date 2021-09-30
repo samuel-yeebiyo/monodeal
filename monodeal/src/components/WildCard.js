@@ -19,30 +19,34 @@ const WildCard = (props) =>  {
       }
       {show && props.placed && !props.wild.wild &&
         <div className="property-options" onClick={()=> toggleOptions()}>
-          <div onClick={()=>{
-            if(props.selected == props.wild.color1){
-              props.flip(props.index, props.wild.color2)
-            }else props.flip(props.index, props.wild.color1)
-          }}>Flip</div>
+          <div onClick={()=>{props.flip(props.containerIndex, props.index)}}>Flip</div>
         </div>
       }
 
-      {show && props.wild.wild &&
+      {show && props.wild.wild && !props.placed &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={() =>{
-            console.log("played")
             props.pop()
             props.action(props.wild, props.index, props.placed)
           }}>Play</div>
         </div>
       }
 
+      {show && props.wild.wild && props.placed &&
+        <div className="property-options" onClick={()=> toggleOptions()}>
+          <div onClick={() =>{
+            props.pop()
+            props.action(props.wild, props.index, props.placed, props.containerIndex)
+          }}>Play</div>
+        </div>
+      }
+
         <div>
-          <p>Price = {props.wild.value}</p>
+          <p>Price of = {props.wild.value}</p>
           <p>Property 1 = {props.wild.color1}</p>
           <p>Property 2 = {props.wild.color2}</p>
-          {props.selected &&
-            <p>Selected: {props.selected}</p>
+          {props.wild.selected &&
+            <p>Selected: {props.wild.selected}</p>
           }
         </div> 
       </div>
