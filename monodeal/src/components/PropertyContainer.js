@@ -32,8 +32,16 @@ const PropertyContainer = (props) =>  {
     })
 
     useEffect(()=>{
-        props.completion(props.index, complete)
+        if(!props.opponent){
+            props.completion(props.index, complete)
+        }
     }, [complete])
+
+    useEffect(()=>{
+        if(!props.opponent){
+            props.renting(props.index, rent)
+        }
+    }, [rent])
 
     return (
       <div>

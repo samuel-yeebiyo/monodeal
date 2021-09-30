@@ -8,6 +8,7 @@ import MoneyCard from './components/MoneyCard';
 import RentCard from './components/Rent';
 import ActionCard from './components/ActionCard';
 import PropertyContainer from './components/PropertyContainer'
+import PayPopUp from './components/PayPopUp';
 
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
@@ -282,9 +283,11 @@ function App(props) {
 
   const [wildpopUp, showWildPopup] = useState(1);
   const [rentpopUp, showRentPopup] = useState(1);
+  const [payPopup, showPayPopup] = useState(1);
   
-  const [colorRent, setRent] = useState([])
+  const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
+  const [payAmount, setAmount] = useState()
   
 
 
@@ -338,6 +341,10 @@ function App(props) {
     setMoney(money)
   })
 
+  props.socket.on("pay", (amount)=>{
+    setAmount(amount)
+    togglePayPopup()
+  })
 
 
   /**************INITIALIZATION PROCESS*****************/
@@ -392,10 +399,6 @@ const draw = () =>{
   toggleUpdate()
 }
 
-const checkTally = (table)=>{
-  console.log(table[0].stacked)
-}
-
 
   
 
@@ -415,6 +418,11 @@ const checkTally = (table)=>{
   const toggleRentPopup = ()=>{
     if(rentpopUp==1) showRentPopup(0)
     else showRentPopup(1)
+  }
+
+  const togglePayPopup = ()=>{
+    if(payPopup==1) showPayPopup(0)
+    else showPayPopup(1)
   }
 
   
@@ -750,10 +758,29 @@ const checkTally = (table)=>{
 
   }
 
-  //handle rent
-  const getRent = (color, rent)=>{
-    
+  const renting = (containerIndex, num)=>{
+    let tempContainer = container;
+
+    tempContainer[containerIndex].rent = num;
+
+    setContainer(tempContainer);
+    toggleUpdate()
   }
+  
+  //handle rent
+  const rentColors = (card) =>{
+    let temp
+    temp = {
+      color1:card.color1,
+      color2:card.color2,
+    }
+    setRentColor(temp)
+  }
+
+  const requestRent = (amount)=>{
+    props.socket.emit("reqrent", amount, props.room)
+  }
+
 
 
  
@@ -816,8 +843,14 @@ const checkTally = (table)=>{
       }
 
       {!rentpopUp &&
-        <div className="modal" onClick={()=>{toggleRentPopup()}}>
-          <RentPopUp />
+        <div className="modal">
+          <RentPopUp pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
+        </div>
+      }
+
+      {!payPopup &&
+        <div className="modal">
+          <PayPopUp money={moneyTable} amount={payAmount}/>
         </div>
       }
 
@@ -836,7 +869,7 @@ const checkTally = (table)=>{
         <div className="opProperty">
         {opCont.length > 0 ? (
           opCont.map((cont, index)=>{
-            return <PropertyContainer completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+            return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
           })
         ):(
           <p>No property placed</p>
@@ -850,7 +883,7 @@ const checkTally = (table)=>{
         <div className="personalProperty">
           {container.length > 0 ? (
             container.map((cont, index)=>{
-              return <PropertyContainer completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+              return <PropertyContainer oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
             })
           ):(
             <p>No property placed</p>
@@ -881,7 +914,7 @@ const checkTally = (table)=>{
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
-                return <RentCard rent={card} pop={toggleRentPopup}/>
+                return <RentCard rent={card} pop={toggleRentPopup} colors={rentColors}/>
               }else {
                 return <MoneyCard index={index} place={placeBank} money={card} placed={false}/>
               }        

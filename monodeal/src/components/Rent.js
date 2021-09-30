@@ -14,7 +14,10 @@ const RentCard = (props) =>  {
 
       {show &&
         <div className="property-options" onClick={()=> toggleOptions()}>
-          <div onClick={()=>{console.log("HHH")}}>Play</div>
+          <div onClick={()=>{
+            props.pop()
+            props.colors(props.rent)
+          }}>Play</div>
         </div>
       }
 

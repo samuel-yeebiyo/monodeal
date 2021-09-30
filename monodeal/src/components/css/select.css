@@ -1,0 +1,21 @@
+.select{
+    height:40px;
+    width:170px;
+    margin-bottom:10px;
+    background-color: rgb(172, 172, 172);
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:5px;
+}
+.pick{
+    width:20px;
+    height:20px;
+    background: green;
+}
+.select-info{
+
+}
+.selected{
+    border:2px solid red;
+}

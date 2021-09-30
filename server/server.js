@@ -46,7 +46,7 @@ io.on("connection", socket =>{
                 if(item.name == room){
                     item.users.push(user);
                     socket.emit("get-users", item.users)
-                    socket.to(room).emit("get-users", item.users)
+                    socket.to(room).emit("get-users", item.users) 
                 }
             })
         }else{
@@ -72,5 +72,9 @@ io.on("connection", socket =>{
 
     socket.on("start", (room, fact)=>{
         socket.to(room).emit("when", fact)
+    })
+
+    socket.on("reqrent", (amount, room)=>{
+        socket.to(room).emit("pay", amount)
     })
 })
