@@ -235,25 +235,31 @@ const action = {
 const money = {
   $10:{
     value:10,
-    num:1
+    num:1,
+    category:"money"
   },
   $5:{
     value:5,
-    num:2
+    num:2,
+    category:"money"
   },
   $4:{
     value:4,
-    num:3
+    num:3,
+    category:"money"
   },
   $3:{
     value:3,
-    num:3
+    num:3,
+    category:"money"
   },$2:{
     value:2,
-    num:5
+    num:5,
+    category:"money"
   },$1:{
     value:1,
-    num:6
+    num:6,
+    category:"money"
   },
 }
 
@@ -849,8 +855,8 @@ const draw = () =>{
       }
 
       {!payPopup &&
-        <div className="modal">
-          <PayPopUp money={moneyTable} amount={payAmount}/>
+        <div className="modal" onClick={()=>{togglePayPopup()}}>
+          <PayPopUp money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
 
