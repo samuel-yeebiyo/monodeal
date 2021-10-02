@@ -12,12 +12,15 @@ const RentCard = (props) =>  {
     return (
       <div className="card" onClick={()=>{toggleOptions()}}>
 
-      {show &&
+      {show && !props.placed &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={()=>{
             props.pop()
             props.colors(props.rent)
           }}>Play</div>
+          <div onClick={()=>{
+            props.bank(props.index)
+          }}>Bank</div>
         </div>
       }
 

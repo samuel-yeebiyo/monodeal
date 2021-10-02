@@ -77,4 +77,10 @@ io.on("connection", socket =>{
     socket.on("reqrent", (amount, room)=>{
         socket.to(room).emit("pay", amount)
     })
+
+    socket.on("send-loot", (prop, mon, room)=>{
+        socket.to(room).emit("get-loot", prop, mon)
+        console.log("Calld to send rent")
+    })
+
 })

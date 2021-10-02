@@ -319,6 +319,8 @@ function App(props) {
 
     props.socket.emit("updateMoney", moneyTable, props.room)
 
+    props.socket.removeListener("get-loot")
+
     console.log(container)
 
   }, [update])
@@ -350,6 +352,30 @@ function App(props) {
   props.socket.on("pay", (amount)=>{
     setAmount(amount)
     togglePayPopup()
+  })
+
+  props.socket.off("get-loot").on("get-loot", (prop, mon)=>{
+
+    console.log("Got Rent: ", prop, " and ", mon)
+
+
+    if(prop.length >0){
+      prop.map((item)=>{
+        if(item.category == "property"){
+          propertyLoot(item, "none")
+        }else if(item.category == "wildcard"){
+          propertyLoot(item, "Choose")
+        }
+      })
+    }
+
+    if(mon.length >0){
+      mon.map((item)=>{
+        moneyLoot(item)
+      })
+    }
+
+    console.log("CALLED TO RECEIVE RENT ONCE")
   })
 
 
@@ -782,12 +808,167 @@ const draw = () =>{
     }
     setRentColor(temp)
   }
-
   const requestRent = (amount)=>{
     props.socket.emit("reqrent", amount, props.room)
   }
+  const sendRent = (property, money)=>{
+    let prop = []
+    let mon = []
+    if(property.length >0){
+      let temp = container;
+      property.map((item)=>{
+        prop.push(temp[item.container].cards[item.index])
+        temp[item.container].cards.splice(item.index,1);
+        if(temp[item.container].cards == 0){
+          temp.splice(item.container, 1)
+        }
+      })
+      setContainer(temp)
+    }
+    if(money.length >0){
+      let temp = moneyTable;
+      money.map((item)=>{
+        mon.push(temp[item.index])
+        temp.splice(item.index, 1)
+      })
+      setMoneyTable(temp)
+    }
 
+    props.socket.emit("send-loot", prop, mon, props.room)
 
+    toggleUpdate();
+  }
+
+  const propertyLoot = (card, selected) =>{
+    let tempContainer = container;
+    
+    let placedProp;
+    if(selected == "none"){
+      let exists = false;
+      tempContainer.map((cont)=>{
+        if(cont.color == card.color && cont.set == 1){
+          exists = true
+          if(cont.complete == true){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == card.color && cont.set == 2){
+                cont.cards.push(card)
+                found=true;
+              }
+            })
+            if(found == false){
+              placedProp = {
+                color:card.color,
+                cards:[card],
+                complete:false,
+                set:2,
+                nComplete:card.nComplete,
+                rent:0,
+                house:0,
+                hotel:0
+              }
+
+              tempContainer.push(placedProp);
+            }
+          }else{
+            cont.cards.push(card)
+          }
+        }
+      })
+      if(exists == false){
+        placedProp = {
+          color:card.color,
+          cards:[card],
+          complete:false,
+          set:1,
+          nComplete:card.nComplete,
+          rent:0,
+          house:0,
+          hotel:0
+        }
+
+        tempContainer.push(placedProp);
+      }
+    }else{
+      card.selected = selected;
+      let exists = false;
+      tempContainer.map((cont)=>{
+        if(cont.color == card.selected && cont.set == 1){
+          exists = true
+          if(cont.complete == true){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == card.selected && cont.set == 2){
+                cont.cards.push(card)
+                found=true;
+              }
+            })
+            if(found == false){
+              let n;
+              Object.values(property).forEach(val => {
+                if(val.color == card.selected){
+                  n = val.nComplete
+                }
+              })
+              placedProp = {
+                color:card.selected,
+                cards:[card],
+                complete:false,
+                set:2,
+                nComplete:n,
+                rent:0,
+                house:0,
+                hotel:0
+              }
+
+              tempContainer.push(placedProp);
+            }
+          }else{
+            cont.cards.push(card)
+          }
+        }
+      })
+      if(exists == false){
+        let n;
+        Object.values(property).forEach(val => {
+          if(val.color == card.selected){
+            n = val.nComplete
+          }
+        })
+
+        placedProp = {
+          color:card.selected,
+          cards:[card],
+          complete:false,
+          set:1,
+          nComplete:n,
+          rent:0,
+          house:0,
+          hotel:0
+        }
+
+        tempContainer.push(placedProp);
+
+      }
+    }
+
+    setContainer(tempContainer)
+    toggleUpdate()
+      
+    
+  }
+  const moneyLoot = (card) =>{
+    console.log("CALLED TO PLACE MONEY LOOT")
+    let tempMoneyTable = moneyTable;
+
+    tempMoneyTable.push(card);
+
+    console.log("Placed ", card)
+
+    setMoneyTable(tempMoneyTable)
+
+    toggleUpdate()
+  }
 
  
   //handle bank  
@@ -855,8 +1036,8 @@ const draw = () =>{
       }
 
       {!payPopup &&
-        <div className="modal" onClick={()=>{togglePayPopup()}}>
-          <PayPopUp money={moneyTable} property={container} amount={payAmount}/>
+        <div className="modal">
+          <PayPopUp pop={togglePayPopup} send={sendRent} money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
 
@@ -867,7 +1048,11 @@ const draw = () =>{
         {opMoney.length > 0 ? (
 
           opMoney.map((card, index)=>{
-            return <MoneyCard money={card} index={index} placed={true}/>    
+            if(card.category == "rent"){
+              return <RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/>
+            }else if(card.category == "money"){
+              return <MoneyCard money={card} index={index} placed={true}/>    
+            }
           }) ):( 
           <p>No Money</p>  )
         }
@@ -899,7 +1084,11 @@ const draw = () =>{
         {moneyTable.length > 0 ? (
 
           moneyTable.map((card, index)=>{
-            return <MoneyCard money={card} index={index} placed={true}/>    
+            if(card.category == "rent"){
+              return <RentCard placed={true} index={index} rent={card} colors={rentColors}/>
+            }else if(card.category == "money"){
+              return <MoneyCard money={card} index={index} placed={true}/>    
+            }    
           }) ):( 
           <p>No Money</p>  )
         }
@@ -920,7 +1109,7 @@ const draw = () =>{
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
-                return <RentCard rent={card} pop={toggleRentPopup} colors={rentColors}/>
+                return <RentCard bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
               }else {
                 return <MoneyCard index={index} place={placeBank} money={card} placed={false}/>
               }        
