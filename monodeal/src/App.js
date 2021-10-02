@@ -161,13 +161,6 @@ const wild = {
 
 }
 
-// - 2 Purple and Orange rent cards,
-// - 2 Railroad and Utility rent cards,
-// - 2 Green and Dark Blue rent cards,
-// - 2 Brown and Light Blue rent cards,
-// - 2 Red and Yellow rent cards, and
-// - 3 ten color wild rent cards
-
 const rent = {
   "purple and orange":{
     color1: "Purple",
@@ -223,12 +216,62 @@ const action = {
   passGo:{
     name:"Pass and Go",
     num:10,
-    attribute:"Draw two more cards"
+    message:"Draw 2 cards",
+    category:"action"
+  },
+  forceDeal:{
+    name:"Forced Deal",
+    num:4,
+    message:"Choose cards to exchange",
+    category:"action"
+  },
+  sayNo:{
+    name:"Just Say No",
+    num:3,
+    message:"Denied!!",
+    category:"action"
+  },
+  slyDeal:{
+    name:"Sly Deal",
+    num:3,
+    message:"Pick a card to steal",
+    category:"action"
+  },
+  debtCollector:{
+    name:"Debt Collector",
+    num:3,
+    message:"Collect $5",
+    category:"action"
+  },
+  birthday:{
+    name:"It's My Birthday",
+    num:3,
+    message:"Collect $2",
+    category:"action"
+  },
+  house:{
+    name:"House",
+    num:3,
+    message:"Choose a complete set to put down",
+    category:"action"
+  },
+  hotel:{
+    name:"Hotel",
+    num:3,
+    message:"Choose a complete set with a house to put down",
+    category:"action"
   },
   dealBreaker:{
     name:"Deal Breaker",
     num:2,
-    attribute:"Mainly for stealing a complete set lol"
+    message:"Choose a complete set to steal",
+    category:"action"
+  },
+  doubleRent:{
+    name:"Double The Rent",
+    num:2,
+    message:"Double the rent",
+    category:"action"
   }
 }
 
@@ -295,15 +338,7 @@ function App(props) {
   const [wildAction, setWildAction] = useState()
   const [payAmount, setAmount] = useState()
   
-
-
-  useEffect(()=>{
-    console.log("This is called everytime I place a property")
-    
-  }, [container])
-
-
-  useEffect(()=>{
+    useEffect(()=>{
     if(props.resp == 'creator'){
       console.log("Creator joined")
     }else{
@@ -318,8 +353,6 @@ function App(props) {
     props.socket.emit("updateProperty", container, props.room)
 
     props.socket.emit("updateMoney", moneyTable, props.room)
-
-    props.socket.removeListener("get-loot")
 
     console.log(container)
 
@@ -391,11 +424,11 @@ const initGame = ()=>{
 
 const initDeck = ()=>{
   let batch = deck;
-  Object.values(property).forEach(val => {
-    for(let i=0; i<val.nComplete; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(property).forEach(val => {
+  //   for(let i=0; i<val.nComplete; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   Object.values(money).forEach(val => {
     for(let i=0; i<val.num; i++){
@@ -403,13 +436,19 @@ const initDeck = ()=>{
     }
   })
 
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(wild).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
-  Object.values(rent).forEach(val => {
+  // Object.values(rent).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
+
+  Object.values(action).forEach(val => {
     for(let i=0; i<val.num; i++){
       batch = [...batch, val]
     }
@@ -418,17 +457,24 @@ const initDeck = ()=>{
   setDeck(batch);
 }
 
-const draw = () =>{
-  let n = Math.floor(Math.random() * deck.length);
-  let newA = [...drawn, deck[n]];
-  setDrawn(newA)
-
-  //update deck
+const draw = (num) =>{
+  let newA = drawn;
   let temp = deck;
-  temp.splice(n,1);
-  setDeck(temp);
+  for(let i=0; i<num;i++){
+    let n = Math.floor(Math.random() * deck.length);
+    newA.push(deck[n])
 
+    //update deck
+    temp.splice(n,1);
+
+    console.log("Drawn: ", deck[n])
+
+  }
+  
+  setDrawn(newA)
+  setDeck(temp);
   toggleUpdate()
+
 }
 
 
@@ -808,10 +854,12 @@ const draw = () =>{
     }
     setRentColor(temp)
   }
+  
   const requestRent = (amount)=>{
     props.socket.emit("reqrent", amount, props.room)
   }
-  const sendRent = (property, money)=>{
+
+  const sendPayment = (property, money)=>{
     let prop = []
     let mon = []
     if(property.length >0){
@@ -990,6 +1038,22 @@ const draw = () =>{
     toggleUpdate()
   }
 
+
+
+  //handle actions
+  const passGo = (index)=>{
+
+    draw(2);
+
+    let hand = drawn;
+    hand.splice(index, 1)
+    console.log("setting drawn")
+
+    setDrawn(hand)
+    toggleUpdate()
+  }
+
+
   return (
     <div className="App">
 
@@ -1037,9 +1101,13 @@ const draw = () =>{
 
       {!payPopup &&
         <div className="modal">
-          <PayPopUp pop={togglePayPopup} send={sendRent} money={moneyTable} property={container} amount={payAmount}/>
+          <PayPopUp pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
+
+      {/*Create separate popups for deal breaker, sly deal, and forced deal*/}
+      {/*Create separate popups for the house and hotel*/}
+
 
       {/* oppponent property section */}
       <div className="opponent">
@@ -1105,7 +1173,7 @@ const draw = () =>{
               if(card.category ==="property"){
                 return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard action={card}/>
+                return <ActionCard index={index} placed={false} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
@@ -1120,7 +1188,7 @@ const draw = () =>{
         </div>
 
         <div className="draw-from">
-          <div className="deck" onClick={()=>{draw()}}></div>
+          <div className="deck" onClick={()=>{draw(1)}}></div>
           <div className="skip">
             <p>Skip Turn</p>
           </div>
