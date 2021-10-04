@@ -9,6 +9,8 @@ import RentCard from './components/Rent';
 import ActionCard from './components/ActionCard';
 import PropertyContainer from './components/PropertyContainer'
 import PayPopUp from './components/PayPopUp';
+import SlyPopUp from './components/SlyPopUp';
+import DealBreakerPopUp from './components/DealBreakerPopUp';
 
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
@@ -22,14 +24,14 @@ const property = {
     value:2,
     color:"Black",
     nComplete:4,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:3, price:4}]
   },
   lightBlue:{
     category:"property",
     value:3,
     color:"Light Blue",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}]
   },
   green:{
     category:"property",
@@ -43,50 +45,50 @@ const property = {
     value:3,
     color:"Yellow",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}]
   },
-  red:{
-    category:"property",
-    value:2,
-    color:"Red",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
-  },
-  purple:{
-    category:"property",
-    value:3,
-    color:"Purple",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}]
-  },
-  orange:{
-    category:"property",
-    value:3,
-    color:"Orange",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
-  },
-  lightGreen:{
-    category:"property",
-    value:2,
-    color:"Light Green",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}]
-  },
-  blue:{
-    category:"property",
-    value:3,
-    color:"Blue",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}]
-  },
-  brown:{
-    category:"property",
-    value:3,
-    color:"Brown",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}]
-  }
+  // red:{
+  //   category:"property",
+  //   value:2,
+  //   color:"Red",
+  //   nComplete:3,
+  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
+  // },
+  // purple:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Purple",
+  //   nComplete:3,
+  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}]
+  // },
+  // orange:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Orange",
+  //   nComplete:3,
+  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
+  // },
+  // lightGreen:{
+  //   category:"property",
+  //   value:2,
+  //   color:"Light Green",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}]
+  // },
+  // blue:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Blue",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}]
+  // },
+  // brown:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Brown",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}]
+  // }
 }
 
 const wild = {
@@ -213,66 +215,66 @@ const rent = {
 }
 
 const action = {
-  passGo:{
-    name:"Pass and Go",
-    num:10,
-    message:"Draw 2 cards",
-    category:"action"
-  },
+  // passGo:{
+  //   name:"Pass and Go",
+  //   num:10,
+  //   message:"Draw 2 cards",
+  //   category:"action"
+  // },
   forceDeal:{
     name:"Forced Deal",
     num:4,
     message:"Choose cards to exchange",
     category:"action"
   },
-  sayNo:{
-    name:"Just Say No",
-    num:3,
-    message:"Denied!!",
-    category:"action"
-  },
-  slyDeal:{
-    name:"Sly Deal",
-    num:3,
-    message:"Pick a card to steal",
-    category:"action"
-  },
-  debtCollector:{
-    name:"Debt Collector",
-    num:3,
-    message:"Collect $5",
-    category:"action"
-  },
-  birthday:{
-    name:"It's My Birthday",
-    num:3,
-    message:"Collect $2",
-    category:"action"
-  },
-  house:{
-    name:"House",
-    num:3,
-    message:"Choose a complete set to put down",
-    category:"action"
-  },
-  hotel:{
-    name:"Hotel",
-    num:3,
-    message:"Choose a complete set with a house to put down",
-    category:"action"
-  },
-  dealBreaker:{
-    name:"Deal Breaker",
-    num:2,
-    message:"Choose a complete set to steal",
-    category:"action"
-  },
-  doubleRent:{
-    name:"Double The Rent",
-    num:2,
-    message:"Double the rent",
-    category:"action"
-  }
+  // sayNo:{
+  //   name:"Just Say No",
+  //   num:3,
+  //   message:"Denied!!",
+  //   category:"action"
+  // },
+  // slyDeal:{
+  //   name:"Sly Deal",
+  //   num:3,
+  //   message:"Pick a card to steal",
+  //   category:"action"
+  // },
+  // debtCollector:{
+  //   name:"Debt Collector",
+  //   num:3,
+  //   message:"Collect $5",
+  //   category:"action"
+  // },
+  // birthday:{
+  //   name:"It's My Birthday",
+  //   num:3,
+  //   message:"Collect $2",
+  //   category:"action"
+  // },
+  // house:{
+  //   name:"House",
+  //   num:3,
+  //   message:"Choose a complete set to put down",
+  //   category:"action"
+  // },
+  // hotel:{
+  //   name:"Hotel",
+  //   num:3,
+  //   message:"Choose a complete set with a house to put down",
+  //   category:"action"
+  // },
+  // dealBreaker:{
+  //   name:"Deal Breaker",
+  //   num:2,
+  //   message:"Choose a complete set to steal",
+  //   category:"action"
+  // },
+  // doubleRent:{
+  //   name:"Double The Rent",
+  //   num:2,
+  //   message:"Double the rent",
+  //   category:"action"
+  // }
 }
 
 const money = {
@@ -333,7 +335,9 @@ function App(props) {
   const [wildpopUp, showWildPopup] = useState(1);
   const [rentpopUp, showRentPopup] = useState(1);
   const [payPopup, showPayPopup] = useState(1);
-  
+  const [slyPopup, setSlyPopup] = useState(1);
+  const [breakerPopup, setBreakerPopup] = useState(1);
+
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
   const [payAmount, setAmount] = useState()
@@ -411,6 +415,69 @@ function App(props) {
     console.log("CALLED TO RECEIVE RENT ONCE")
   })
 
+  props.socket.off("give").on("give", (card)=>{
+    console.log("Called")
+
+    console.log(card)
+
+    let tempContainer = container;
+    let tempCard = tempContainer[card.container].cards[card.index];
+    tempContainer[card.container].cards.splice(card.index, 1);
+    if(tempContainer[card.container].cards.length == 0){
+      tempContainer.splice(card.container, 1);
+    }
+
+    console.log("Transferring card")
+    console.log(tempContainer)
+    setContainer(tempContainer);
+
+    toggleUpdate()
+
+    props.socket.emit("transfer", tempCard, props.room)
+
+
+  })
+
+  props.socket.off("giveUp").on("giveUp", index =>{
+    let temp = container
+    let stolen = temp[index.container];
+
+    temp.splice(index.container, 1);
+    setContainer(temp);
+
+    console.log("Stolen ", stolen)
+
+    props.socket.emit("transfer-container", stolen, props.room)
+
+  })
+  props.socket.off("receive").on("receive", (item)=>{
+    if(item.category == "property"){
+      propertyLoot(item, "none")
+    }else if(item.category == "wildcard"){
+      propertyLoot(item, "Choose")
+    }
+  })
+  props.socket.off("receive-container").on("receive-container", (item)=>{
+    item.set=1;
+    if(container.length>0){
+      container.map((cont)=>{
+        if(cont.color == item.color){
+          if(cont.set==1){
+            item.set=2;
+          }else if(cont.set ==2){
+            item.set=3;
+          }
+        }
+      })
+    }  
+
+    console.log(item);
+    let temp = container || [];
+    temp.push(item);
+    setContainer(temp)
+    toggleUpdate()
+  })
+
 
   /**************INITIALIZATION PROCESS*****************/
 const initGame = ()=>{
@@ -424,17 +491,17 @@ const initGame = ()=>{
 
 const initDeck = ()=>{
   let batch = deck;
-  // Object.values(property).forEach(val => {
-  //   for(let i=0; i<val.nComplete; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
-
-  Object.values(money).forEach(val => {
-    for(let i=0; i<val.num; i++){
+  Object.values(property).forEach(val => {
+    for(let i=0; i<val.nComplete; i++){
       batch = [...batch, val]
     }
   })
+
+  // Object.values(money).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   // Object.values(wild).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -503,6 +570,15 @@ const draw = (num) =>{
     else showPayPopup(1)
   }
 
+  const toggleSlyPopup = ()=>{
+    if(slyPopup==1) setSlyPopup(0)
+    else setSlyPopup(1)
+  }
+
+  const toggleBreakerPopup = ()=>{
+    if(breakerPopup==1) setBreakerPopup(0)
+    else setBreakerPopup(1)
+  }
   
 
   
@@ -1005,6 +1081,7 @@ const draw = (num) =>{
       
     
   }
+
   const moneyLoot = (card) =>{
     console.log("CALLED TO PLACE MONEY LOOT")
     let tempMoneyTable = moneyTable;
@@ -1053,6 +1130,13 @@ const draw = (num) =>{
     toggleUpdate()
   }
 
+  const slySteal = (card)=>{
+    props.socket.emit("steal", card, props.room)
+  }
+
+  const breakSteal = (container)=>{
+    props.socket.emit("break", container, props.room)
+  }
 
   return (
     <div className="App">
@@ -1102,6 +1186,18 @@ const draw = (num) =>{
       {!payPopup &&
         <div className="modal">
           <PayPopUp pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
+        </div>
+      }
+
+      {!slyPopup &&
+        <div className="modal">
+          <SlyPopUp opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
+        </div>
+      }
+
+      {!breakerPopup &&
+        <div className="modal">
+          <DealBreakerPopUp opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
         </div>
       }
 
@@ -1173,7 +1269,7 @@ const draw = (num) =>{
               if(card.category ==="property"){
                 return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard index={index} placed={false} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard index={index} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){

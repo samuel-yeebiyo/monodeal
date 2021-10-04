@@ -83,4 +83,22 @@ io.on("connection", socket =>{
         console.log("Calld to send rent")
     })
 
+    socket.on("steal", (card, room)=>{
+        socket.to(room).emit("give", card)
+        console.log("called to steal ", card)
+    })
+
+    socket.on("transfer", (card, room)=>{
+        socket.to(room).emit("receive", card)
+        console.log("Transferring ", card)
+    })
+
+    socket.on("break", (container, room)=>{
+        socket.to(room).emit("giveUp", container)
+        console.log(container)
+    })
+
+    socket.on("transfer-container", (container, room)=>{
+        socket.to(room).emit("receive-container", container)
+    })
 })

@@ -22,6 +22,10 @@ const ActionCard = (props) =>  {
               props.get(5)
             }else if(props.action.name == "It's My Birthday"){
               props.get(2)
+            }else if(props.action.name == "Sly Deal"){
+              props.popSly()
+            }else if(props.action.name == "Deal Breaker"){
+              props.popBreak()
             }
           }}>Play</div>
           <div>Bank</div>
