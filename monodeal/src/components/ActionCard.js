@@ -26,6 +26,8 @@ const ActionCard = (props) =>  {
               props.popSly()
             }else if(props.action.name == "Deal Breaker"){
               props.popBreak()
+            }else if(props.action.name == "Forced Deal"){
+              props.popForced()
             }
           }}>Play</div>
           <div>Bank</div>

@@ -101,4 +101,14 @@ io.on("connection", socket =>{
     socket.on("transfer-container", (container, room)=>{
         socket.to(room).emit("receive-container", container)
     })
+
+    socket.on("deal", (card, req, room)=>{
+        socket.to(room).emit("forced-card", card, req)
+        console.log("deal")
+    })
+
+    socket.on("switch", (card, room)=>{
+        socket.to(room).emit("receive", card)
+        console.log("Switching")
+    })
 })

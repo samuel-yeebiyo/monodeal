@@ -11,10 +11,12 @@ import PropertyContainer from './components/PropertyContainer'
 import PayPopUp from './components/PayPopUp';
 import SlyPopUp from './components/SlyPopUp';
 import DealBreakerPopUp from './components/DealBreakerPopUp';
+import ForcedPopUp from './components/ForcedPopUp'
 
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
 import RentPopUp from './components/RentPopUp';
+import { setUncaughtExceptionCaptureCallback } from 'process';
 
 
 
@@ -337,6 +339,7 @@ function App(props) {
   const [payPopup, showPayPopup] = useState(1);
   const [slyPopup, setSlyPopup] = useState(1);
   const [breakerPopup, setBreakerPopup] = useState(1);
+  const [forcedPopup, showForcedPopup] = useState(1);
 
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
@@ -450,6 +453,7 @@ function App(props) {
     props.socket.emit("transfer-container", stolen, props.room)
 
   })
+
   props.socket.off("receive").on("receive", (item)=>{
     if(item.category == "property"){
       propertyLoot(item, "none")
@@ -457,6 +461,7 @@ function App(props) {
       propertyLoot(item, "Choose")
     }
   })
+
   props.socket.off("receive-container").on("receive-container", (item)=>{
     item.set=1;
     if(container.length>0){
@@ -477,6 +482,31 @@ function App(props) {
     setContainer(temp)
     toggleUpdate()
   })
+
+  props.socket.off("forced-card").on("forced-card", (card, req)=>{
+
+    let myCard = container[req.container].cards[req.index];
+
+    let temp = container; 
+    temp[req.container].cards.splice(req.index, 1);
+    if(temp[req.container].cards.length == 0){
+      temp.splice(req.container, 1);
+    }
+    
+    setContainer(temp)
+
+    if(card.category == "property"){
+      propertyLoot(card, "none")
+    }else if(card.category == "wildcard"){
+      propertyLoot(card, "Choose")
+    }
+    
+
+    props.socket.emit("switch", myCard, props.room) 
+  })
+
+
+
 
 
   /**************INITIALIZATION PROCESS*****************/
@@ -580,6 +610,10 @@ const draw = (num) =>{
     else setBreakerPopup(1)
   }
   
+  const toggleForcedPopup = ()=>{
+    if(forcedPopup==1) showForcedPopup(0)
+    else showForcedPopup(1)
+  }
 
   
   //handle properties
@@ -1138,6 +1172,20 @@ const draw = (num) =>{
     props.socket.emit("break", container, props.room)
   }
 
+  const forcedDeal= (mine, op)=>{
+    let myCard = container[mine.container].cards[mine.index];
+
+    let temp = container; 
+    temp[mine.container].cards.splice(mine.index, 1);
+    if(temp[mine.container].cards.length == 0){
+      temp.splice(mine.container, 1);
+    }
+
+    setContainer(temp)
+
+    props.socket.emit("deal", myCard, op, props.room)
+  }
+
   return (
     <div className="App">
 
@@ -1201,6 +1249,11 @@ const draw = (num) =>{
         </div>
       }
 
+      {!forcedPopup &&
+        <div className="modal">
+          <ForcedPopUp opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
+        </div>
+      }
       {/*Create separate popups for deal breaker, sly deal, and forced deal*/}
       {/*Create separate popups for the house and hotel*/}
 
@@ -1269,7 +1322,7 @@ const draw = (num) =>{
               if(card.category ==="property"){
                 return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard index={index} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard index={index} popForced={toggleForcedPopup} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
