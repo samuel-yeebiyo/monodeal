@@ -28,6 +28,10 @@ const ActionCard = (props) =>  {
               props.popBreak()
             }else if(props.action.name == "Forced Deal"){
               props.popForced()
+            }else if(props.action.name == "House"){
+              props.popHouse()
+            }else if(props.action.name == "Hotel"){
+              console.log("hotel")
             }
           }}>Play</div>
           <div>Bank</div>

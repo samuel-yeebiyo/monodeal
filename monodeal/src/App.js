@@ -12,6 +12,8 @@ import PayPopUp from './components/PayPopUp';
 import SlyPopUp from './components/SlyPopUp';
 import DealBreakerPopUp from './components/DealBreakerPopUp';
 import ForcedPopUp from './components/ForcedPopUp'
+import HousePopUp from './components/HousePopUp';
+import HotelPopUp from './components/HotelPopUp';
 
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
@@ -223,12 +225,12 @@ const action = {
   //   message:"Draw 2 cards",
   //   category:"action"
   // },
-  forceDeal:{
-    name:"Forced Deal",
-    num:4,
-    message:"Choose cards to exchange",
-    category:"action"
-  },
+  // forceDeal:{
+  //   name:"Forced Deal",
+  //   num:4,
+  //   message:"Choose cards to exchange",
+  //   category:"action"
+  // },
   // sayNo:{
   //   name:"Just Say No",
   //   num:3,
@@ -253,18 +255,18 @@ const action = {
   //   message:"Collect $2",
   //   category:"action"
   // },
-  // house:{
-  //   name:"House",
-  //   num:3,
-  //   message:"Choose a complete set to put down",
-  //   category:"action"
-  // },
-  // hotel:{
-  //   name:"Hotel",
-  //   num:3,
-  //   message:"Choose a complete set with a house to put down",
-  //   category:"action"
-  // },
+  house:{
+    name:"House",
+    num:3,
+    message:"Choose a complete set to put down",
+    category:"action"
+  },
+  hotel:{
+    name:"Hotel",
+    num:3,
+    message:"Choose a complete set with a house to put down",
+    category:"action"
+  },
   // dealBreaker:{
   //   name:"Deal Breaker",
   //   num:2,
@@ -334,12 +336,15 @@ function App(props) {
 
   const [update, setUpdate] = useState(0)
 
-  const [wildpopUp, showWildPopup] = useState(1);
-  const [rentpopUp, showRentPopup] = useState(1);
-  const [payPopup, showPayPopup] = useState(1);
-  const [slyPopup, setSlyPopup] = useState(1);
-  const [breakerPopup, setBreakerPopup] = useState(1);
-  const [forcedPopup, showForcedPopup] = useState(1);
+  const [wildpopUp, showWildPopup] = useState(false);
+  const [rentpopUp, showRentPopup] = useState(false);
+  const [payPopup, showPayPopup] = useState(false);
+  const [slyPopup, setSlyPopup] = useState(false);
+  const [breakerPopup, setBreakerPopup] = useState(false);
+  const [forcedPopup, showForcedPopup] = useState(false);
+  const [housePop, showHouse] = useState(false)
+  const [hotelPop, showHotel] = useState(false)
+
 
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
@@ -579,43 +584,42 @@ const draw = (num) =>{
 
 //toggles
   const toggleUpdate = ()=>{
-    if(update==1) setUpdate(0)
-    else setUpdate(1)
-
-    console.log(container)
+    setUpdate(!update)
   }
 
   const toggleWildPopup = ()=>{
-    if(wildpopUp==1) showWildPopup(0)
-    else showWildPopup(1)
+    showWildPopup(!wildpopUp)
   }
 
   const toggleRentPopup = ()=>{
-    if(rentpopUp==1) showRentPopup(0)
-    else showRentPopup(1)
+    showRentPopup(!rentpopUp)
   }
 
   const togglePayPopup = ()=>{
-    if(payPopup==1) showPayPopup(0)
-    else showPayPopup(1)
+    showPayPopup(!payPopup)
   }
 
   const toggleSlyPopup = ()=>{
-    if(slyPopup==1) setSlyPopup(0)
-    else setSlyPopup(1)
+    setSlyPopup(!slyPopup)
   }
 
   const toggleBreakerPopup = ()=>{
-    if(breakerPopup==1) setBreakerPopup(0)
-    else setBreakerPopup(1)
+    setBreakerPopup(!breakerPopup)
   }
   
   const toggleForcedPopup = ()=>{
-    if(forcedPopup==1) showForcedPopup(0)
-    else showForcedPopup(1)
+    showForcedPopup(!forcedPopup)
   }
 
+  const toggleHouse=()=>{
+    showHouse(!housePop)
+  }
   
+  const toggleHotel=()=>{
+    showHotel(!hotelPop)
+  }
+
+
   //handle properties
   const flip = (containerIndex, index, selected)=>{
     let tempContainer = container;
@@ -1186,6 +1190,28 @@ const draw = (num) =>{
     props.socket.emit("deal", myCard, op, props.room)
   }
 
+  const placeHouse = (index) =>{
+    let temp = container;
+
+    temp[index.container].house+=1;
+
+    setContainer(temp)
+    toggleUpdate()
+  }
+
+  const placeHotel = (index) =>{
+    let temp = container;
+
+    temp[index.container].hotel+=1;
+
+    setContainer(temp)
+    toggleUpdate()
+  }
+
+
+
+
+
   return (
     <div className="App">
 
@@ -1219,41 +1245,54 @@ const draw = (num) =>{
       </div>
       }
 
-      {!wildpopUp &&
+      {wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
           <WildCardPopUp action={wildAction} change={flip} place={placeProperty}/>
         </div>
       }
 
-      {!rentpopUp &&
+      {rentpopUp &&
         <div className="modal">
           <RentPopUp pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
         </div>
       }
 
-      {!payPopup &&
+      {payPopup &&
         <div className="modal">
           <PayPopUp pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
 
-      {!slyPopup &&
+      {slyPopup &&
         <div className="modal">
           <SlyPopUp opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
         </div>
       }
 
-      {!breakerPopup &&
+      {breakerPopup &&
         <div className="modal">
           <DealBreakerPopUp opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
         </div>
       }
 
-      {!forcedPopup &&
+      {forcedPopup &&
         <div className="modal">
           <ForcedPopUp opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
         </div>
       }
+
+      {housePop &&
+        <div className="modal">
+          <HousePopUp container={container} place={placeHouse} pop={toggleHouse}/>
+        </div>
+      }
+
+      {hotelPop &&
+        <div className="modal">
+          <HotelPopUp container={container} place={placeHotel} pop={toggleHotel}/>
+        </div>
+      }
+
       {/*Create separate popups for deal breaker, sly deal, and forced deal*/}
       {/*Create separate popups for the house and hotel*/}
 
@@ -1322,7 +1361,7 @@ const draw = (num) =>{
               if(card.category ==="property"){
                 return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard index={index} popForced={toggleForcedPopup} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
