@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import './css/form.css'
 
 const Form = (props) => {
 
@@ -24,43 +24,52 @@ const Form = (props) => {
 
 
     return (
-        <div>
-            <p>Provide username: </p>
-            <form onSubmit={handleCreate}>
-                <label>Username : </label>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e)=>{setUsername(e.target.value)}}
-                />
-            </form>
-            <br/>
+        <div className="form-background">
+            <div className="form-tint"></div>
+            <div className="form">
+                <div className="form-field">
+                    <p className="form-title">Username </p>
+                    <form onSubmit={handleCreate}>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e)=>{setUsername(e.target.value)}}
+                        />
+                    </form>
+                </div>
+               
+                <br/>
 
-            <p>Create Room using this form below: </p>
-            <form onSubmit={handleCreate}>
-                <label>Room iD : </label>
-                <input
-                    type="text"
-                    value={roomC}
-                    onChange={(e)=>{setRoomC(e.target.value)}}
-                 />
-                <button type="submit">Join</button>
-            </form>    
+                <div className="form-field">
+                    <p className="form-title">Create Room</p>
+                    <form onSubmit={handleCreate}>
+                        <input
+                            type="text"
+                            value={roomC}
+                            onChange={(e)=>{setRoomC(e.target.value)}}
+                        />
+                        <button type="submit">Create</button>
+                    </form>    
+                
+                </div>
+                
 
-            <br></br>
-            <p>Join a room using the form below</p>
-            <form onSubmit={handleJoin}>
-                <label>Room iD : </label>
-                <input
-                    type="text"
-                    value={roomJ}
-                    onChange={(e)=>{setRoomJ(e.target.value)}}
-                 />
-                <button type="submit">Join</button>
-            </form>     
-            
-            <br></br> 
-            <p>{joined}</p>
+                <br></br>
+
+                <div className="form-field">
+                    <p className="form-title">Join a room</p>
+                    <form onSubmit={handleJoin}>
+                        <input
+                            type="text"
+                            value={roomJ}
+                            onChange={(e)=>{setRoomJ(e.target.value)}}
+                        />
+                        <button type="submit">Join</button>
+                    </form>     
+                
+                </div>
+                
+            </div>
         </div>
     )
 }

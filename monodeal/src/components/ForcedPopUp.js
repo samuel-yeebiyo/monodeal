@@ -68,6 +68,8 @@ const ForcedPopUp = (props)=> {
                     props.deal(myChoice, opChoice)
                 }}>Selected</div>
             }
+
+            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

@@ -41,6 +41,8 @@ const HousePopUp = (props)=> {
                     props.place(propChoice)
                 }}>Selected</div>
             }
+
+            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

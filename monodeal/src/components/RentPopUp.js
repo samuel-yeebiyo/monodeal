@@ -1,16 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Select from "./Select";
 
 const RentPopUp = (props)=> {
 
     const [choice, setChoice] = useState()
+    const [double, setDouble] = useState(false)
 
 
     const choose = (index)=>{
         console.log("Chosen: ", props.cont[index])
         setChoice(props.cont[index])
     }
+
+    const toggleDouble = () =>{
+        setDouble(!double)
+    }
+
+    useEffect(()=>{
+        if(double == true){
+            if(choice){
+                let temp = choice;
+                temp.rent *= 2
+                setChoice(temp)
+            }else{
+                setDouble(false)
+            }
+        }
+
+    }, [double])
 
     return (
         <div className="center">
@@ -32,6 +50,10 @@ const RentPopUp = (props)=> {
                 <p>No property placed</p>
             )}
 
+            <p style={{border: double ? '1px solid red': ''}}onClick={()=> {toggleDouble()}} >Double The Rent</p>
+            
+
+
             {choice &&
                 <div onClick={()=>{
                     props.get(choice.rent)
@@ -39,6 +61,7 @@ const RentPopUp = (props)=> {
                 }}> Request </div>
             }
 
+            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

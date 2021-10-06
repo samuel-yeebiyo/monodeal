@@ -41,6 +41,8 @@ const DealBreakerPopUp = (props)=> {
                     props.steal(propChoice)
                 }}>Selected</div>
             }
+
+            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

@@ -17,6 +17,7 @@
     width:50%;
     height:50%;
     padding:10px;
+    max-width:900px;
 }
 .opponent{
     width:100%;

@@ -102,13 +102,13 @@ io.on("connection", socket =>{
         socket.to(room).emit("receive-container", container)
     })
 
-    socket.on("deal", (card, req, room)=>{
-        socket.to(room).emit("forced-card", card, req)
+    socket.on("deal", (card, del, req, room)=>{
+        socket.to(room).emit("forced-card", card, del, req)
         console.log("deal")
     })
 
-    socket.on("switch", (card, room)=>{
-        socket.to(room).emit("receive", card)
+    socket.on("switch", (del, card, room)=>{
+        socket.to(room).emit("receive-forced", del, card)
         console.log("Switching")
     })
 })

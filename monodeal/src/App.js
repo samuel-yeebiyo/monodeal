@@ -2,6 +2,10 @@ import {useState, useRef, useEffect} from 'react'
 
 
 import './App.css';
+
+import './components/css/start.css'
+
+
 import PropertyCard from'./components/PropertyCard'
 import WildCard from './components/WildCard';
 import MoneyCard from './components/MoneyCard';
@@ -232,18 +236,18 @@ const action = {
     message:"Choose cards to exchange",
     category:"action"
   },
-  sayNo:{
-    name:"Just Say No",
-    num:3,
-    message:"Denied!!",
-    category:"action"
-  },
-  slyDeal:{
-    name:"Sly Deal",
-    num:3,
-    message:"Pick a card to steal",
-    category:"action"
-  },
+  // sayNo:{
+  //   name:"Just Say No",
+  //   num:3,
+  //   message:"Denied!!",
+  //   category:"action"
+  // },
+  // slyDeal:{
+  //   name:"Sly Deal",
+  //   num:3,
+  //   message:"Pick a card to steal",
+  //   category:"action"
+  // },
   // debtCollector:{
   //   name:"Debt Collector",
   //   num:3,
@@ -350,7 +354,7 @@ function App(props) {
   const [forcedPopup, showForcedPopup] = useState(false);
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
-  const [sayNo, showSayNo] = useState(true)
+  const [sayNo, showSayNo] = useState(false)  //should be true
 
 
   const [colorRent, setRentColor] = useState([])
@@ -379,9 +383,9 @@ function App(props) {
 
 
 
-  useEffect(()=>{
-    toggleSayNo()
-  }, [no])
+  // useEffect(()=>{
+  //   toggleSayNo()
+  // }, [no])
 
   //socket entries
   props.socket.on("get-users", (users)=>{
@@ -443,7 +447,6 @@ function App(props) {
 
     setTimeout(()=>{
 
-      let temp = answer
       toggleNO()
 
       if(countRef.current === "Yes"){
@@ -464,7 +467,6 @@ function App(props) {
         props.socket.emit("transfer", tempCard, props.room)
       }else{
         setAnswer("Yes")
-        console.log("This is the answer, ", temp)
       }
       
     }, 5000)
@@ -472,16 +474,30 @@ function App(props) {
   })
 
   props.socket.off("giveUp").on("giveUp", index =>{
-    let temp = container
-    let stolen = temp[index.container];
 
-    temp.splice(index.container, 1);
-    setContainer(temp);
+    toggleSayNo()
 
-    console.log("Stolen ", stolen)
+    setTimeout(()=>{
 
-    props.socket.emit("transfer-container", stolen, props.room)
+      toggleNO()
 
+      if(countRef.current === "Yes"){
+
+        let temp = container
+        let stolen = temp[index.container];
+    
+        temp.splice(index.container, 1);
+        setContainer(temp);
+    
+        console.log("Stolen ", stolen)
+    
+        props.socket.emit("transfer-container", stolen, props.room)
+
+      }else{
+        setAnswer("Yes")
+      }
+
+    }, 5000)
   })
 
   props.socket.off("receive").on("receive", (item)=>{
@@ -513,16 +529,53 @@ function App(props) {
     toggleUpdate()
   })
 
-  props.socket.off("forced-card").on("forced-card", (card, req)=>{
+  props.socket.off("forced-card").on("forced-card", (card, mine, req)=>{
 
     let myCard = container[req.container].cards[req.index];
 
-    let temp = container; 
-    temp[req.container].cards.splice(req.index, 1);
-    if(temp[req.container].cards.length == 0){
-      temp.splice(req.container, 1);
-    }
+    toggleSayNo()
+
+    setTimeout(()=>{
+
+      toggleNO()
+
+      if(countRef.current === "Yes"){
+
+        let temp = container; 
+        if(temp[req.container].cards.length == 1){
+          temp.splice(req.container, 1);
+        }else{
+          temp[req.container].cards.splice(req.index, 1);
+        }
+        
+        setContainer(temp)
+        console.log("set container")
+
+        if(card.category == "property"){
+          propertyLoot(card, "none")
+        }else if(card.category == "wildcard"){
+          propertyLoot(card, "Choose")
+        }
     
+
+        props.socket.emit("switch", mine, myCard, props.room) 
+
+      }else{
+        setAnswer("Yes")
+      }
+
+    }, 5000)
+    
+  })
+
+  props.socket.off("receive-forced").on("receive-forced", (mine, card)=>{
+    
+    let temp = container; 
+    temp[mine.container].cards.splice(mine.index, 1);
+    if(temp[mine.container].cards.length == 0){
+      temp.splice(mine.container, 1);
+    }
+
     setContainer(temp)
 
     if(card.category == "property"){
@@ -530,11 +583,7 @@ function App(props) {
     }else if(card.category == "wildcard"){
       propertyLoot(card, "Choose")
     }
-    
-
-    props.socket.emit("switch", myCard, props.room) 
   })
-
 
 
 
@@ -557,23 +606,23 @@ const initDeck = ()=>{
     }
   })
 
-  // Object.values(money).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(money).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
-  // Object.values(wild).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(wild).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
-  // Object.values(rent).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(rent).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   Object.values(action).forEach(val => {
     for(let i=0; i<val.num; i++){
@@ -1210,16 +1259,7 @@ const draw = (num) =>{
 
   const forcedDeal= (mine, op)=>{
     let myCard = container[mine.container].cards[mine.index];
-
-    let temp = container; 
-    temp[mine.container].cards.splice(mine.index, 1);
-    if(temp[mine.container].cards.length == 0){
-      temp.splice(mine.container, 1);
-    }
-
-    setContainer(temp)
-
-    props.socket.emit("deal", myCard, op, props.room)
+    props.socket.emit("deal", myCard, mine, op, props.room)
   }
 
   const placeHouse = (index) =>{
@@ -1252,32 +1292,29 @@ const draw = (num) =>{
 
       {!start &&
         <div className="modal">
-        <div className="center">
-          <p>Joined room {props.room}</p>
+          <div className="center">
+            <div className="starting">
+              <div className="waiting">
+                <p className="start-text">Joined room: <span className="room-name">{props.room}</span></p>                
+                <p className="start-text">Players Joined:</p>
+                {joined.length>0 &&
+                    <div className="joined-players">
+                      {joined.map((user)=>(
+                        <p className="joined">{user.name}</p>
+                      ))
+                      }
+                    </div>
+                }
 
-          {joined.length<2 &&
-            <p>Waiting for other play to join</p>
-          }
-          
-          <p>Joined players: </p>
-          {joined.length>0 &&
-              <div>
-                {joined.map((user)=>(
-                  <p>{user.name}</p>
-                ))
+                {joined.length==2 && props.resp=="creator" &&
+                  <div>
+                    <button className="start-button" onClick={()=>{initGame()}}>Start</button>
+                  </div>
                 }
               </div>
-          }
-
-          {joined.length==2 && props.resp=="creator" &&
-            <div>
-              <p>Start game?</p>
-              <button onClick={()=>{initGame()}}>Start</button>
-            </div>
-          }
-         
+            </div>          
+          </div>
         </div>
-      </div>
       }
 
       {wildpopUp &&
