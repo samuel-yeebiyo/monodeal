@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react' 
+import {useState, useRef, useEffect} from 'react' 
 
 
 import './App.css';
@@ -14,6 +14,7 @@ import DealBreakerPopUp from './components/DealBreakerPopUp';
 import ForcedPopUp from './components/ForcedPopUp'
 import HousePopUp from './components/HousePopUp';
 import HotelPopUp from './components/HotelPopUp';
+import SayNo from './components/SayNo';
 
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
@@ -225,24 +226,24 @@ const action = {
   //   message:"Draw 2 cards",
   //   category:"action"
   // },
-  // forceDeal:{
-  //   name:"Forced Deal",
-  //   num:4,
-  //   message:"Choose cards to exchange",
-  //   category:"action"
-  // },
-  // sayNo:{
-  //   name:"Just Say No",
-  //   num:3,
-  //   message:"Denied!!",
-  //   category:"action"
-  // },
-  // slyDeal:{
-  //   name:"Sly Deal",
-  //   num:3,
-  //   message:"Pick a card to steal",
-  //   category:"action"
-  // },
+  forceDeal:{
+    name:"Forced Deal",
+    num:4,
+    message:"Choose cards to exchange",
+    category:"action"
+  },
+  sayNo:{
+    name:"Just Say No",
+    num:3,
+    message:"Denied!!",
+    category:"action"
+  },
+  slyDeal:{
+    name:"Sly Deal",
+    num:3,
+    message:"Pick a card to steal",
+    category:"action"
+  },
   // debtCollector:{
   //   name:"Debt Collector",
   //   num:3,
@@ -255,24 +256,24 @@ const action = {
   //   message:"Collect $2",
   //   category:"action"
   // },
-  house:{
-    name:"House",
-    num:3,
-    message:"Choose a complete set to put down",
-    category:"action"
-  },
-  hotel:{
-    name:"Hotel",
-    num:3,
-    message:"Choose a complete set with a house to put down",
-    category:"action"
-  },
-  // dealBreaker:{
-  //   name:"Deal Breaker",
-  //   num:2,
-  //   message:"Choose a complete set to steal",
+  // house:{
+  //   name:"House",
+  //   num:3,
+  //   message:"Choose a complete set to put down",
   //   category:"action"
   // },
+  // hotel:{
+  //   name:"Hotel",
+  //   num:3,
+  //   message:"Choose a complete set with a house to put down",
+  //   category:"action"
+  // },
+  dealBreaker:{
+    name:"Deal Breaker",
+    num:2,
+    message:"Choose a complete set to steal",
+    category:"action"
+  },
   // doubleRent:{
   //   name:"Double The Rent",
   //   num:2,
@@ -335,6 +336,11 @@ function App(props) {
   const [opMoney, setMoney] = useState([])
 
   const [update, setUpdate] = useState(0)
+  const [no, setNo] = useState(true)
+  const [answer, setAnswer] = useState("Yes")
+  const countRef = useRef(answer)
+  countRef.current = answer
+
 
   const [wildpopUp, showWildPopup] = useState(false);
   const [rentpopUp, showRentPopup] = useState(false);
@@ -344,6 +350,7 @@ function App(props) {
   const [forcedPopup, showForcedPopup] = useState(false);
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
+  const [sayNo, showSayNo] = useState(true)
 
 
   const [colorRent, setRentColor] = useState([])
@@ -351,12 +358,12 @@ function App(props) {
   const [payAmount, setAmount] = useState()
   
     useEffect(()=>{
-    if(props.resp == 'creator'){
-      console.log("Creator joined")
-    }else{
-      console.log("Joiner joined")
-    }
-  }, [])
+      if(props.resp == 'creator'){
+        console.log("Creator joined")
+      }else{
+        console.log("Joiner joined")
+      }
+    }, [])
 
 
   useEffect(()=>{
@@ -370,6 +377,11 @@ function App(props) {
 
   }, [update])
 
+
+
+  useEffect(()=>{
+    toggleSayNo()
+  }, [no])
 
   //socket entries
   props.socket.on("get-users", (users)=>{
@@ -426,23 +438,36 @@ function App(props) {
   props.socket.off("give").on("give", (card)=>{
     console.log("Called")
 
-    console.log(card)
 
-    let tempContainer = container;
-    let tempCard = tempContainer[card.container].cards[card.index];
-    tempContainer[card.container].cards.splice(card.index, 1);
-    if(tempContainer[card.container].cards.length == 0){
-      tempContainer.splice(card.container, 1);
-    }
+    toggleSayNo()
 
-    console.log("Transferring card")
-    console.log(tempContainer)
-    setContainer(tempContainer);
+    setTimeout(()=>{
 
-    toggleUpdate()
+      let temp = answer
+      toggleNO()
 
-    props.socket.emit("transfer", tempCard, props.room)
+      if(countRef.current === "Yes"){
+        
+        let tempContainer = container;
+        let tempCard = tempContainer[card.container].cards[card.index];
+        if(tempContainer[card.container].cards.length == 1){
+          tempContainer.splice(card.container, 1);
+        }else{
+          tempContainer[card.container].cards.splice(card.index, 1);
+        }
+        console.log("Transferring card")
+        console.log(tempContainer)
+        setContainer(tempContainer);
 
+        toggleUpdate()
+
+        props.socket.emit("transfer", tempCard, props.room)
+      }else{
+        setAnswer("Yes")
+        console.log("This is the answer, ", temp)
+      }
+      
+    }, 5000)
 
   })
 
@@ -617,6 +642,13 @@ const draw = (num) =>{
   
   const toggleHotel=()=>{
     showHotel(!hotelPop)
+  }
+
+  const toggleSayNo=()=>{
+    showSayNo(!sayNo)
+  }
+  const toggleNO = ()=>{
+    setNo(!no)
   }
 
 
@@ -1208,7 +1240,10 @@ const draw = (num) =>{
     toggleUpdate()
   }
 
-
+  const answering = (bool) =>{
+    setAnswer(bool)
+    toggleUpdate()
+  }
 
 
 
@@ -1290,6 +1325,12 @@ const draw = (num) =>{
       {hotelPop &&
         <div className="modal">
           <HotelPopUp container={container} place={placeHotel} pop={toggleHotel}/>
+        </div>
+      }
+
+      {sayNo &&
+        <div className="modal">
+          <SayNo answer={answering} drawn={drawn} />
         </div>
       }
 

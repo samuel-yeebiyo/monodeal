@@ -31,7 +31,7 @@ const ActionCard = (props) =>  {
             }else if(props.action.name == "House"){
               props.popHouse()
             }else if(props.action.name == "Hotel"){
-              console.log("hotel")
+              props.popHotel()
             }
           }}>Play</div>
           <div>Bank</div>
