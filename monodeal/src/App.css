@@ -38,7 +38,7 @@
 }
 .personal{
     width:100%;
-    height:33.3%;
+    height:38.3%;
     padding:10px;
     border:1px solid black;
     display: flex;
@@ -55,7 +55,7 @@
 }
 .draw{
     width:100%;
-    height:33.3%;
+    height:28.3%;
     padding:5px;
     border:1px solid black;
     display:flex;
@@ -67,11 +67,12 @@
     align-items: center;
 }
 .card{
-    height:189px;
-    width:138px;
-    background-color: antiquewhite;
+    height:169px;
+    width:118px;
+    background-color: white;
     margin-left:10px;
     position: relative;
+    font-size: 0.9em;
 }
 .draw-from{
     width:25%;

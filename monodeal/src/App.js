@@ -23,7 +23,6 @@ import SayNo from './components/SayNo';
 //popups
 import WildCardPopUp from './components/WildCardPopUp';
 import RentPopUp from './components/RentPopUp';
-import { setUncaughtExceptionCaptureCallback } from 'process';
 
 
 
@@ -33,28 +32,32 @@ const property = {
     value:2,
     color:"Black",
     nComplete:4,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:3, price:4}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:3, price:4}],
+    hex:"#262626"
   },
   lightBlue:{
     category:"property",
     value:3,
     color:"Light Blue",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}],
+    hex:"#8FC4FF"
   },
   green:{
     category:"property",
     value:2,
     color:"Green",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
+    hex:"#00CB0E"
   },
   yellow:{
     category:"property",
     value:3,
     color:"Yellow",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}]
+    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}],
+    hex:"#FFE600"
   },
   // red:{
   //   category:"property",
@@ -606,29 +609,29 @@ const initDeck = ()=>{
     }
   })
 
-  Object.values(money).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(money).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(wild).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
-  Object.values(rent).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(rent).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
-  Object.values(action).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(action).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   setDeck(batch);
 }

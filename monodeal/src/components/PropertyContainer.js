@@ -2,14 +2,10 @@ import { useState, useEffect } from 'react';
 import WildCard from './WildCard';
 import PropertyCard from './PropertyCard'
 import WildCardPopUp from './WildCardPopUp';
+import '../components/css/propertyContainer.css'
 
 const PropertyContainer = (props) =>  {
 
-    //count how many compared with nComplete
-    //calculate the rent
-        //add the cards
-        //house
-        //hotel
     const [rent, setRent] = useState()
     const [complete, setComplete] = useState(false)
 
@@ -44,17 +40,17 @@ const PropertyContainer = (props) =>  {
     }, [rent])
 
     return (
-      <div>
+      <div className="prop-container">
+          <div className="props-rent">houses and hotel</div>
         {
             props.contains.cards.map((card, index)=>{
                 if(card.category == "property"){
-                    return <PropertyCard property={card} placed={true}/>
+                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`, left:`${index*5}px`}}><PropertyCard property={card} placed={true}/></div>
                 }else{
                     return <WildCard action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/>
                 }
             })
         }
-        <p>{rent}</p>
 
       </div>
     );

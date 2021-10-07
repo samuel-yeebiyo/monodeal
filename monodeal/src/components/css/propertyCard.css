@@ -15,3 +15,22 @@
     justify-content: center;
     align-items: center;
 }
+.card-value{
+    background:white;
+    position:absolute;
+    margin-left:10px;
+    width:30px;
+    text-align: center;
+    font-weight: bold;
+    height: 25px;
+    border-radius: 0px 0px 2px 2px;
+}
+.card-color{
+    height:40px
+}
+.card-renting{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:10px;
+}

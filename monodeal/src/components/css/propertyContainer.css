@@ -1,0 +1,9 @@
+.prop-container{
+    margin-right: 20px;
+    position:relative;
+    height:189px;
+    width:138px;
+}
+.props{
+    position: absolute;
+}
