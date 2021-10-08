@@ -1,4 +1,5 @@
 import { useState } from "react";
+import '../components/css/moneyCard.css'
 
 const MoneyCard = (props) =>  {
 
@@ -17,8 +18,12 @@ const MoneyCard = (props) =>  {
           <div onClick={()=>{props.place(props.index)}}>A</div>
         </div>
       }
-        <p>Money</p>
-        <p>Price = {props.money.value}</p>
+        <p className="card-value">${props.money.value}</p>
+        <div style={{background: `${props.money.hex}`}} className="card-main">
+          <div className="card-money">
+            <p className="card-money-value">${props.money.value}</p>
+          </div>
+        </div>
       </div>
     );
   }

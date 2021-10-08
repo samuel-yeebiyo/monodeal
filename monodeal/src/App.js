@@ -32,7 +32,7 @@ const property = {
     value:2,
     color:"Black",
     nComplete:4,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:3, price:4}],
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:4, price:4}],
     hex:"#262626"
   },
   lightBlue:{
@@ -40,7 +40,7 @@ const property = {
     value:3,
     color:"Light Blue",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}],
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:3}],
     hex:"#8FC4FF"
   },
   green:{
@@ -56,51 +56,57 @@ const property = {
     value:3,
     color:"Yellow",
     nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:2, price:3}],
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:3}],
     hex:"#FFE600"
   },
-  // red:{
-  //   category:"property",
-  //   value:2,
-  //   color:"Red",
-  //   nComplete:3,
-  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
-  // },
-  // purple:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Purple",
-  //   nComplete:3,
-  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}]
-  // },
-  // orange:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Orange",
-  //   nComplete:3,
-  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}]
-  // },
-  // lightGreen:{
-  //   category:"property",
-  //   value:2,
-  //   color:"Light Green",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}]
-  // },
-  // blue:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Blue",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}]
-  // },
-  // brown:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Brown",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}]
-  // }
+  red:{
+    category:"property",
+    value:2,
+    color:"Red",
+    nComplete:3,
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
+    hex:"#EF0000"
+  },
+  purple:{
+    category:"property",
+    value:3,
+    color:"Purple",
+    nComplete:3,
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}],
+    hex:"#6400E6"
+  },
+  orange:{
+    category:"property",
+    value:3,
+    color:"Orange",
+    nComplete:3,
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
+    hex:"#FF9900"
+  },
+  lightGreen:{
+    category:"property",
+    value:2,
+    color:"Light Green",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#7DFF7D"
+  },
+  blue:{
+    category:"property",
+    value:3,
+    color:"Blue",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#0014C8"
+  },
+  brown:{
+    category:"property",
+    value:3,
+    color:"Brown",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#7D4B00"
+  }
 }
 
 const wild = {
@@ -108,6 +114,9 @@ const wild = {
     num:2,
     color1:'Purple',
     color2:'Orange',
+    hex1:"#6400E6",
+    hex2:"#FF9900",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:2,
     selected:'None'
@@ -116,6 +125,9 @@ const wild = {
     num:2,
     color1:'Red',
     color2:'Yellow',
+    hex1:"#EF0000",
+    hex2:"#FFE600",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:1,
     selected:'None'
@@ -124,6 +136,9 @@ const wild = {
     num:1,
     color1:'Light Blue',
     color2:'Brown',
+    hex1:"#8FC4FF",
+    hex2:"#7D4B00",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:2,
     selected:'None'
@@ -132,6 +147,9 @@ const wild = {
     num:1,
     color1:'Light Blue',
     color2:'Black',
+    hex1:"#8FC4FF",
+    hex2:"#262626",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:2,
     selected:'None'
@@ -140,6 +158,9 @@ const wild = {
     num:1,
     color1:'Blue',
     color2:'Green',
+    hex1:"#0014C8",
+    hex2:"#00CB0E",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:1,
     selected:'None'
@@ -148,6 +169,9 @@ const wild = {
     num:1,
     color1:'Black',
     color2:'Green',
+    hex1:"#262626",
+    hex2:"#00CB0E",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:2,
     selected:'None'
@@ -156,6 +180,9 @@ const wild = {
     num:1,
     color1:'Light Green',
     color2:'Black',
+    hex1:"#7DFF7D",
+    hex2:"#262626",
+    selectedHex:"#FFFF",
     category:'wildcard',
     value:1,
     selected:'None'
@@ -179,6 +206,8 @@ const rent = {
   "purple and orange":{
     color1: "Purple",
     color2: "Orange",
+    hex1:"#6400E6",
+    hex2:"#FF9900",
     message: "Pick a property to apply rent",
     category:"rent",
     num:2,
@@ -187,6 +216,8 @@ const rent = {
   "black and light green":{
     color1: "Black",
     color2: "Light Green",
+    hex1:"#262626",
+    hex2:"#7DFF7D",
     message: "Pick a property to apply rent",
     category:"rent",
     num:2,
@@ -195,6 +226,8 @@ const rent = {
   "green and blue":{
     color1: "Green",
     color2: "Blue",
+    hex1:"#00CB0E",
+    hex2:"#0014C8",
     message: "Pick a property to apply rent",
     category:"rent",
     num:2,
@@ -203,6 +236,8 @@ const rent = {
   "brown and light blue":{
     color1: "Brown",
     color2: "Light Blue",
+    hex1:"#7D4B00",
+    hex2:"#8FC4FF",
     message: "Pick a property to apply rent",
     category:"rent",
     num:2,
@@ -211,6 +246,8 @@ const rent = {
   "red and yellow":{
     color1: "Red",
     color2: "Yellow",
+    hex1:"#EF0000",
+    hex2:"#FFE600",
     message: "Pick a property to apply rent",
     category:"rent",
     num:2,
@@ -293,30 +330,36 @@ const money = {
   $10:{
     value:10,
     num:1,
-    category:"money"
+    category:"money",
+    hex:"#FCD187"
   },
   $5:{
     value:5,
     num:2,
-    category:"money"
+    category:"money",
+    hex:"#D7A2FF"
   },
   $4:{
     value:4,
     num:3,
-    category:"money"
+    category:"money",
+    hex:"#B4CDFF"
   },
   $3:{
     value:3,
     num:3,
-    category:"money"
+    category:"money",
+    hex:"#E3FFE4"
   },$2:{
     value:2,
     num:5,
-    category:"money"
+    category:"money",
+    hex:"#FFC9C9"
   },$1:{
     value:1,
     num:6,
-    category:"money"
+    category:"money",
+    hex:"#FFDEBE"
   },
 }
 
@@ -603,11 +646,11 @@ const initGame = ()=>{
 
 const initDeck = ()=>{
   let batch = deck;
-  Object.values(property).forEach(val => {
-    for(let i=0; i<val.nComplete; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(property).forEach(val => {
+  //   for(let i=0; i<val.nComplete; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   // Object.values(money).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -621,11 +664,11 @@ const initDeck = ()=>{
   //   }
   // })
 
-  // Object.values(rent).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(rent).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   // Object.values(action).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -1383,15 +1426,19 @@ const draw = (num) =>{
 
         <div className="opMoney">
         {opMoney.length > 0 ? (
+          <div className="moneyTable">
 
-          opMoney.map((card, index)=>{
-            if(card.category == "rent"){
-              return <RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/>
-            }else if(card.category == "money"){
-              return <MoneyCard money={card} index={index} placed={true}/>    
-            }
-          }) ):( 
-          <p>No Money</p>  )
+            {opMoney.map((card, index)=>{
+              if(card.category == "rent"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/></div>
+              }else if(card.category == "money"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>    
+              }
+            }) }
+          </div>
+          )
+          :
+          (<p>No Money</p>)
         }
         </div>
         <div className="opProperty">
@@ -1419,15 +1466,20 @@ const draw = (num) =>{
         </div>
         <div className="personalMoney">
         {moneyTable.length > 0 ? (
+          <div className="moneyTable">
 
-          moneyTable.map((card, index)=>{
-            if(card.category == "rent"){
-              return <RentCard placed={true} index={index} rent={card} colors={rentColors}/>
-            }else if(card.category == "money"){
-              return <MoneyCard money={card} index={index} placed={true}/>    
-            }    
-          }) ):( 
-          <p>No Money</p>  )
+            {moneyTable.map((card, index)=>{
+              if(card.category == "rent"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
+              }else if(card.category == "money"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
+              }    
+            }) }
+            
+          </div>
+          )
+          :
+          (<p>No Money</p>)
         }
         </div>
       

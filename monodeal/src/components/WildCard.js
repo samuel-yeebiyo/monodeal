@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import '../components/css/wildCard.css'
+
 const WildCard = (props) =>  {
 
     const [show,setShow] = useState(false);
@@ -41,13 +43,25 @@ const WildCard = (props) =>  {
         </div>
       }
 
-        <div>
-          <p>Price of = {props.wild.value}</p>
-          <p>Property 1 = {props.wild.color1}</p>
-          <p>Property 2 = {props.wild.color2}</p>
-          {props.wild.selected &&
-            <p>Selected: {props.wild.selected}</p>
-          }
+        <div className="wild-card">
+
+          <div className="side-banner">
+            <div className="wildCard-value">${props.wild.value}</div>
+            <div className="under">
+              <div>Wild Card</div>
+            </div>
+          </div>
+
+          <div className="wild-main">
+            <div style={{background: `${props.wild.hex1}`}} className="wild1"></div>
+            <div style={{background: `${props.wild.hex2}`}} className="wild2"></div>
+          </div>
+
+          <div className="wild-selected">
+            {props.wild.selected &&
+              <p style={{background: '#FFFF'}}>{props.wild.selected}</p>
+            } 
+          </div>
         </div> 
       </div>
     );

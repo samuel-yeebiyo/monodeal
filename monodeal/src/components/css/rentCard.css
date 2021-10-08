@@ -1,0 +1,40 @@
+.rent-card{
+    width:100%;
+    height:100%;
+}
+.rentCard-value{
+    width:30px;
+    margin-left:10px;
+    width:30px;
+    font-weight: bold;
+    height: 25px;
+    border-radius: 0px 0px 2px 2px;
+    background-color: white;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.rent-main{
+    width:100%;
+    height:80%;
+    display: flex;
+    background-color: rgb(181, 181, 181);
+    flex-direction: row-reverse;
+    align-items: center;
+}
+.rent-colors{
+    width:50%;
+    height:50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.rent1{
+    height:46%;
+    background-color:pink;
+    border-radius: 15px 0 0 0;
+}
+.rent2{
+    height:46%;
+    background-color: pink;
+    border-radius: 0 0 0 15px;
+}

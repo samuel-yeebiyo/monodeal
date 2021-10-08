@@ -51,7 +51,16 @@
 .personalMoney{
     width:20%;
     background-color: rgb(255, 255, 56);
-    display:flex;
+}
+.moneyTable{
+    position:relative;
+    width:100%;
+    height:100%;
+}
+.moneyTable-money{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
 }
 .draw{
     width:100%;
