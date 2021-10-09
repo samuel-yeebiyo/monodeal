@@ -6,11 +6,13 @@ const RentPopUp = (props)=> {
 
     const [choice, setChoice] = useState()
     const [double, setDouble] = useState(false)
+    const [total, setTotal] = useState(0)
 
 
     const choose = (index)=>{
         console.log("Chosen: ", props.cont[index])
         setChoice(props.cont[index])
+        setTotal(props.cont[index].rent)
     }
 
     const toggleDouble = () =>{
@@ -20,11 +22,15 @@ const RentPopUp = (props)=> {
     useEffect(()=>{
         if(double == true){
             if(choice){
-                let temp = choice;
-                temp.rent *= 2
-                setChoice(temp)
-            }else{
-                setDouble(false)
+                let temp = total;
+                temp *= 2
+                setTotal(temp)
+            }
+        }else{
+            if(choice){
+                let temp = total;
+                temp /= 2
+                setTotal(temp)
             }
         }
 
@@ -50,7 +56,8 @@ const RentPopUp = (props)=> {
                 <p>No property placed</p>
             )}
 
-            <p style={{border: double ? '1px solid red': ''}}onClick={()=> {toggleDouble()}} >Double The Rent</p>
+            <p>Total: {total}</p>
+            <p style={{border: double ? '1px solid red': ''}} onClick={()=> {toggleDouble()}} >Double The Rent</p>
             
 
 
@@ -58,6 +65,7 @@ const RentPopUp = (props)=> {
                 <div onClick={()=>{
                     props.get(choice.rent)
                     props.pop()
+                    props.update(props.colors.index)
                 }}> Request </div>
             }
 

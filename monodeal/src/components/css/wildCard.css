@@ -34,12 +34,6 @@
     display: flex;
     background-color: violet;
 }
-.wild1{
-    width:50%;
-}
-.wild2{
-    width:50%;
-}
 .wild-selected{
     height:20%;
     display: flex;

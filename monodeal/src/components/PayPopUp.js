@@ -106,6 +106,12 @@ const PayPopUp = (props)=> {
                     props.send(propChoice, moneyChoice)
                 }}>Selected</div>
             }
+
+            <div onClick={()=>{
+                props.pop()
+                props.deny()
+            }} >Say N!</div>
+
         </div>
     )
 }

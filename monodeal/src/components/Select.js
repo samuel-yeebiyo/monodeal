@@ -4,7 +4,7 @@ const Select = (props)=> {
     return (
         <div className={`select ${props.class ? props.class : ""}`}>
             <div className="select-info">
-                <p>Color: {props.container.color}</p>
+                <p>{props.container.color}</p>
                 <p>Rent: {props.container.rent}</p>
             </div>
             <div className="pick" onClick={()=>{

@@ -1,6 +1,7 @@
 .App{
     height:100vh;
     width:100%;
+    background-color: #04729B;
 }
 .modal{
     position:absolute;
@@ -28,12 +29,10 @@
 }
 .opProperty{
     width:80%;
-    background-color: rgb(56, 159, 255);
     display: flex;
 }
 .opMoney{
     width:20%;
-    background-color: rgb(255, 255, 56);
     display:flex;
 }
 .personal{
@@ -45,12 +44,10 @@
 }
 .personalProperty{
     width:80%;
-    background-color: rgb(56, 159, 255);
     display: flex;
 }
 .personalMoney{
     width:20%;
-    background-color: rgb(255, 255, 56);
 }
 .moneyTable{
     position:relative;

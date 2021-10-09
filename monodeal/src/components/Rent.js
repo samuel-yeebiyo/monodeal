@@ -17,7 +17,7 @@ const RentCard = (props) =>  {
           <div className="property-options" onClick={()=> toggleOptions()}>
             <div onClick={()=>{
               props.pop()
-              props.colors(props.rent)
+              props.colors(props.rent, props.index)
             }}>Play</div>
             <div onClick={()=>{
               props.bank(props.index)

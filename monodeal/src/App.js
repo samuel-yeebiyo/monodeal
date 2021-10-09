@@ -110,8 +110,8 @@ const property = {
 }
 
 const wild = {
-  'purple and orange':{
-    num:2,
+  'purple and orange1':{
+    num:1,
     color1:'Purple',
     color2:'Orange',
     hex1:"#6400E6",
@@ -121,8 +121,19 @@ const wild = {
     value:2,
     selected:'None'
   },
-  'red and yellow':{
-    num:2,
+  'purple and orange2':{
+    num:1,
+    color1:'Purple',
+    color2:'Orange',
+    hex1:"#6400E6",
+    hex2:"#FF9900",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:2,
+    selected:'None'
+  },
+  'red and yellow1':{
+    num:1,
     color1:'Red',
     color2:'Yellow',
     hex1:"#EF0000",
@@ -132,63 +143,86 @@ const wild = {
     value:1,
     selected:'None'
   },
-  'light blue and brown':{
+  'red and yellow2':{
     num:1,
-    color1:'Light Blue',
-    color2:'Brown',
-    hex1:"#8FC4FF",
-    hex2:"#7D4B00",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'light blue and black':{
-    num:1,
-    color1:'Light Blue',
-    color2:'Black',
-    hex1:"#8FC4FF",
-    hex2:"#262626",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'blue and green':{
-    num:1,
-    color1:'Blue',
-    color2:'Green',
-    hex1:"#0014C8",
-    hex2:"#00CB0E",
+    color1:'Red',
+    color2:'Yellow',
+    hex1:"#EF0000",
+    hex2:"#FFE600",
     selectedHex:"#FFFF",
     category:'wildcard',
     value:1,
     selected:'None'
   },
-  'black and green':{
+  // 'light blue and brown':{
+  //   num:1,
+  //   color1:'Light Blue',
+  //   color2:'Brown',
+  //   hex1:"#8FC4FF",
+  //   hex2:"#7D4B00",
+  //   selectedHex:"#FFFF",
+  //   category:'wildcard',
+  //   value:2,
+  //   selected:'None'
+  // },
+  // 'light blue and black':{
+  //   num:1,
+  //   color1:'Light Blue',
+  //   color2:'Black',
+  //   hex1:"#8FC4FF",
+  //   hex2:"#262626",
+  //   selectedHex:"#FFFF",
+  //   category:'wildcard',
+  //   value:2,
+  //   selected:'None'
+  // },
+  // 'blue and green':{
+  //   num:1,
+  //   color1:'Blue',
+  //   color2:'Green',
+  //   hex1:"#0014C8",
+  //   hex2:"#00CB0E",
+  //   selectedHex:"#FFFF",
+  //   category:'wildcard',
+  //   value:1,
+  //   selected:'None'
+  // },
+  // 'black and green':{
+  //   num:1,
+  //   color1:'Black',
+  //   color2:'Green',
+  //   hex1:"#262626",
+  //   hex2:"#00CB0E",
+  //   selectedHex:"#FFFF",
+  //   category:'wildcard',
+  //   value:2,
+  //   selected:'None'
+  // },
+  // 'light green and black':{
+  //   num:1,
+  //   color1:'Light Green',
+  //   color2:'Black',
+  //   hex1:"#7DFF7D",
+  //   hex2:"#262626",
+  //   selectedHex:"#FFFF",
+  //   category:'wildcard',
+  //   value:1,
+  //   selected:'None'
+  // },
+  'wild property1':{
     num:1,
-    color1:'Black',
-    color2:'Green',
-    hex1:"#262626",
-    hex2:"#00CB0E",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'ligh green and black':{
-    num:1,
-    color1:'Light Green',
-    color2:'Black',
-    hex1:"#7DFF7D",
-    hex2:"#262626",
-    selectedHex:"#FFFF",
+    color1:'all',
+    color2:'all',
     category:'wildcard',
     value:1,
-    selected:'None'
+    selected:'None',
+    wild:true,
+    message:"Choose color for wildcard",
+    choice:["Black","Light Blue","Green","Yellow","Red","Purple","Orange","Light Green","Blue","Brown" ],
+    color:'all'
   },
-  'wild property':{
-    num:2,
+  'wild property2':{
+    num:1,
     color1:'all',
     color2:'all',
     category:'wildcard',
@@ -256,6 +290,8 @@ const rent = {
   "wild rent":{
     color1: "all",
     color2: "all",
+    hex1:"#FFFF",
+    hex2:"#FFFF",
     message: "Pick a property to apply rent",
     category:"rent",
     num:3,
@@ -264,66 +300,76 @@ const rent = {
 }
 
 const action = {
-  // passGo:{
-  //   name:"Pass and Go",
-  //   num:10,
-  //   message:"Draw 2 cards",
-  //   category:"action"
-  // },
+  passGo:{
+    name:"Pass and Go",
+    num:10,
+    message:"Draw 2 cards",
+    category:"action",
+    value:2
+  },
   forceDeal:{
     name:"Forced Deal",
     num:4,
     message:"Choose cards to exchange",
-    category:"action"
+    category:"action",
+    value:2
   },
-  // sayNo:{
-  //   name:"Just Say No",
-  //   num:3,
-  //   message:"Denied!!",
-  //   category:"action"
-  // },
-  // slyDeal:{
-  //   name:"Sly Deal",
-  //   num:3,
-  //   message:"Pick a card to steal",
-  //   category:"action"
-  // },
-  // debtCollector:{
-  //   name:"Debt Collector",
-  //   num:3,
-  //   message:"Collect $5",
-  //   category:"action"
-  // },
-  // birthday:{
-  //   name:"It's My Birthday",
-  //   num:3,
-  //   message:"Collect $2",
-  //   category:"action"
-  // },
-  // house:{
-  //   name:"House",
-  //   num:3,
-  //   message:"Choose a complete set to put down",
-  //   category:"action"
-  // },
-  // hotel:{
-  //   name:"Hotel",
-  //   num:3,
-  //   message:"Choose a complete set with a house to put down",
-  //   category:"action"
-  // },
+  sayNo:{
+    name:"Just Say No",
+    num:3,
+    message:"Denied!!",
+    category:"action",
+    value:2
+  },
+  slyDeal:{
+    name:"Sly Deal",
+    num:3,
+    message:"Pick a card to steal",
+    category:"action",
+    value:2
+  },
+  debtCollector:{
+    name:"Debt Collector",
+    num:3,
+    message:"Collect $5",
+    category:"action",
+    value:2
+  },
+  birthday:{
+    name:"It's My Birthday",
+    num:3,
+    message:"Collect $2",
+    category:"action",
+    value:2
+  },
+  house:{
+    name:"House",
+    num:3,
+    message:"Choose a complete set to put down",
+    category:"action",
+    value:2
+  },
+  hotel:{
+    name:"Hotel",
+    num:3,
+    message:"Choose a complete set with a house to put down",
+    category:"action",
+    value:2
+  },
   dealBreaker:{
     name:"Deal Breaker",
     num:2,
     message:"Choose a complete set to steal",
-    category:"action"
+    category:"action",
+    value:2
   },
-  // doubleRent:{
-  //   name:"Double The Rent",
-  //   num:2,
-  //   message:"Double the rent",
-  //   category:"action"
-  // }
+  doubleRent:{
+    name:"Double The Rent",
+    num:2,
+    message:"Double the rent",
+    category:"action",
+    value:2
+  }
 }
 
 const money = {
@@ -401,19 +447,22 @@ function App(props) {
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
   const [sayNo, showSayNo] = useState(false)  //should be true
+  const [deny, showDenial] = useState(false)
+  const denRef = useRef(deny)
+  denRef.current = deny
 
 
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
   const [payAmount, setAmount] = useState()
   
-    useEffect(()=>{
-      if(props.resp == 'creator'){
-        console.log("Creator joined")
-      }else{
-        console.log("Joiner joined")
-      }
-    }, [])
+  useEffect(()=>{
+    if(props.resp == 'creator'){
+      console.log("Creator joined")
+    }else{
+      console.log("Joiner joined")
+    }
+  }, [])
 
 
   useEffect(()=>{
@@ -512,6 +561,7 @@ function App(props) {
 
         props.socket.emit("transfer", tempCard, props.room)
       }else{
+        denial()
         setAnswer("Yes")
       }
       
@@ -540,6 +590,7 @@ function App(props) {
         props.socket.emit("transfer-container", stolen, props.room)
 
       }else{
+        denial()
         setAnswer("Yes")
       }
 
@@ -607,6 +658,7 @@ function App(props) {
         props.socket.emit("switch", mine, myCard, props.room) 
 
       }else{
+        denial()
         setAnswer("Yes")
       }
 
@@ -631,7 +683,15 @@ function App(props) {
     }
   })
 
+  props.socket.off("denial").on("denial", ()=>{
+    showDenial(!deny)
 
+    setTimeout(()=>{
+
+      showDenial(!denRef.current)
+      
+    }, 2000)
+  })
 
 
   /**************INITIALIZATION PROCESS*****************/
@@ -646,11 +706,11 @@ const initGame = ()=>{
 
 const initDeck = ()=>{
   let batch = deck;
-  // Object.values(property).forEach(val => {
-  //   for(let i=0; i<val.nComplete; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(property).forEach(val => {
+    for(let i=0; i<val.nComplete; i++){
+      batch = [...batch, val]
+    }
+  })
 
   // Object.values(money).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -670,11 +730,11 @@ const initDeck = ()=>{
     }
   })
 
-  // Object.values(action).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(action).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   setDeck(batch);
 }
@@ -752,9 +812,13 @@ const draw = (num) =>{
     let tempContainer = container;
     let card = tempContainer[containerIndex].cards[index]
 
-    tempContainer[containerIndex].cards.splice(index, 1);
-    if(tempContainer[containerIndex].cards == 0){
+    if(tempContainer[containerIndex].cards.length == 1){
       tempContainer.splice(containerIndex, 1)
+    }else{
+      tempContainer[containerIndex].cards.splice(index, 1);
+      if(tempContainer[containerIndex].complete == true){
+        tempContainer[containerIndex].complete = false 
+      }
     }
 
     if(!selected){
@@ -815,6 +879,7 @@ const draw = (num) =>{
             }
           }else{
             cont.cards.push(card)
+            cont.complete = true;
           }
         }
       })
@@ -1087,11 +1152,12 @@ const draw = (num) =>{
   }
   
   //handle rent
-  const rentColors = (card) =>{
+  const rentColors = (card, index) =>{
     let temp
     temp = {
       color1:card.color1,
       color2:card.color2,
+      index: index,
     }
     setRentColor(temp)
   }
@@ -1260,6 +1326,9 @@ const draw = (num) =>{
     toggleUpdate()
   }
 
+  const denial = () =>{
+    props.socket.emit("deny", props.room)
+  }
  
   //handle bank  
   const placeBank = (index)=>{
@@ -1283,6 +1352,18 @@ const draw = (num) =>{
 
 
   //handle actions
+ const updateDrawn = (index)=>{
+
+    let hand = drawn;
+    hand.splice(index, 1)
+    console.log("setting drawn")
+
+    setDrawn(hand)
+
+    toggleUpdate()
+ }
+
+
   const passGo = (index)=>{
 
     draw(2);
@@ -1371,13 +1452,13 @@ const draw = (num) =>{
 
       {rentpopUp &&
         <div className="modal">
-          <RentPopUp pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
+          <RentPopUp update={updateDrawn} drawn={drawn} pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
         </div>
       }
 
       {payPopup &&
         <div className="modal">
-          <PayPopUp pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
+          <PayPopUp deny={denial} pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
 
@@ -1417,6 +1498,14 @@ const draw = (num) =>{
         </div>
       }
 
+      {deny &&
+        <div className="modal">
+          <div className="center">
+            <p>DENIED HAHA!!</p>
+          </div>
+        </div>
+      }
+
       {/*Create separate popups for deal breaker, sly deal, and forced deal*/}
       {/*Create separate popups for the house and hotel*/}
 
@@ -1433,7 +1522,9 @@ const draw = (num) =>{
                 return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/></div>
               }else if(card.category == "money"){
                 return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>    
-              }
+              }else if(card.category == "action"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
+              }  
             }) }
           </div>
           )
@@ -1473,7 +1564,9 @@ const draw = (num) =>{
                 return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
               }else if(card.category == "money"){
                 return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
-              }    
+              }else if(card.category == "action"){
+                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
+              }      
             }) }
             
           </div>
@@ -1494,7 +1587,7 @@ const draw = (num) =>{
               if(card.category ==="property"){
                 return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
                 return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){

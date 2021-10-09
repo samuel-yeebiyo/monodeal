@@ -1,4 +1,5 @@
 import { useState } from "react";
+import '../components/css/actionCard.css'
 
 const ActionCard = (props) =>  {
 
@@ -20,8 +21,10 @@ const ActionCard = (props) =>  {
               props.pass(props.index)
             }else if(props.action.name == "Debt Collector"){
               props.get(5)
+              props.update(props.index)
             }else if(props.action.name == "It's My Birthday"){
               props.get(2)
+              props.update(props.index)
             }else if(props.action.name == "Sly Deal"){
               props.popSly()
             }else if(props.action.name == "Deal Breaker"){
@@ -34,15 +37,29 @@ const ActionCard = (props) =>  {
               props.popHotel()
             }
           }}>Play</div>
-          <div>Bank</div>
+          <div onClick={()=>{
+            props.bank(props.index)
+          }}>Bank</div>
         </div>
       }
 
 
-      <br></br>
-        <p>Name = {props.action.name}</p>
-        <p>{props.action.message}</p>
+        <div className="action-card">
+
+          <div className="side-banner">
+            <div className="actionCard-value">${props.action.value}</div>
+            <div className="under-action">
+              <div>Action Card</div>
+            </div>
+          </div>
+          <div className="action-top"></div>
+          <div className="action-bottom">
+            <p>{props.action.name}</p>
+          </div>  
+        </div>
       </div>
+
+
     );
 }
   

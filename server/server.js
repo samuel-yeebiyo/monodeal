@@ -111,4 +111,9 @@ io.on("connection", socket =>{
         socket.to(room).emit("receive-forced", del, card)
         console.log("Switching")
     })
+
+    socket.on("deny", room =>{
+        socket.to(room).emit("denial")
+        console.log("Denying")
+    })
 })

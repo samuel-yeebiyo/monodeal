@@ -53,8 +53,12 @@ const WildCard = (props) =>  {
           </div>
 
           <div className="wild-main">
-            <div style={{background: `${props.wild.hex1}`}} className="wild1"></div>
-            <div style={{background: `${props.wild.hex2}`}} className="wild2"></div>
+            {!props.wild.wild &&
+              <div style={{height:'100%', width:'100%', display: 'flex'}}>
+                <div style={{background: `${!props.wild.wild && props.wild.hex1}`, width:'50%'}} ></div>
+                <div style={{background: `${!props.wild.wild && props.wild.hex2}`, width:'50%'}} ></div>
+              </div>
+            }
           </div>
 
           <div className="wild-selected">
