@@ -66,6 +66,7 @@ const RentPopUp = (props)=> {
                     props.get(choice.rent)
                     props.pop()
                     props.update(props.colors.index)
+                    props.move()
                 }}> Request </div>
             }
 

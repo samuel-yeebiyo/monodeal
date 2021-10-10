@@ -13,9 +13,9 @@ const MoneyCard = (props) =>  {
 
     return (
       <div className="card" onClick={()=> toggleOptions()}>
-      {show && !props.placed &&
+      {show && !props.placed && props.moves > 0 &&
         <div className="property-options" onClick={()=> toggleOptions()}>
-          <div onClick={()=>{props.place(props.index)}}>A</div>
+          <div onClick={()=>{props.place(props.index); props.move()}}>A</div>
         </div>
       }
         <p className="card-value">${props.money.value}</p>

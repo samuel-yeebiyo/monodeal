@@ -415,12 +415,14 @@ function App(props) {
   //initialization
   const [joined, setJoined] = useState([])
   const [start, setStart] = useState(false)
+  const [dist, setDist] = useState(false)
 
 
   //common
   const [deck, setDeck] = useState([])
   const [drawn, setDrawn] = useState([])
-
+  const [turn, setTurn] = useState(false)
+  const [moves, setMoves] = useState(0)
 
   //Current player
   const [moneyTable, setMoneyTable] = useState([])
@@ -455,10 +457,17 @@ function App(props) {
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
   const [payAmount, setAmount] = useState()
+
+
+  useEffect(()=>{
+    console.log("I have ", moves, " moves(s)")
+  })
   
   useEffect(()=>{
     if(props.resp == 'creator'){
       console.log("Creator joined")
+      setMoves(3)
+      setTurn(true)
     }else{
       console.log("Joiner joined")
     }
@@ -495,6 +504,16 @@ function App(props) {
 
   props.socket.on("get-deck", roomDeck =>{
     setDeck(roomDeck)
+  })
+
+  props.socket.off("dist").on("dist", ()=>{
+    draw(5)
+  })
+
+  props.socket.off("get-turn").on("get-turn", ()=>{
+    setTurn(true)
+    setMoves(3)
+    draw(2)
   })
 
   props.socket.on("getOpProp", table =>{
@@ -700,7 +719,6 @@ const initGame = ()=>{
  
   toggleUpdate()
   setStart(true)
-
   props.socket.emit("start", props.room, true)
 }
 
@@ -759,8 +777,24 @@ const draw = (num) =>{
 
 }
 
+const deal = () =>{
+  draw(7)
+  props.socket.emit("deal-cards", props.room)
+}
 
+const move = ()=>{
+  let temp = moves
+  temp -= 1;
+  setMoves(temp)
+}
   
+
+const pass = ()=>{
+  setMoves(0);
+  setTurn(false)
+
+  props.socket.emit("pass", props.room)
+}
 
 //toggles
   const toggleUpdate = ()=>{
@@ -1435,7 +1469,7 @@ const draw = (num) =>{
 
                 {joined.length==2 && props.resp=="creator" &&
                   <div>
-                    <button className="start-button" onClick={()=>{initGame()}}>Start</button>
+                    <button className="start-button" onClick={()=>{initGame(); setDist(true)}}>Start</button>
                   </div>
                 }
               </div>
@@ -1444,15 +1478,24 @@ const draw = (num) =>{
         </div>
       }
 
+
+      {dist &&
+        <div className="modal">
+          <div className="center">
+            <button onClick={()=>{deal(); setDist(false) }} >Distribute cards</button>
+          </div>
+        </div>
+      }
+
       {wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
-          <WildCardPopUp action={wildAction} change={flip} place={placeProperty}/>
+          <WildCardPopUp move={move} action={wildAction} change={flip} place={placeProperty}/>
         </div>
       }
 
       {rentpopUp &&
         <div className="modal">
-          <RentPopUp update={updateDrawn} drawn={drawn} pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
+          <RentPopUp move={move} update={updateDrawn} drawn={drawn} pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
         </div>
       }
 
@@ -1462,35 +1505,40 @@ const draw = (num) =>{
         </div>
       }
 
+
+      {/*Action cards*/}
+
       {slyPopup &&
         <div className="modal">
-          <SlyPopUp opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
+          <SlyPopUp move={move} opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
         </div>
       }
 
       {breakerPopup &&
         <div className="modal">
-          <DealBreakerPopUp opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
+          <DealBreakerPopUp move={move} opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
         </div>
       }
 
       {forcedPopup &&
         <div className="modal">
-          <ForcedPopUp opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
+          <ForcedPopUp move={move} opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
         </div>
       }
 
       {housePop &&
         <div className="modal">
-          <HousePopUp container={container} place={placeHouse} pop={toggleHouse}/>
+          <HousePopUp move={move} container={container} place={placeHouse} pop={toggleHouse}/>
         </div>
       }
 
       {hotelPop &&
         <div className="modal">
-          <HotelPopUp container={container} place={placeHotel} pop={toggleHotel}/>
+          <HotelPopUp move={move} container={container} place={placeHotel} pop={toggleHotel}/>
         </div>
       }
+
+      {/*Saying NO*/}
 
       {sayNo &&
         <div className="modal">
@@ -1505,9 +1553,6 @@ const draw = (num) =>{
           </div>
         </div>
       }
-
-      {/*Create separate popups for deal breaker, sly deal, and forced deal*/}
-      {/*Create separate popups for the house and hotel*/}
 
 
       {/* oppponent property section */}
@@ -1585,15 +1630,15 @@ const draw = (num) =>{
             
             drawn.map((card, index)=>{
               if(card.category ==="property"){
-                return <PropertyCard place={placeProperty} property={card} index={index} placed={false}/>
+                return <PropertyCard moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
-                return <WildCard index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                return <WildCard moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
-                return <RentCard bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
+                return <RentCard moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
               }else {
-                return <MoneyCard index={index} place={placeBank} money={card} placed={false}/>
+                return <MoneyCard moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
               }        
             }) ):( 
             
@@ -1603,8 +1648,8 @@ const draw = (num) =>{
 
         <div className="draw-from">
           <div className="deck" onClick={()=>{draw(1)}}></div>
-          <div className="skip">
-            <p>Skip Turn</p>
+          <div className="skip" onClick={()=>{pass()}}>
+            <p>Pass</p>
           </div>
         </div>
       </div>

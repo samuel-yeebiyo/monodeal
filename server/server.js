@@ -74,6 +74,14 @@ io.on("connection", socket =>{
         socket.to(room).emit("when", fact)
     })
 
+    socket.on("deal-cards", (room)=>{
+        socket.to(room).emit("dist")
+    })
+
+    socket.on("pass", room =>{
+        socket.to(room).emit("get-turn")
+    })
+
     socket.on("reqrent", (amount, room)=>{
         socket.to(room).emit("pay", amount)
     })

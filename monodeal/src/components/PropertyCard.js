@@ -12,9 +12,9 @@ const PropertyCard = (props) =>  {
 
     return (
       <div className="card" onClick={()=>{toggleOptions()}}>
-        {show && !props.placed &&
+        {show && !props.placed && props.moves >0 &&
           <div className="property-options" onClick={()=> toggleOptions()}>
-            <div onClick={()=>{props.place(props.index, "none")}}>P</div>
+            <div onClick={()=>{props.place(props.index, "none"); props.move()}}>P</div>
           </div>
         }
         
