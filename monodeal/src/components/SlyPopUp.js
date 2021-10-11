@@ -1,5 +1,6 @@
 import { useState } from "react"
 
+import'../components/css/slypop.css'
 import PaymentPick from "./PaymentPick"
 
 
@@ -20,31 +21,48 @@ const SlyPopUp = (props)=> {
 
 
     return (
-        <div className="center">
-            <p>This is where you pay</p>
-            <p>You will pay ${props.amount}</p>
-            <br></br>
-            {props.opTable.length > 0 ?
-                props.opTable.map((cont, contIndex)=>(
-                    cont.cards.map((card,index)=>(
-                        <PaymentPick class={
-                            (propChoice && propChoice.index == index && propChoice.container == contIndex) ? "selected" : ""
-                        } select={selectingProperty} card={card} index={index} containerIndex={contIndex}/> 
-                    ))
-                ))
-                :
-                <div>No property</div>
-            }
-
-            {propChoice &&
-                <div onClick={()=>{
-                    console.log("Selected")
-                    props.pop()
-                    props.steal(propChoice)
-                }}>Selected</div>
-            }
+        <div className="pop-center">
+            <div className="actions-top">
+                <div className="actions-desc">
+                    <p className="actions-title">SLY DEAL</p>
+                    <p>Pick a card to steal from your opponent!</p>
+                </div>
+            </div>
+            <div className="action-div">
+                <div>
+                    {props.opTable.length > 0 ?
+                        props.opTable.map((cont, contIndex)=>(
+                            <div className="pop-container">{
+                                cont.cards.map((card,index)=>(
+                                    <div className="pop-cards">
+                                        <PaymentPick class={
+                                            (propChoice && propChoice.index == index && propChoice.container == contIndex) ? "selected" : ""
+                                        } select={selectingProperty} card={card} index={index} containerIndex={contIndex}/> 
+                                    </div>
+                                ))
+                            }
+                            </div>
+                        ))
+                        :
+                        <div>No property</div>
+                    }
+                </div>
+                <div className="action-buttons">
+                    {propChoice &&
+                        <div className="pop-submit" onClick={()=>{
+                            console.log("Selected")
+                            props.pop()
+                            props.steal(propChoice)
+                            props.move()
+                            props.update(props.curr)
+                        }}>Selected</div>
+                    }
+                    <div className="pop-cancel">
+                        <p onClick={()=>props.pop()}>Cancel</p>
+                    </div>
+                </div>
+            </div>
             
-            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

@@ -4,10 +4,8 @@ const PaymentPick = (props) => {
         <div>
         {(props.card.category == "property" || props.card.category == "wildcard") &&
             <div className={`select ${props.class ?  props.class: null}`}>
-                <div>
-                    <p>Container Index: {props.containerIndex}</p>            
-                    <p>Index: {props.index}</p>
-                    <p>{props.card.value}</p>
+                <div style={{background: props.card.color}}>
+                    <p>Value {props.card.value}</p>
                 </div>
                 <div className="pick" onClick={()=>{
                     let temp={index: props.index, container:props.containerIndex, value:props.card.value}

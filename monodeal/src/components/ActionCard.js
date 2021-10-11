@@ -19,22 +19,30 @@ const ActionCard = (props) =>  {
           <div onClick={()=>{
             if(props.action.name == "Pass and Go"){
               props.pass(props.index)
+              props.move()
             }else if(props.action.name == "Debt Collector"){
               props.get(5)
               props.update(props.index)
+              props.move()
             }else if(props.action.name == "It's My Birthday"){
               props.get(2)
               props.update(props.index)
+              props.move()
             }else if(props.action.name == "Sly Deal"){
               props.popSly()
+              props.current(props.index)
             }else if(props.action.name == "Deal Breaker"){
               props.popBreak()
+              props.current(props.index)
             }else if(props.action.name == "Forced Deal"){
               props.popForced()
+              props.current(props.index)
             }else if(props.action.name == "House"){
               props.popHouse()
+              props.current(props.index)
             }else if(props.action.name == "Hotel"){
               props.popHotel()
+              props.current(props.index)
             }
           }}>Play</div>
           <div onClick={()=>{

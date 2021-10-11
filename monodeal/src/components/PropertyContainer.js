@@ -45,9 +45,9 @@ const PropertyContainer = (props) =>  {
         {
             props.contains.cards.map((card, index)=>{
                 if(card.category == "property"){
-                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`, left:`${index*5}px`}}><PropertyCard property={card} placed={true}/></div>
+                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`}}><PropertyCard property={card} placed={true}/></div>
                 }else{
-                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`, left:`${index*5}px`}}><WildCard action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/></div>
+                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`, left:`${index*5}px`}}><WildCard turn={props.turn} action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/></div>
                 }
             })
         }

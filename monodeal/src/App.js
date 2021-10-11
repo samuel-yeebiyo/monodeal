@@ -75,38 +75,38 @@ const property = {
     each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}],
     hex:"#6400E6"
   },
-  orange:{
-    category:"property",
-    value:3,
-    color:"Orange",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
-    hex:"#FF9900"
-  },
-  lightGreen:{
-    category:"property",
-    value:2,
-    color:"Light Green",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#7DFF7D"
-  },
-  blue:{
-    category:"property",
-    value:3,
-    color:"Blue",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#0014C8"
-  },
-  brown:{
-    category:"property",
-    value:3,
-    color:"Brown",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#7D4B00"
-  }
+  // orange:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Orange",
+  //   nComplete:3,
+  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
+  //   hex:"#FF9900"
+  // },
+  // lightGreen:{
+  //   category:"property",
+  //   value:2,
+  //   color:"Light Green",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}],
+  //   hex:"#7DFF7D"
+  // },
+  // blue:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Blue",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}],
+  //   hex:"#0014C8"
+  // },
+  // brown:{
+  //   category:"property",
+  //   value:3,
+  //   color:"Brown",
+  //   nComplete:2,
+  //   each:[{num:1, price:2}, {num:2, price:3}],
+  //   hex:"#7D4B00"
+  // }
 }
 
 const wild = {
@@ -300,20 +300,20 @@ const rent = {
 }
 
 const action = {
-  passGo:{
-    name:"Pass and Go",
-    num:10,
-    message:"Draw 2 cards",
-    category:"action",
-    value:2
-  },
-  forceDeal:{
-    name:"Forced Deal",
-    num:4,
-    message:"Choose cards to exchange",
-    category:"action",
-    value:2
-  },
+  // passGo:{
+  //   name:"Pass and Go",
+  //   num:10,
+  //   message:"Draw 2 cards",
+  //   category:"action",
+  //   value:2
+  // },
+  // forceDeal:{
+  //   name:"Forced Deal",
+  //   num:4,
+  //   message:"Choose cards to exchange",
+  //   category:"action",
+  //   value:2
+  // },
   sayNo:{
     name:"Just Say No",
     num:3,
@@ -328,34 +328,34 @@ const action = {
     category:"action",
     value:2
   },
-  debtCollector:{
-    name:"Debt Collector",
-    num:3,
-    message:"Collect $5",
-    category:"action",
-    value:2
-  },
-  birthday:{
-    name:"It's My Birthday",
-    num:3,
-    message:"Collect $2",
-    category:"action",
-    value:2
-  },
-  house:{
-    name:"House",
-    num:3,
-    message:"Choose a complete set to put down",
-    category:"action",
-    value:2
-  },
-  hotel:{
-    name:"Hotel",
-    num:3,
-    message:"Choose a complete set with a house to put down",
-    category:"action",
-    value:2
-  },
+  // debtCollector:{
+  //   name:"Debt Collector",
+  //   num:3,
+  //   message:"Collect $5",
+  //   category:"action",
+  //   value:2
+  // },
+  // birthday:{
+  //   name:"It's My Birthday",
+  //   num:3,
+  //   message:"Collect $2",
+  //   category:"action",
+  //   value:2
+  // },
+  // house:{
+  //   name:"House",
+  //   num:3,
+  //   message:"Choose a complete set to put down",
+  //   category:"action",
+  //   value:2
+  // },
+  // hotel:{
+  //   name:"Hotel",
+  //   num:3,
+  //   message:"Choose a complete set with a house to put down",
+  //   category:"action",
+  //   value:2
+  // },
   dealBreaker:{
     name:"Deal Breaker",
     num:2,
@@ -456,6 +456,7 @@ function App(props) {
 
   const [colorRent, setRentColor] = useState([])
   const [wildAction, setWildAction] = useState()
+  const [curAction, setAction] = useState()
   const [payAmount, setAmount] = useState()
 
 
@@ -782,9 +783,12 @@ const deal = () =>{
   props.socket.emit("deal-cards", props.room)
 }
 
-const move = ()=>{
+const move = (index)=>{
   let temp = moves
-  temp -= 1;
+  if(index == undefined){
+    temp -= 1;
+  }else temp -= index
+  
   setMoves(temp)
 }
   
@@ -1397,6 +1401,9 @@ const pass = ()=>{
     toggleUpdate()
  }
 
+ const currentAction = (index) =>{
+    setAction(index)
+ }
 
   const passGo = (index)=>{
 
@@ -1482,7 +1489,7 @@ const pass = ()=>{
       {dist &&
         <div className="modal">
           <div className="center">
-            <button onClick={()=>{deal(); setDist(false) }} >Distribute cards</button>
+            <button onClick={()=>{deal(); setDist(false) }}>Distribute cards</button>
           </div>
         </div>
       }
@@ -1510,31 +1517,31 @@ const pass = ()=>{
 
       {slyPopup &&
         <div className="modal">
-          <SlyPopUp move={move} opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
+          <SlyPopUp move={move} curr={curAction} update={updateDrawn} opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
         </div>
       }
 
       {breakerPopup &&
         <div className="modal">
-          <DealBreakerPopUp move={move} opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
+          <DealBreakerPopUp move={move} curr={curAction} update={updateDrawn} opTable={opCont} steal={breakSteal} pop={toggleBreakerPopup}/>
         </div>
       }
 
       {forcedPopup &&
         <div className="modal">
-          <ForcedPopUp move={move} opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
+          <ForcedPopUp move={move} curr={curAction} update={updateDrawn} opTable={opCont} container={container} deal={forcedDeal} pop={toggleForcedPopup}/>
         </div>
       }
 
       {housePop &&
         <div className="modal">
-          <HousePopUp move={move} container={container} place={placeHouse} pop={toggleHouse}/>
+          <HousePopUp move={move} curr={curAction} update={updateDrawn} container={container} place={placeHouse} pop={toggleHouse}/>
         </div>
       }
 
       {hotelPop &&
         <div className="modal">
-          <HotelPopUp move={move} container={container} place={placeHotel} pop={toggleHotel}/>
+          <HotelPopUp move={move} curr={curAction} update={updateDrawn} container={container} place={placeHotel} pop={toggleHotel}/>
         </div>
       }
 
@@ -1542,7 +1549,7 @@ const pass = ()=>{
 
       {sayNo &&
         <div className="modal">
-          <SayNo answer={answering} drawn={drawn} />
+          <SayNo answer={answering} update={updateDrawn} drawn={drawn} />
         </div>
       }
 
@@ -1594,7 +1601,7 @@ const pass = ()=>{
         <div className="personalProperty">
           {container.length > 0 ? (
             container.map((cont, index)=>{
-              return <PropertyContainer oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+              return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
             })
           ):(
             <p>No property placed</p>
@@ -1632,9 +1639,9 @@ const pass = ()=>{
               if(card.category ==="property"){
                 return <PropertyCard moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
-                return <WildCard moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                return <WildCard turn={turn} moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
                 return <RentCard moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
               }else {

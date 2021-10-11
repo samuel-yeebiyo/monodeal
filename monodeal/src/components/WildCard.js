@@ -13,19 +13,19 @@ const WildCard = (props) =>  {
 
     return (
       <div className="card" onClick={()=>{toggleOptions()}}>
-      {show && !props.placed && !props.wild.wild && props.moves >0 &&
+      {show && !props.placed && !props.wild.wild && props.moves > 0 &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={()=>{props.place(props.index, props.wild.color1); props.move()}}>{props.wild.color1.charAt(0)}</div>
           <div onClick={()=>{props.place(props.index, props.wild.color2); props.move()}}>{props.wild.color2.charAt(0)}</div>
         </div>
       }
-      {show && props.placed && !props.wild.wild && 
+      {show && props.placed && !props.wild.wild && props.turn &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={()=>{props.flip(props.containerIndex, props.index)}}>Flip</div>
         </div>
       }
 
-      {show && props.wild.wild && !props.placed &&
+      {show && props.wild.wild && !props.placed && props.moves > 0 &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={() =>{
             props.pop()
@@ -34,7 +34,7 @@ const WildCard = (props) =>  {
         </div>
       }
 
-      {show && props.wild.wild && props.placed &&
+      {show && props.wild.wild && props.placed && props.turn &&
         <div className="property-options" onClick={()=> toggleOptions()}>
           <div onClick={() =>{
             props.pop()

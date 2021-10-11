@@ -1,0 +1,47 @@
+.actions-top{
+    width:100%;
+    height:20%;
+}
+.actions-desc{
+    text-align: center;
+}
+.actions-title{
+    font-weight: bold;
+}
+.action-div{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
+    height:80%;
+    width:100%;
+}
+.pop-container{
+    display: flex;
+}
+.pop-cards{
+    margin-right:10px
+}
+.action-buttons{
+    display: flex;
+    justify-content: space-evenly;
+    width:100%
+}
+.pop-submit{
+    background-color: rgb(131, 255, 81);
+    width:100px;
+    height:27px;
+    text-align: center;
+    color:black;
+    font-weight: bold;
+    cursor: pointer;
+}
+.pop-cancel{
+    background-color: rgb(255, 144, 144);
+    width:100px;
+    height:27px;
+    text-align: center;
+    color:black;
+    font-weight: bold;
+    cursor: pointer;
+}

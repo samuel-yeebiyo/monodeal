@@ -27,49 +27,66 @@ const ForcedPopUp = (props)=> {
 
 
     return (
-        <div className="center">
-            <p>This is where you pay</p>
-            <p>You will pay ${props.amount}</p>
-            <br></br>
-            <div style={{display:"flex"}}>
-                <div>
-                    {props.opTable.length > 0 ?
-                        props.opTable.map((cont, contIndex)=>(
-                            cont.cards.map((card,index)=>(
-                                <PaymentPick class={
-                                    (opChoice && opChoice.index == index && opChoice.container == contIndex) ? "selected" : ""
-                                } select={selectingOp} card={card} index={index} containerIndex={contIndex}/> 
+        <div className="pop-center">
+            <div className="actions-top">
+                <div className="actions-desc">
+                    <p className="actions-title">FORCED DEAL</p>
+                    <p>Pick a card to swap from your opponent!</p>
+                </div>
+            </div>
+            <div className="action-div">
+                <div style={{display:"flex"}}>
+                    <div>
+                        {props.opTable.length > 0 ?
+                            props.opTable.map((cont, contIndex)=>(
+                                <div className="pop-container">{
+                                    cont.cards.map((card,index)=>(
+                                        <div className="pop-cards">
+                                        <PaymentPick class={
+                                            (opChoice && opChoice.index == index && opChoice.container == contIndex) ? "selected" : ""
+                                        } select={selectingOp} card={card} index={index} containerIndex={contIndex}/> </div>
+                                    ))
+                                }
+                                </div>
                             ))
+                            :
+                            <div>No property</div>
+                        }
+                    </div>
+                    <div>
+                    {props.container.length > 0 ?
+                        props.container.map((cont, contIndex)=>(
+                            <div className="pop-container">{
+                                cont.cards.map((card,index)=>(
+                                    <div className="pop-cards">
+                                    <PaymentPick class={
+                                        (myChoice && myChoice.index == index && myChoice.container == contIndex) ? "selected" : ""
+                                    } select={selectingMine} card={card} index={index} containerIndex={contIndex}/> </div>
+                                ))
+                            }
+                            </div>
                         ))
                         :
                         <div>No property</div>
                     }
+                    </div>
                 </div>
-                <div>
-                {props.container.length > 0 ?
-                    props.container.map((cont, contIndex)=>(
-                        cont.cards.map((card,index)=>(
-                            <PaymentPick class={
-                                (myChoice && myChoice.index == index && myChoice.container == contIndex) ? "selected" : ""
-                            } select={selectingMine} card={card} index={index} containerIndex={contIndex}/> 
-                        ))
-                    ))
-                    :
-                    <div>No property</div>
-                }
+            
+                <div className="action-buttons">
+                    {myChoice && opChoice &&
+                        <div className="pop-submit" onClick={()=>{
+                            console.log("Selected")
+                            props.pop()
+                            props.deal(myChoice, opChoice)
+                            props.move()
+                            props.update(props.curr)
+                        }}>Selected</div>
+                    }
+                    <div className="pop-cancel">
+                        <p onClick={()=>props.pop()}>Cancel</p>
+                    </div>
                 </div>
             </div>
-            
-
-            {myChoice && opChoice &&
-                <div onClick={()=>{
-                    console.log("Selected")
-                    props.pop()
-                    props.deal(myChoice, opChoice)
-                }}>Selected</div>
-            }
-
-            <p onClick={()=>props.pop()}>Cancel</p>
         </div>
     )
 }

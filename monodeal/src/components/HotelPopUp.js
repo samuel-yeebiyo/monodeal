@@ -18,30 +18,41 @@ const HotelPopUp = (props)=> {
 
 
     return (
-        <div className="center">
-            <p>This is where you pay</p>
-            <p>You will pay ${props.amount}</p>
-            <br></br>
-            {props.container.length > 0 ?
-                props.container.map((cont, contIndex)=>(
-                    // cont.complete &&
-                    <ContainerPick class={
-                        ( propChoice && propChoice.container == contIndex) ? "selected" : ""
-                    } select={selectingContainer} containerIndex={contIndex}/> 
-                ))
-                :
-                <div>No property</div>
-            }
-
-            {propChoice &&
-                <div onClick={()=>{
-                    console.log("Selected")
-                    props.pop()
-                    props.place(propChoice)
-                }}>Selected</div>
-            }
-
-            <p onClick={()=>props.pop()}>Cancel</p>
+        <div className="pop-center">
+            <div className="actions-top">
+                <div className="actions-desc">
+                    <p className="actions-title">HOTEL</p>
+                    <p>Pick set to place Hotel on!</p>
+                </div>
+            </div>
+            <div className="action-div">
+                <div>
+                    {props.container.length > 0 ?
+                        props.container.map((cont, contIndex)=>(
+                            // cont.complete &&
+                            <ContainerPick class={
+                                ( propChoice && propChoice.container == contIndex) ? "selected" : ""
+                            } select={selectingContainer} containerIndex={contIndex}/> 
+                        ))
+                        :
+                        <div>No property</div>
+                    }
+                </div>
+                <div className="action-buttons">
+                    {propChoice &&
+                        <div className="pop-submit" onClick={()=>{
+                            console.log("Selected")
+                            props.pop()
+                            props.place(propChoice)
+                            props.move()
+                            props.update(props.curr)
+                        }}>Selected</div>
+                    }
+                    <div className="pop-cancel">
+                        <p onClick={()=>props.pop()}>Cancel</p>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

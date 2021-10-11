@@ -1,0 +1,29 @@
+.no-center{
+    background-color: white;
+    width:40%;
+    height:40%;
+    padding:10px;
+    max-width:900px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.no-title{
+    font-weight: bold;
+    font-size: 1.2em;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.no-button{
+    margin-top:5px;
+    background-color: rgb(255, 144, 144);
+    width:110px;
+    height:37px;
+    text-align: center;
+    color:black;
+    border:none;
+    font-weight: bold;
+    cursor: pointer;
+}
