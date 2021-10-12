@@ -1,10 +1,19 @@
-// const express = require('express')
-// const app = express();
-const port = 5555;
+const cors = require('cors')
+const express = require('express')
+const app = express();
+const server = require('http').createServer(app)
 
-const io = require('socket.io')(port, {
+const port = process.env.PORT || 5000
+
+app.use(cors())
+
+app.get('/', (req,res)=>{
+    res.send("Server running")
+})
+
+const io = require('socket.io')(server, {
     cors:{
-        origin:["http://localhost:3000"],
+        origin:'*',
     },
 });
 
@@ -124,4 +133,11 @@ io.on("connection", socket =>{
         socket.to(room).emit("denial")
         console.log("Denying")
     })
+})
+
+
+
+
+server.listen(port, ()=>{
+    console.log("Listening to port: ", port)
 })

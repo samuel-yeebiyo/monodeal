@@ -8,6 +8,17 @@ const PayPopUp = (props)=> {
     const [moneyChoice, setMoneyChoice] = useState([])
     const [update, setUpdate] = useState(0)
     const [total, setTotal] = useState(0)
+    const [bool, setBool] = useState()
+    const [index, setIndex] = useState()
+
+    useEffect(()=>{
+        props.drawn.some((val, index) => {
+            if(val.name == "Just Say No"){
+                setBool(true)
+                setIndex(index)
+            }
+        })
+    },[])
 
     useEffect(()=>{
         console.log("Total Selected: ", total)
@@ -98,20 +109,23 @@ const PayPopUp = (props)=> {
                     } select={selectingBank} index={index} card={money}/>
                 ))
                 :
-                <p>No monney</p>
+                <p>No money</p>
             }
             {(moneyChoice.length > 0 || propChoice.length > 0) && (total >= props.amount) &&
-                <div onClick={()=>{
+                <div className="pop-cancel" onClick={()=>{
                     props.pop()
                     props.send(propChoice, moneyChoice)
-                }}>Selected</div>
+                }}>Submit</div>
             }
 
-            <div onClick={()=>{
-                props.pop()
-                props.deny()
-            }} >Say N!</div>
-
+            {bool &&
+                <div className="pop-submit" onClick={()=>{
+                    props.pop()
+                    props.deny()
+                    props.update(index)
+                }} >Say No!</div>
+            }
+           
         </div>
     )
 }

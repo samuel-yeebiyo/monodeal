@@ -25,6 +25,13 @@ const RentCard = (props) =>  {
             }}>Bank</div>
           </div>
         }
+
+        {show && props.moves == 0 && props.excess &&
+          <div className="property-options" onClick={()=> toggleOptions()}>
+            <div  onClick={()=>{props.update(props.index)}}>X</div>
+          </div>
+        }
+
         <div className="rent-card">
 
 

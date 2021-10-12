@@ -83,7 +83,7 @@ const RentPopUp = (props)=> {
                 <div className="action-buttons">
                     {choice &&
                         <div className="pop-submit" onClick={()=>{
-                            props.get(choice.rent)
+                            props.get(total)
                             props.pop()
                             props.update(props.colors.index)
                             if(double){

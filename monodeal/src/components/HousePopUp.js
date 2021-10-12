@@ -31,7 +31,7 @@ const HousePopUp = (props)=> {
                 <div>
                     {props.container.length > 0 ?
                         props.container.map((cont, contIndex)=>(
-                            // cont.complete &&
+                            cont.complete && cont.house == 0&&
                             <ContainerPick class={
                                 ( propChoice && propChoice.container == contIndex) ? "selected" : ""
                             } select={selectingContainer} containerIndex={contIndex}/> 

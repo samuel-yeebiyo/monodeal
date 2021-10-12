@@ -17,6 +17,11 @@ const PropertyCard = (props) =>  {
             <div onClick={()=>{props.place(props.index, "none"); props.move()}}>P</div>
           </div>
         }
+        {show && props.moves == 0 && props.excess &&
+          <div className="property-options" onClick={()=> toggleOptions()}>
+            <div  onClick={()=>{props.update(props.index)}}>X</div>
+          </div>
+        }
         
         <div className="card-value">${props.property.value}</div>
         <div className="card-color" style={{background: props.property.hex}}></div>

@@ -75,38 +75,38 @@ const property = {
     each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}],
     hex:"#6400E6"
   },
-  // orange:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Orange",
-  //   nComplete:3,
-  //   each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
-  //   hex:"#FF9900"
-  // },
-  // lightGreen:{
-  //   category:"property",
-  //   value:2,
-  //   color:"Light Green",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}],
-  //   hex:"#7DFF7D"
-  // },
-  // blue:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Blue",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}],
-  //   hex:"#0014C8"
-  // },
-  // brown:{
-  //   category:"property",
-  //   value:3,
-  //   color:"Brown",
-  //   nComplete:2,
-  //   each:[{num:1, price:2}, {num:2, price:3}],
-  //   hex:"#7D4B00"
-  // }
+  orange:{
+    category:"property",
+    value:3,
+    color:"Orange",
+    nComplete:3,
+    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
+    hex:"#FF9900"
+  },
+  lightGreen:{
+    category:"property",
+    value:2,
+    color:"Light Green",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#7DFF7D"
+  },
+  blue:{
+    category:"property",
+    value:3,
+    color:"Blue",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#0014C8"
+  },
+  brown:{
+    category:"property",
+    value:3,
+    color:"Brown",
+    nComplete:2,
+    each:[{num:1, price:2}, {num:2, price:3}],
+    hex:"#7D4B00"
+  }
 }
 
 const wild = {
@@ -154,61 +154,61 @@ const wild = {
     value:1,
     selected:'None'
   },
-  // 'light blue and brown':{
-  //   num:1,
-  //   color1:'Light Blue',
-  //   color2:'Brown',
-  //   hex1:"#8FC4FF",
-  //   hex2:"#7D4B00",
-  //   selectedHex:"#FFFF",
-  //   category:'wildcard',
-  //   value:2,
-  //   selected:'None'
-  // },
-  // 'light blue and black':{
-  //   num:1,
-  //   color1:'Light Blue',
-  //   color2:'Black',
-  //   hex1:"#8FC4FF",
-  //   hex2:"#262626",
-  //   selectedHex:"#FFFF",
-  //   category:'wildcard',
-  //   value:2,
-  //   selected:'None'
-  // },
-  // 'blue and green':{
-  //   num:1,
-  //   color1:'Blue',
-  //   color2:'Green',
-  //   hex1:"#0014C8",
-  //   hex2:"#00CB0E",
-  //   selectedHex:"#FFFF",
-  //   category:'wildcard',
-  //   value:1,
-  //   selected:'None'
-  // },
-  // 'black and green':{
-  //   num:1,
-  //   color1:'Black',
-  //   color2:'Green',
-  //   hex1:"#262626",
-  //   hex2:"#00CB0E",
-  //   selectedHex:"#FFFF",
-  //   category:'wildcard',
-  //   value:2,
-  //   selected:'None'
-  // },
-  // 'light green and black':{
-  //   num:1,
-  //   color1:'Light Green',
-  //   color2:'Black',
-  //   hex1:"#7DFF7D",
-  //   hex2:"#262626",
-  //   selectedHex:"#FFFF",
-  //   category:'wildcard',
-  //   value:1,
-  //   selected:'None'
-  // },
+  'light blue and brown':{
+    num:1,
+    color1:'Light Blue',
+    color2:'Brown',
+    hex1:"#8FC4FF",
+    hex2:"#7D4B00",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:2,
+    selected:'None'
+  },
+  'light blue and black':{
+    num:1,
+    color1:'Light Blue',
+    color2:'Black',
+    hex1:"#8FC4FF",
+    hex2:"#262626",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:2,
+    selected:'None'
+  },
+  'blue and green':{
+    num:1,
+    color1:'Blue',
+    color2:'Green',
+    hex1:"#0014C8",
+    hex2:"#00CB0E",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:1,
+    selected:'None'
+  },
+  'black and green':{
+    num:1,
+    color1:'Black',
+    color2:'Green',
+    hex1:"#262626",
+    hex2:"#00CB0E",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:2,
+    selected:'None'
+  },
+  'light green and black':{
+    num:1,
+    color1:'Light Green',
+    color2:'Black',
+    hex1:"#7DFF7D",
+    hex2:"#262626",
+    selectedHex:"#FFFF",
+    category:'wildcard',
+    value:1,
+    selected:'None'
+  },
   'wild property1':{
     num:1,
     color1:'all',
@@ -300,20 +300,20 @@ const rent = {
 }
 
 const action = {
-  // passGo:{
-  //   name:"Pass and Go",
-  //   num:10,
-  //   message:"Draw 2 cards",
-  //   category:"action",
-  //   value:2
-  // },
-  // forceDeal:{
-  //   name:"Forced Deal",
-  //   num:4,
-  //   message:"Choose cards to exchange",
-  //   category:"action",
-  //   value:2
-  // },
+  passGo:{
+    name:"Pass and Go",
+    num:10,
+    message:"Draw 2 cards",
+    category:"action",
+    value:2
+  },
+  forceDeal:{
+    name:"Forced Deal",
+    num:4,
+    message:"Choose cards to exchange",
+    category:"action",
+    value:2
+  },
   sayNo:{
     name:"Just Say No",
     num:3,
@@ -328,34 +328,34 @@ const action = {
     category:"action",
     value:2
   },
-  // debtCollector:{
-  //   name:"Debt Collector",
-  //   num:3,
-  //   message:"Collect $5",
-  //   category:"action",
-  //   value:2
-  // },
-  // birthday:{
-  //   name:"It's My Birthday",
-  //   num:3,
-  //   message:"Collect $2",
-  //   category:"action",
-  //   value:2
-  // },
-  // house:{
-  //   name:"House",
-  //   num:3,
-  //   message:"Choose a complete set to put down",
-  //   category:"action",
-  //   value:2
-  // },
-  // hotel:{
-  //   name:"Hotel",
-  //   num:3,
-  //   message:"Choose a complete set with a house to put down",
-  //   category:"action",
-  //   value:2
-  // },
+  debtCollector:{
+    name:"Debt Collector",
+    num:3,
+    message:"Collect $5",
+    category:"action",
+    value:2
+  },
+  birthday:{
+    name:"It's My Birthday",
+    num:3,
+    message:"Collect $2",
+    category:"action",
+    value:2
+  },
+  house:{
+    name:"House",
+    num:3,
+    message:"Choose a complete set to put down",
+    category:"action",
+    value:2
+  },
+  hotel:{
+    name:"Hotel",
+    num:3,
+    message:"Choose a complete set with a house to put down",
+    category:"action",
+    value:2
+  },
   dealBreaker:{
     name:"Deal Breaker",
     num:2,
@@ -423,6 +423,7 @@ function App(props) {
   const [drawn, setDrawn] = useState([])
   const [turn, setTurn] = useState(false)
   const [moves, setMoves] = useState(0)
+  const [excess, setExcess] = useState(false)
 
   //Current player
   const [moneyTable, setMoneyTable] = useState([])
@@ -448,10 +449,13 @@ function App(props) {
   const [forcedPopup, showForcedPopup] = useState(false);
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
-  const [sayNo, showSayNo] = useState(false)  //should be true
+  const [sayNo, showSayNo] = useState(true)  //should be true
   const [deny, showDenial] = useState(false)
   const denRef = useRef(deny)
   denRef.current = deny
+  const [Epop, showEpop] = useState(false)
+  const popRef = useRef(Epop);
+  popRef.current = Epop
 
 
   const [colorRent, setRentColor] = useState([])
@@ -462,6 +466,11 @@ function App(props) {
 
   useEffect(()=>{
     console.log("I have ", moves, " moves(s)")
+    console.log("Excess: ", excess)
+    if(drawn.length > 7){
+      setExcess(true)
+    }
+    else setExcess(false)
   })
   
   useEffect(()=>{
@@ -488,9 +497,9 @@ function App(props) {
 
 
 
-  // useEffect(()=>{
-  //   toggleSayNo()
-  // }, [no])
+  useEffect(()=>{
+    toggleSayNo()
+  }, [no])
 
   //socket entries
   props.socket.on("get-users", (users)=>{
@@ -731,17 +740,17 @@ const initDeck = ()=>{
     }
   })
 
-  // Object.values(money).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(money).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
-  // Object.values(wild).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(wild).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   Object.values(rent).forEach(val => {
     for(let i=0; i<val.num; i++){
@@ -840,11 +849,22 @@ const pass = ()=>{
   const toggleSayNo=()=>{
     showSayNo(!sayNo)
   }
+
   const toggleNO = ()=>{
     setNo(!no)
   }
 
+  const toggleEpop = ()=>{
+    showEpop(!Epop)
 
+    setTimeout(()=>{
+
+      showEpop(!popRef.current)
+      
+    }, 2000)
+  }
+
+  
   //handle properties
   const flip = (containerIndex, index, selected)=>{
     let tempContainer = container;
@@ -1283,7 +1303,6 @@ const pass = ()=>{
         tempContainer.push(placedProp);
       }
     }else{
-      card.selected = selected;
       let exists = false;
       tempContainer.map((cont)=>{
         if(cont.color == card.selected && cont.set == 1){
@@ -1488,8 +1507,17 @@ const pass = ()=>{
 
       {dist &&
         <div className="modal">
+          <div className="distribute">
+            <p>Distribute cards</p>
+            <button onClick={()=>{deal(); setDist(false) }}>Distribute</button>
+          </div>
+        </div>
+      }
+
+      {Epop &&
+        <div className="modal">
           <div className="center">
-            <button onClick={()=>{deal(); setDist(false) }}>Distribute cards</button>
+            <h4>DISCARD EXTRA CARDS!</h4>
           </div>
         </div>
       }
@@ -1508,7 +1536,7 @@ const pass = ()=>{
 
       {payPopup &&
         <div className="modal">
-          <PayPopUp deny={denial} pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
+          <PayPopUp deny={denial} drawn={drawn} pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
         </div>
       }
 
@@ -1555,7 +1583,7 @@ const pass = ()=>{
 
       {deny &&
         <div className="modal">
-          <div className="center">
+          <div className="distribute">
             <p>DENIED HAHA!!</p>
           </div>
         </div>
@@ -1637,15 +1665,15 @@ const pass = ()=>{
             
             drawn.map((card, index)=>{
               if(card.category ==="property"){
-                return <PropertyCard moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
+                return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
               }else if(card.category === "action"){
-                return <ActionCard current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
-                return <WildCard turn={turn} moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
-                return <RentCard moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
+                return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
               }else {
-                return <MoneyCard moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
+                return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
               }        
             }) ):( 
             
@@ -1653,12 +1681,13 @@ const pass = ()=>{
           }
         </div>
 
-        <div className="draw-from">
-          <div className="deck" onClick={()=>{draw(1)}}></div>
-          <div className="skip" onClick={()=>{pass()}}>
-            <p>Pass</p>
-          </div>
+        <div className="skip" onClick={()=>{
+          if(drawn.length > 7){
+            toggleEpop()
+          }else pass()
+          }}><p>Pass</p>
         </div>
+
       </div>
     </div>
   );

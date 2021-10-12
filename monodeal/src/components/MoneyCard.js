@@ -18,6 +18,12 @@ const MoneyCard = (props) =>  {
           <div onClick={()=>{props.place(props.index); props.move()}}>A</div>
         </div>
       }
+
+      {show && props.moves == 0 && props.excess &&
+        <div className="property-options" onClick={()=> toggleOptions()}>
+          <div onClick={()=>{props.update(props.index)}}>X</div>
+        </div>
+      }
         <p className="card-value">${props.money.value}</p>
         <div style={{background: `${props.money.hex}`}} className="card-main">
           <div className="card-money">
