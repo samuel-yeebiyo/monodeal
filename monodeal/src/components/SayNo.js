@@ -21,7 +21,10 @@ const SayNo = (props) => {
         {bool ?
             <div className="no-title">
                 <p>Do you wanna say NO?</p>
-                <button className="no-button" onClick={()=>{props.answer("No")}}> Just say no</button>
+                <button className="no-button" onClick={()=>{
+                    props.answer("No")
+                    props.update(index)
+                }}> Just say no</button>
             </div> :
 
             <div className="no-title">

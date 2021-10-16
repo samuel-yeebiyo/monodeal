@@ -31,7 +31,7 @@ const DealBreakerPopUp = (props)=> {
                 <div>
                     {props.opTable.length > 0 ?
                         props.opTable.map((cont, contIndex)=>(
-                        // cont.complete &&
+                        cont.complete &&
                             <ContainerPick class={
                                 ( propChoice && propChoice.container == contIndex) ? "selected" : ""
                             } select={selectingContainer} containerIndex={contIndex}/> 

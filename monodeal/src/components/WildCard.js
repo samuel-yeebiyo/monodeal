@@ -61,8 +61,32 @@ const WildCard = (props) =>  {
           <div className="wild-main">
             {!props.wild.wild &&
               <div style={{height:'100%', width:'100%', display: 'flex'}}>
-                <div style={{background: `${!props.wild.wild && props.wild.hex1}`, width:'50%'}} ></div>
-                <div style={{background: `${!props.wild.wild && props.wild.hex2}`, width:'50%'}} ></div>
+                <div className="wild-colors" style={{background: `${!props.wild.wild && props.wild.hex1}`, width:'50%', position:"relative"}}>
+                  <div className="tooltip">
+                  { !props.wild.wild &&
+                    Object.values(props.property).map(val => {
+                      if(val.color == props.wild.color1){
+                        return val.each.map((item)=>{
+                          return <div>{item.num}--- ${item.price}</div>
+                        })
+                      }
+                    })
+                  }
+                  </div>
+                </div>
+                <div className="wild-colors" style={{background: `${!props.wild.wild && props.wild.hex2}`, width:'50%', position:"relative"}}>
+                <div className="tooltip">
+                  { !props.wild.wild &&
+                    Object.values(props.property).map(val => {
+                      if(val.color == props.wild.color2){
+                        return val.each.map((item)=>{
+                          return <div>{item.num}--- ${item.price}</div>
+                        })
+                      }
+                    })
+                  }
+                </div>
+                </div>
               </div>
             }
           </div>

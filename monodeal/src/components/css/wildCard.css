@@ -4,6 +4,7 @@
 }
 .side-banner{
     position: absolute;
+    z-index: 2;
 }
 .wildCard-value{
     width:30px;
@@ -39,4 +40,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.tooltip{
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    top:20%;
+    left:30px;
+    border-radius: 6px;
+    padding: 5px 0;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 3;
+}
+.wild-colors:hover .tooltip{
+    visibility: visible;
 }

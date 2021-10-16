@@ -449,7 +449,7 @@ function App(props) {
   const [forcedPopup, showForcedPopup] = useState(false);
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
-  const [sayNo, showSayNo] = useState(true)  //should be true
+  const [sayNo, showSayNo] = useState(false)  //should be true
   const [deny, showDenial] = useState(false)
   const denRef = useRef(deny)
   denRef.current = deny
@@ -497,9 +497,9 @@ function App(props) {
 
 
 
-  useEffect(()=>{
-    toggleSayNo()
-  }, [no])
+  // useEffect(()=>{
+  //   toggleSayNo()
+  // }, [no])
 
   //socket entries
   props.socket.on("get-users", (users)=>{
@@ -1669,7 +1669,7 @@ const pass = ()=>{
               }else if(card.category === "action"){
                 return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
               }else if(card.category === "wildcard"){
-                return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
               }else if(card.category === "rent"){
                 return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
               }else {

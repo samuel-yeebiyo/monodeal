@@ -39,6 +39,7 @@ const ForcedPopUp = (props)=> {
                     <div>
                         {props.opTable.length > 0 ?
                             props.opTable.map((cont, contIndex)=>(
+                                cont.complete &&
                                 <div className="pop-container">{
                                     cont.cards.map((card,index)=>(
                                         <div className="pop-cards">
