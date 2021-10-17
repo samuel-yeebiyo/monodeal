@@ -752,17 +752,17 @@ const initDeck = ()=>{
     }
   })
 
-  Object.values(rent).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(rent).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
-  Object.values(action).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(action).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   setDeck(batch);
 }
@@ -1682,10 +1682,11 @@ const pass = ()=>{
         </div>
 
         <div className="skip" onClick={()=>{
-          if(drawn.length > 7){
-            toggleEpop()
-          }else pass()
-          }}><p>Pass</p>
+          if(turn){ if(drawn.length > 7){
+              toggleEpop()
+            }else pass()
+          }}}>
+          <p>Pass</p>
         </div>
 
       </div>

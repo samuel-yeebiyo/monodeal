@@ -89,6 +89,21 @@ const WildCard = (props) =>  {
                 </div>
               </div>
             }
+            {props.wild.wild && props.placed &&
+              <div className="wild-colors" style={{width:'100%', height:'100%', position:"relative"}}>
+                <div className="tooltip">
+                    {
+                      Object.values(props.property).map(val => {
+                        if(val.color == props.wild.selected){
+                          return val.each.map((item)=>{
+                            return <div>{item.num}--- ${item.price}</div>
+                          })
+                        }
+                      })
+                    }
+                </div>
+              </div>
+            }
           </div>
 
           <div className="wild-selected">
