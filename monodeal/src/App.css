@@ -1,7 +1,7 @@
 .App{
     height:100vh;
     width:100%;
-    background-color: rgb(225, 224, 168);
+    background-color: #108139;
 }
 .modal{
     position:absolute;
@@ -54,6 +54,24 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.turn-true{
+    height:50px;
+    width:50px;
+    background:rgb(21, 255, 21);
+    position:absolute;
+    right:10px;
+    top:10px;
+    border-radius:50%;
+}
+.turn-false{
+    height:50px;
+    width:50px;
+    background:red;
+    position:absolute;
+    right:10px;
+    top:10px;
+    border-radius:50%;
 }
 .opponent{
     width:100%;

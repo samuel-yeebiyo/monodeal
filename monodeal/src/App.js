@@ -746,11 +746,11 @@ const initDeck = ()=>{
     }
   })
 
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(wild).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     batch = [...batch, val]
+  //   }
+  // })
 
   // Object.values(rent).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -758,11 +758,11 @@ const initDeck = ()=>{
   //   }
   // })
 
-  // Object.values(action).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(action).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   setDeck(batch);
 }
@@ -1240,10 +1240,21 @@ const pass = ()=>{
     }
     if(money.length >0){
       let temp = moneyTable;
+      let removable = []
+
       money.map((item)=>{
-        mon.push(temp[item.index])
-        temp.splice(item.index, 1)
+        removable.push(item.index);
       })
+
+      removable.sort((a,b)=>{return a-b;})
+
+      for(let i=(removable.length)-1;i>=0;i--){
+
+        mon.push(temp[removable[i]]);
+        temp.splice(removable[i], 1);
+
+      }
+
       setMoneyTable(temp)
     }
 
@@ -1589,6 +1600,12 @@ const pass = ()=>{
         </div>
       }
 
+      {turn ?
+        <div className="turn-true">
+        </div> :
+        <div className="turn-false">
+        </div>
+      }
 
       {/* oppponent property section */}
       <div className="opponent">
