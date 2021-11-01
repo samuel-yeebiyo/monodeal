@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import '../components/css/wildCard.css'
+import '../css/wildCard.css'
 
 const WildCard = (props) =>  {
 

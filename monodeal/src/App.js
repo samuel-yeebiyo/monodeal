@@ -6,408 +6,29 @@ import './App.css';
 import './components/css/start.css'
 
 
-import PropertyCard from'./components/PropertyCard'
-import WildCard from './components/WildCard';
-import MoneyCard from './components/MoneyCard';
-import RentCard from './components/Rent';
-import ActionCard from './components/ActionCard';
-import PropertyContainer from './components/PropertyContainer'
-import PayPopUp from './components/PayPopUp';
-import SlyPopUp from './components/SlyPopUp';
-import DealBreakerPopUp from './components/DealBreakerPopUp';
-import ForcedPopUp from './components/ForcedPopUp'
-import HousePopUp from './components/HousePopUp';
-import HotelPopUp from './components/HotelPopUp';
+import PropertyCard from'./components/cards/PropertyCard'
+import WildCard from './components/cards/WildCard';
+import MoneyCard from './components/cards/MoneyCard';
+import RentCard from './components/cards/Rent';
+import ActionCard from './components/cards/ActionCard';
+
+
+import PayPopUp from './components/popups/PayPopUp';
+import SlyPopUp from './components/popups/SlyPopUp';
+import DealBreakerPopUp from './components/popups/DealBreakerPopUp';
+import ForcedPopUp from './components/popups/ForcedPopUp'
+import HousePopUp from './components/popups/HousePopUp';
+import HotelPopUp from './components/popups/HotelPopUp';
+import WildCardPopUp from './components/popups/WildCardPopUp';
+import RentPopUp from './components/popups/RentPopUp';
+
+
 import SayNo from './components/SayNo';
-
+import PropertyContainer from './components/PropertyContainer'
 //popups
-import WildCardPopUp from './components/WildCardPopUp';
-import RentPopUp from './components/RentPopUp';
 
 
-
-const property = {
-  black:{
-    category:"property",
-    value:2,
-    color:"Black",
-    nComplete:4,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}, {num:4, price:4}],
-    hex:"#262626"
-  },
-  lightBlue:{
-    category:"property",
-    value:3,
-    color:"Light Blue",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:3}],
-    hex:"#8FC4FF"
-  },
-  green:{
-    category:"property",
-    value:2,
-    color:"Green",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
-    hex:"#00CB0E"
-  },
-  yellow:{
-    category:"property",
-    value:3,
-    color:"Yellow",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:3}],
-    hex:"#FFE600"
-  },
-  red:{
-    category:"property",
-    value:2,
-    color:"Red",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
-    hex:"#EF0000"
-  },
-  purple:{
-    category:"property",
-    value:3,
-    color:"Purple",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:5}],
-    hex:"#6400E6"
-  },
-  orange:{
-    category:"property",
-    value:3,
-    color:"Orange",
-    nComplete:3,
-    each:[{num:1, price:2}, {num:2, price:3}, {num:3, price:4}],
-    hex:"#FF9900"
-  },
-  lightGreen:{
-    category:"property",
-    value:2,
-    color:"Light Green",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#7DFF7D"
-  },
-  blue:{
-    category:"property",
-    value:3,
-    color:"Blue",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#0014C8"
-  },
-  brown:{
-    category:"property",
-    value:3,
-    color:"Brown",
-    nComplete:2,
-    each:[{num:1, price:2}, {num:2, price:3}],
-    hex:"#7D4B00"
-  }
-}
-
-const wild = {
-  'purple and orange1':{
-    num:1,
-    color1:'Purple',
-    color2:'Orange',
-    hex1:"#6400E6",
-    hex2:"#FF9900",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'purple and orange2':{
-    num:1,
-    color1:'Purple',
-    color2:'Orange',
-    hex1:"#6400E6",
-    hex2:"#FF9900",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'red and yellow1':{
-    num:1,
-    color1:'Red',
-    color2:'Yellow',
-    hex1:"#EF0000",
-    hex2:"#FFE600",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:1,
-    selected:'None'
-  },
-  'red and yellow2':{
-    num:1,
-    color1:'Red',
-    color2:'Yellow',
-    hex1:"#EF0000",
-    hex2:"#FFE600",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:1,
-    selected:'None'
-  },
-  'light blue and brown':{
-    num:1,
-    color1:'Light Blue',
-    color2:'Brown',
-    hex1:"#8FC4FF",
-    hex2:"#7D4B00",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'light blue and black':{
-    num:1,
-    color1:'Light Blue',
-    color2:'Black',
-    hex1:"#8FC4FF",
-    hex2:"#262626",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'blue and green':{
-    num:1,
-    color1:'Blue',
-    color2:'Green',
-    hex1:"#0014C8",
-    hex2:"#00CB0E",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:1,
-    selected:'None'
-  },
-  'black and green':{
-    num:1,
-    color1:'Black',
-    color2:'Green',
-    hex1:"#262626",
-    hex2:"#00CB0E",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:2,
-    selected:'None'
-  },
-  'light green and black':{
-    num:1,
-    color1:'Light Green',
-    color2:'Black',
-    hex1:"#7DFF7D",
-    hex2:"#262626",
-    selectedHex:"#FFFF",
-    category:'wildcard',
-    value:1,
-    selected:'None'
-  },
-  'wild property1':{
-    num:1,
-    color1:'all',
-    color2:'all',
-    category:'wildcard',
-    value:1,
-    selected:'None',
-    wild:true,
-    message:"Choose color for wildcard",
-    choice:["Black","Light Blue","Green","Yellow","Red","Purple","Orange","Light Green","Blue","Brown" ],
-    color:'all'
-  },
-  'wild property2':{
-    num:1,
-    color1:'all',
-    color2:'all',
-    category:'wildcard',
-    value:1,
-    selected:'None',
-    wild:true,
-    message:"Choose color for wildcard",
-    choice:["Black","Light Blue","Green","Yellow","Red","Purple","Orange","Light Green","Blue","Brown" ],
-    color:'all'
-  },
-
-}
-
-const rent = {
-  "purple and orange":{
-    color1: "Purple",
-    color2: "Orange",
-    hex1:"#6400E6",
-    hex2:"#FF9900",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:2,
-    value:2
-  },
-  "black and light green":{
-    color1: "Black",
-    color2: "Light Green",
-    hex1:"#262626",
-    hex2:"#7DFF7D",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:2,
-    value:2
-  },
-  "green and blue":{
-    color1: "Green",
-    color2: "Blue",
-    hex1:"#00CB0E",
-    hex2:"#0014C8",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:2,
-    value:2
-  },
-  "brown and light blue":{
-    color1: "Brown",
-    color2: "Light Blue",
-    hex1:"#7D4B00",
-    hex2:"#8FC4FF",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:2,
-    value:2
-  },
-  "red and yellow":{
-    color1: "Red",
-    color2: "Yellow",
-    hex1:"#EF0000",
-    hex2:"#FFE600",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:2,
-    value:2
-  },
-  "wild rent":{
-    color1: "all",
-    color2: "all",
-    hex1:"#FFFF",
-    hex2:"#FFFF",
-    message: "Pick a property to apply rent",
-    category:"rent",
-    num:3,
-    value:2
-  }
-}
-
-const action = {
-  passGo:{
-    name:"Pass and Go",
-    num:10,
-    message:"Draw 2 cards",
-    category:"action",
-    value:2
-  },
-  forceDeal:{
-    name:"Forced Deal",
-    num:4,
-    message:"Choose cards to exchange",
-    category:"action",
-    value:2
-  },
-  sayNo:{
-    name:"Just Say No",
-    num:3,
-    message:"Denied!!",
-    category:"action",
-    value:2
-  },
-  slyDeal:{
-    name:"Sly Deal",
-    num:3,
-    message:"Pick a card to steal",
-    category:"action",
-    value:2
-  },
-  debtCollector:{
-    name:"Debt Collector",
-    num:3,
-    message:"Collect $5",
-    category:"action",
-    value:2
-  },
-  birthday:{
-    name:"It's My Birthday",
-    num:3,
-    message:"Collect $2",
-    category:"action",
-    value:2
-  },
-  house:{
-    name:"House",
-    num:3,
-    message:"Choose a complete set to put down",
-    category:"action",
-    value:2
-  },
-  hotel:{
-    name:"Hotel",
-    num:3,
-    message:"Choose a complete set with a house to put down",
-    category:"action",
-    value:2
-  },
-  dealBreaker:{
-    name:"Deal Breaker",
-    num:2,
-    message:"Choose a complete set to steal",
-    category:"action",
-    value:2
-  },
-  doubleRent:{
-    name:"Double The Rent",
-    num:2,
-    message:"Double the rent",
-    category:"action",
-    value:2
-  }
-}
-
-const money = {
-  $10:{
-    value:10,
-    num:1,
-    category:"money",
-    hex:"#FCD187"
-  },
-  $5:{
-    value:5,
-    num:2,
-    category:"money",
-    hex:"#D7A2FF"
-  },
-  $4:{
-    value:4,
-    num:3,
-    category:"money",
-    hex:"#B4CDFF"
-  },
-  $3:{
-    value:3,
-    num:3,
-    category:"money",
-    hex:"#E3FFE4"
-  },$2:{
-    value:2,
-    num:5,
-    category:"money",
-    hex:"#FFC9C9"
-  },$1:{
-    value:1,
-    num:6,
-    category:"money",
-    hex:"#FFDEBE"
-  },
-}
+import {property, wild, rent, action, money} from './cardObjects'
 
 
 function App(props) {
@@ -462,7 +83,6 @@ function App(props) {
   const [wildAction, setWildAction] = useState()
   const [curAction, setAction] = useState()
   const [payAmount, setAmount] = useState()
-
 
   useEffect(()=>{
     console.log("I have ", moves, " moves(s)")
@@ -565,7 +185,6 @@ function App(props) {
 
   props.socket.off("give").on("give", (card)=>{
     console.log("Called")
-
 
     toggleSayNo()
 
@@ -746,17 +365,17 @@ const initDeck = ()=>{
     }
   })
 
-  // Object.values(wild).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(wild).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
-  // Object.values(rent).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     batch = [...batch, val]
-  //   }
-  // })
+  Object.values(rent).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      batch = [...batch, val]
+    }
+  })
 
   Object.values(action).forEach(val => {
     for(let i=0; i<val.num; i++){
@@ -1547,7 +1166,7 @@ const pass = ()=>{
 
       {payPopup &&
         <div className="modal">
-          <PayPopUp deny={denial} drawn={drawn} pop={togglePayPopup} send={sendPayment} money={moneyTable} property={container} amount={payAmount}/>
+          <PayPopUp deny={denial} drawn={drawn} pop={togglePayPopup}  update={updateDrawn} send={sendPayment} money={moneyTable} property={container}  amount={payAmount}/>
         </div>
       }
 
@@ -1588,7 +1207,7 @@ const pass = ()=>{
 
       {sayNo &&
         <div className="modal">
-          <SayNo answer={answering} update={updateDrawn} drawn={drawn} />
+          <SayNo answer={answering} update={updateDrawn} drawn={drawn}/>
         </div>
       }
 
@@ -1600,16 +1219,23 @@ const pass = ()=>{
         </div>
       }
 
-      {turn ?
-        <div className="turn-true">
-        </div> :
-        <div className="turn-false">
-        </div>
-      }
-
       {/* oppponent property section */}
+      <div className="opUser">
+        <div className="opUser-img"></div>
+        { joined.length > 1 && (props.resp == "creator" ?
+          joined[1].name : joined[0].name )
+        }
+      </div>
       <div className="opponent">
-
+        <div className="opProperty">
+        {opCont.length > 0 ? (
+          opCont.map((cont, index)=>{
+            return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+          })
+        ):(
+          <p style={{color:"white"}}>No property placed</p>
+        )}
+        </div>
         <div className="opMoney">
         {opMoney.length > 0 ? (
           <div className="moneyTable">
@@ -1626,17 +1252,8 @@ const pass = ()=>{
           </div>
           )
           :
-          (<p>No Money</p>)
+          (<p style={{color:"white"}}>No Money</p>)
         }
-        </div>
-        <div className="opProperty">
-        {opCont.length > 0 ? (
-          opCont.map((cont, index)=>{
-            return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
-          })
-        ):(
-          <p>No property placed</p>
-        )}
         </div>
         
       </div>
@@ -1649,7 +1266,7 @@ const pass = ()=>{
               return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
             })
           ):(
-            <p>No property placed</p>
+            <p style={{color:"white"}}>No property placed</p>
           )}
         </div>
         <div className="personalMoney">
@@ -1669,7 +1286,7 @@ const pass = ()=>{
           </div>
           )
           :
-          (<p>No Money</p>)
+          (<p style={{color:"white"}}>No Money</p>)
         }
         </div>
       
@@ -1677,6 +1294,15 @@ const pass = ()=>{
 
       {/* drawn cards section */}
       <div className="draw">
+
+        <div className="skip" onClick={()=>{
+          if(turn){ if(drawn.length > 7){
+              toggleEpop()
+            }else pass()
+          }}}>
+          <p>Pass</p>
+        </div>
+
         <div className="drawn-cards">
           {drawn.length > 0  ? (
             
@@ -1698,13 +1324,12 @@ const pass = ()=>{
           }
         </div>
 
-        <div className="skip" onClick={()=>{
-          if(turn){ if(drawn.length > 7){
-              toggleEpop()
-            }else pass()
-          }}}>
-          <p>Pass</p>
+        <div style={{background: `${turn ? "rgb(0, 197, 0)" : "red"}`}} className="turn">
+          { joined.length > 1 && (props.resp == "creator" ?
+            joined[0].name : joined[1].name )
+          }
         </div>
+        
 
       </div>
     </div>

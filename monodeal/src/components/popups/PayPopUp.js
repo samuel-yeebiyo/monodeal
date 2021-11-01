@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-import PaymentPick from "./PaymentPick"
+import PaymentPick from "../PaymentPick"
 
 const PayPopUp = (props)=> {
 

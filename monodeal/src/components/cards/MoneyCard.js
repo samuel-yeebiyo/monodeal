@@ -1,5 +1,5 @@
 import { useState } from "react";
-import '../components/css/moneyCard.css'
+import '../css/moneyCard.css'
 
 const MoneyCard = (props) =>  {
 

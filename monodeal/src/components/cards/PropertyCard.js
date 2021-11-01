@@ -1,4 +1,4 @@
-import './css/propertyCard.css'
+import '../css/propertyCard.css'
 import { useState } from 'react';
 
 const PropertyCard = (props) =>  {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import Select from "./Select";
+import Select from "../Select";
 
 const RentPopUp = (props)=> {
 

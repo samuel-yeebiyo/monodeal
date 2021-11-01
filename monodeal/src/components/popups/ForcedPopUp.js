@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import PaymentPick from "./PaymentPick"
+import PaymentPick from "../PaymentPick"
 
 
 const ForcedPopUp = (props)=> {

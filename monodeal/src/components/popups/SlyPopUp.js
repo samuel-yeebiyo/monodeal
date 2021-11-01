@@ -1,13 +1,15 @@
 import { useState } from "react"
 
-import ContainerPick from "./ContainerPick"
+import '../css/slypop.css'
+import PaymentPick from "../PaymentPick"
 
-const HousePopUp = (props)=> {
-    
+
+const SlyPopUp = (props)=> {
+
     const [propChoice, setChoice] = useState()
     const [update, setUpdate] = useState(1)
 
-    const selectingContainer = (item)=>{
+    const selectingProperty = (item)=>{
         setChoice(item)
         toggleUpdate()
     }
@@ -22,19 +24,25 @@ const HousePopUp = (props)=> {
         <div className="pop-center">
             <div className="actions-top">
                 <div className="actions-desc">
-                    <p className="actions-title">HOUSE</p>
-                    <p>Pick set to place House on!</p>
+                    <p className="actions-title">SLY DEAL</p>
+                    <p>Pick a card to steal from your opponent!</p>
                 </div>
             </div>
-
             <div className="action-div">
                 <div>
-                    {props.container.length > 0 ?
-                        props.container.map((cont, contIndex)=>(
-                            cont.complete && cont.house == 0 &&
-                            <ContainerPick class={
-                                ( propChoice && propChoice.container == contIndex) ? "selected" : ""
-                            } select={selectingContainer} containerIndex={contIndex}/> 
+                    {props.opTable.length > 0 ?
+                        props.opTable.map((cont, contIndex)=>(
+                            !cont.complete &&
+                            <div className="pop-container">{
+                                cont.cards.map((card,index)=>(
+                                    <div className="pop-cards">
+                                        <PaymentPick class={
+                                            (propChoice && propChoice.index == index && propChoice.container == contIndex) ? "selected" : ""
+                                        } select={selectingProperty} card={card} index={index} containerIndex={contIndex}/> 
+                                    </div>
+                                ))
+                            }
+                            </div>
                         ))
                         :
                         <div>No property</div>
@@ -45,7 +53,7 @@ const HousePopUp = (props)=> {
                         <div className="pop-submit" onClick={()=>{
                             console.log("Selected")
                             props.pop()
-                            props.place(propChoice)
+                            props.steal(propChoice)
                             props.move()
                             props.update(props.curr)
                         }}>Selected</div>
@@ -55,8 +63,9 @@ const HousePopUp = (props)=> {
                     </div>
                 </div>
             </div>
+            
         </div>
     )
 }
 
-export default HousePopUp
+export default SlyPopUp

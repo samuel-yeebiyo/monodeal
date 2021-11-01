@@ -1,7 +1,8 @@
 .prop-container{
-    margin-right: 20px;
+    margin: 0 10px 0 10px;
     position:relative;
-    height:189px;
+    min-height:49%;
+    height:auto;
     width:138px;
 }
 .props{

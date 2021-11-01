@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react"
 import'../components/css/sayno.css'
 
+import PropertyCard from "../components/cards/PropertyCard" 
+import WildCard from "./cards/WildCard"
+
 
 const SayNo = (props) => {
 

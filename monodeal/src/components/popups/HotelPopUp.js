@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import ContainerPick from "./ContainerPick"
+import ContainerPick from "../ContainerPick"
 
 const HotelPopUp = (props)=> {
     

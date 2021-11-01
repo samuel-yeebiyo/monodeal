@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import WildCard from './WildCard';
-import PropertyCard from './PropertyCard'
-import WildCardPopUp from './WildCardPopUp';
+
+import WildCard from './cards/WildCard'
+import PropertyCard from './cards/PropertyCard'
 import '../components/css/propertyContainer.css'
 
-import houseIcon from './house.png'
-import hotelIcon from './hotel.png'
+import houseIcon from './assets/house.png'
+import hotelIcon from './assets/hotel.png'
+
 
 const PropertyContainer = (props) =>  {
 
@@ -56,9 +57,9 @@ const PropertyContainer = (props) =>  {
             {
                 props.contains.cards.map((card, index)=>{
                     if(card.category == "property"){
-                        return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`}}><PropertyCard property={card} placed={true}/></div>
+                        return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><PropertyCard property={card} placed={true}/></div>
                     }else{
-                        return <div className="props" style={{top: `${index == 0 ? 20 :index * 50+20}px`, left:`${index*5}px`}}><WildCard property={props.property} turn={props.turn} action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/></div>
+                        return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><WildCard property={props.property} turn={props.turn} action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/></div>
                     }
                 })
             }

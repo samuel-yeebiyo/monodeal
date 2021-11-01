@@ -1,5 +1,5 @@
 import { useState } from "react";
-import '../components/css/actionCard.css'
+import '../css/actionCard.css'
 
 const ActionCard = (props) =>  {
 
