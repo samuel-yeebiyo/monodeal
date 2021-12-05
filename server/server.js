@@ -79,12 +79,12 @@ io.on("connection", socket =>{
         socket.to(room).emit("getMoney", table)
     })
 
-    socket.on("start", (room, fact)=>{
-        socket.to(room).emit("when", fact)
+    socket.on("start-game", (room, fact)=>{
+        socket.to(room).emit("starting-game", fact)
     })
 
     socket.on("deal-cards", (room)=>{
-        socket.to(room).emit("dist")
+        socket.to(room).emit("get-cards")
     })
 
     socket.on("pass", room =>{

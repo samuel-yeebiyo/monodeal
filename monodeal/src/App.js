@@ -85,8 +85,6 @@ function App(props) {
   const [payAmount, setAmount] = useState()
 
   useEffect(()=>{
-    console.log("I have ", moves, " moves(s)")
-    console.log("Excess: ", excess)
     if(drawn.length > 7){
       setExcess(true)
     }
@@ -122,24 +120,30 @@ function App(props) {
   // }, [no])
 
   //socket entries
+
+  //Get players in the game
   props.socket.on("get-users", (users)=>{
     console.log("got users")
     console.log(users)
     setJoined(users)
   })
 
-  props.socket.on("when", fact =>{
+  //start the game for opponent
+  props.socket.on("starting-game", fact =>{
     setStart(fact)
   })
 
+  //get main deck from room creator
   props.socket.on("get-deck", roomDeck =>{
     setDeck(roomDeck)
   })
 
-  props.socket.off("dist").on("dist", ()=>{
+  //get first set of cards
+  props.socket.off("get-cards").on("get-cards", ()=>{
     draw(5)
   })
 
+  //get turn to play cards
   props.socket.off("get-turn").on("get-turn", ()=>{
     setTurn(true)
     setMoves(3)
@@ -344,11 +348,14 @@ function App(props) {
 
   /**************INITIALIZATION PROCESS*****************/
 const initGame = ()=>{
+  
   initDeck();
  
   toggleUpdate()
+  
   setStart(true)
-  props.socket.emit("start", props.room, true)
+
+  props.socket.emit("start-game", props.room, true)
 }
 
 const initDeck = ()=>{
@@ -389,21 +396,20 @@ const initDeck = ()=>{
 const draw = (num) =>{
   let newA = drawn;
   let temp = deck;
-  for(let i=0; i<num;i++){
+
+  for(let i=0; i< num;i++){
     let n = Math.floor(Math.random() * deck.length);
     newA.push(deck[n])
 
     //update deck
     temp.splice(n,1);
-
-    console.log("Drawn: ", deck[n])
-
   }
   
   setDrawn(newA)
-  setDeck(temp);
-  toggleUpdate()
 
+  setDeck(temp);
+
+  toggleUpdate()
 }
 
 const deal = () =>{
@@ -486,7 +492,9 @@ const pass = ()=>{
   
   //handle properties
   const flip = (containerIndex, index, selected)=>{
+    
     let tempContainer = container;
+    //which container the card to flip exists
     let card = tempContainer[containerIndex].cards[index]
 
     if(tempContainer[containerIndex].cards.length == 1){
@@ -1219,6 +1227,9 @@ const pass = ()=>{
         </div>
       }
 
+
+
+
       {/* oppponent property section */}
       <div className="opUser">
         <div className="opUser-img"></div>
@@ -1295,33 +1306,36 @@ const pass = ()=>{
       {/* drawn cards section */}
       <div className="draw">
 
-        <div className="skip" onClick={()=>{
-          if(turn){ if(drawn.length > 7){
-              toggleEpop()
-            }else pass()
-          }}}>
-          <p>Pass</p>
-        </div>
+        <div className="draw-left">
+          <div className="skip" onClick={()=>{
+            if(turn){ if(drawn.length > 7){
+                toggleEpop()
+              }else pass()
+            }}}>
+            <p>Pass</p>
+          </div>
+          
 
-        <div className="drawn-cards">
-          {drawn.length > 0  ? (
-            
-            drawn.map((card, index)=>{
-              if(card.category ==="property"){
-                return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
-              }else if(card.category === "action"){
-                return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
-              }else if(card.category === "wildcard"){
-                return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
-              }else if(card.category === "rent"){
-                return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
-              }else {
-                return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
-              }        
-            }) ):( 
-            
-            <p>No cards drawn</p>  )
-          }
+          <div className="drawn-cards">
+            {drawn.length > 0  ? (
+              
+              drawn.map((card, index)=>{
+                if(card.category ==="property"){
+                  return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
+                }else if(card.category === "action"){
+                  return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                }else if(card.category === "wildcard"){
+                  return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                }else if(card.category === "rent"){
+                  return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
+                }else {
+                  return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
+                }        
+              }) ):( 
+              
+              <p>No cards drawn</p>  )
+            }
+          </div>
         </div>
 
         <div style={{background: `${turn ? "rgb(0, 197, 0)" : "red"}`}} className="turn">
