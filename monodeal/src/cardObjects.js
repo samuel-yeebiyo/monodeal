@@ -1,6 +1,7 @@
 const property = {
     black:{
       category:"property",
+      id:"prop1",
       value:2,
       color:"Black",
       nComplete:4,
@@ -9,6 +10,7 @@ const property = {
     },
     lightBlue:{
       category:"property",
+      id:"prop2",
       value:3,
       color:"Light Blue",
       nComplete:3,
@@ -17,6 +19,7 @@ const property = {
     },
     green:{
       category:"property",
+      id:"prop3",
       value:2,
       color:"Green",
       nComplete:3,
@@ -25,6 +28,7 @@ const property = {
     },
     yellow:{
       category:"property",
+      id:"prop4",
       value:3,
       color:"Yellow",
       nComplete:3,
@@ -33,6 +37,7 @@ const property = {
     },
     red:{
       category:"property",
+      id:"prop5",
       value:2,
       color:"Red",
       nComplete:3,
@@ -41,6 +46,7 @@ const property = {
     },
     purple:{
       category:"property",
+      id:"prop6",
       value:3,
       color:"Purple",
       nComplete:3,
@@ -49,6 +55,7 @@ const property = {
     },
     orange:{
       category:"property",
+      id:"prop7",
       value:3,
       color:"Orange",
       nComplete:3,
@@ -57,6 +64,7 @@ const property = {
     },
     lightGreen:{
       category:"property",
+      id:"prop8",
       value:2,
       color:"Light Green",
       nComplete:2,
@@ -65,6 +73,7 @@ const property = {
     },
     blue:{
       category:"property",
+      id:"prop9",
       value:3,
       color:"Blue",
       nComplete:2,
@@ -73,6 +82,7 @@ const property = {
     },
     brown:{
       category:"property",
+      id:"prop10",
       value:3,
       color:"Brown",
       nComplete:2,
@@ -84,6 +94,7 @@ const property = {
   const wild = {
     'purple and orange1':{
       num:1,
+      id:"wild1",
       color1:'Purple',
       color2:'Orange',
       hex1:"#6400E6",
@@ -95,6 +106,7 @@ const property = {
     },
     'purple and orange2':{
       num:1,
+      id:"wild2",
       color1:'Purple',
       color2:'Orange',
       hex1:"#6400E6",
@@ -106,6 +118,7 @@ const property = {
     },
     'red and yellow1':{
       num:1,
+      id:"wild3",
       color1:'Red',
       color2:'Yellow',
       hex1:"#EF0000",
@@ -117,6 +130,7 @@ const property = {
     },
     'red and yellow2':{
       num:1,
+      id:"wild4",
       color1:'Red',
       color2:'Yellow',
       hex1:"#EF0000",
@@ -128,6 +142,7 @@ const property = {
     },
     'light blue and brown':{
       num:1,
+      id:"wild5",
       color1:'Light Blue',
       color2:'Brown',
       hex1:"#8FC4FF",
@@ -139,6 +154,7 @@ const property = {
     },
     'light blue and black':{
       num:1,
+      id:"wild6",
       color1:'Light Blue',
       color2:'Black',
       hex1:"#8FC4FF",
@@ -150,6 +166,7 @@ const property = {
     },
     'blue and green':{
       num:1,
+      id:"wild7",
       color1:'Blue',
       color2:'Green',
       hex1:"#0014C8",
@@ -161,6 +178,7 @@ const property = {
     },
     'black and green':{
       num:1,
+      id:"wild8",
       color1:'Black',
       color2:'Green',
       hex1:"#262626",
@@ -172,6 +190,7 @@ const property = {
     },
     'light green and black':{
       num:1,
+      id:"wild9",
       color1:'Light Green',
       color2:'Black',
       hex1:"#7DFF7D",
@@ -183,6 +202,7 @@ const property = {
     },
     'wild property1':{
       num:1,
+      id:"wild10",
       color1:'all',
       color2:'all',
       category:'wildcard',
@@ -195,6 +215,7 @@ const property = {
     },
     'wild property2':{
       num:1,
+      id:"wild11",
       color1:'all',
       color2:'all',
       category:'wildcard',
@@ -217,6 +238,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:2,
+      id:"rent1",
       value:2
     },
     "black and light green":{
@@ -227,6 +249,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:2,
+      id:"rent2",
       value:2
     },
     "green and blue":{
@@ -237,6 +260,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:2,
+      id:"rent3",
       value:2
     },
     "brown and light blue":{
@@ -247,6 +271,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:2,
+      id:"rent4",
       value:2
     },
     "red and yellow":{
@@ -257,6 +282,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:2,
+      id:"rent5",
       value:2
     },
     "wild rent":{
@@ -267,6 +293,7 @@ const property = {
       message: "Pick a property to apply rent",
       category:"rent",
       num:3,
+      id:"rent6",
       value:2
     }
   }
@@ -277,70 +304,80 @@ const property = {
       num:10,
       message:"Draw 2 cards",
       category:"action",
-      value:2
+      value:2,
+      id:"action1"
     },
     forceDeal:{
       name:"Forced Deal",
       num:4,
       message:"Choose cards to exchange",
       category:"action",
-      value:2
+      value:2,
+      id:"action2"
     },
     sayNo:{
       name:"Just Say No",
       num:3,
       message:"Denied!!",
       category:"action",
-      value:2
+      value:2,
+      id:"action3"
     },
     slyDeal:{
       name:"Sly Deal",
       num:3,
       message:"Pick a card to steal",
       category:"action",
-      value:2
+      value:2,
+      id:"action4"
     },
     debtCollector:{
       name:"Debt Collector",
       num:3,
       message:"Collect $5",
       category:"action",
-      value:2
+      value:2,
+      id:"action5"
     },
     birthday:{
       name:"It's My Birthday",
       num:3,
       message:"Collect $2",
       category:"action",
-      value:2
+      value:2,
+      id:"action6"
     },
     house:{
       name:"House",
       num:3,
       message:"Choose a complete set to put down",
       category:"action",
-      value:2
+      value:2,
+      id:"action7"
     },
     hotel:{
       name:"Hotel",
       num:3,
       message:"Choose a complete set with a house to put down",
       category:"action",
-      value:2
+      value:2,
+      id:"action8"
     },
     dealBreaker:{
       name:"Deal Breaker",
       num:2,
       message:"Choose a complete set to steal",
       category:"action",
-      value:2
+      value:2,
+      id:"action9"
     },
     doubleRent:{
       name:"Double The Rent",
       num:2,
       message:"Double the rent",
       category:"action",
-      value:2
+      value:2,
+      id:"action10"
     }
   }
   
@@ -349,35 +386,41 @@ const property = {
       value:10,
       num:1,
       category:"money",
-      hex:"#FCD187"
+      hex:"#FCD187",
+      id:"money1",
     },
     $5:{
       value:5,
       num:2,
       category:"money",
-      hex:"#D7A2FF"
+      hex:"#D7A2FF",
+      id:"money2",
     },
     $4:{
       value:4,
       num:3,
       category:"money",
-      hex:"#B4CDFF"
+      hex:"#B4CDFF",
+      id:"money3",
     },
     $3:{
       value:3,
       num:3,
       category:"money",
-      hex:"#E3FFE4"
+      hex:"#E3FFE4",
+      id:"money4",
     },$2:{
       value:2,
       num:5,
       category:"money",
-      hex:"#FFC9C9"
+      hex:"#FFC9C9",
+      id:"money5",
     },$1:{
       value:1,
       num:6,
       category:"money",
-      hex:"#FFDEBE"
+      hex:"#FFDEBE",
+      id:"money6",
     },
   }
   

@@ -1,5 +1,6 @@
 import {useState, useRef, useEffect} from 'react' 
-
+import {Droppable} from 'react-beautiful-dnd'
+import {v4} from 'uuid'
 
 import './App.css';
 
@@ -362,30 +363,36 @@ const initDeck = ()=>{
   let batch = deck;
   Object.values(property).forEach(val => {
     for(let i=0; i<val.nComplete; i++){
+      val.id = v4()
+      console.log({val})
       batch = [...batch, val]
     }
   })
 
   Object.values(money).forEach(val => {
     for(let i=0; i<val.num; i++){
+      val.id = v4()
       batch = [...batch, val]
     }
   })
 
   Object.values(wild).forEach(val => {
     for(let i=0; i<val.num; i++){
+      val.id = v4()
       batch = [...batch, val]
     }
   })
 
   Object.values(rent).forEach(val => {
     for(let i=0; i<val.num; i++){
+      val.id = v4()
       batch = [...batch, val]
     }
   })
 
   Object.values(action).forEach(val => {
     for(let i=0; i<val.num; i++){
+      val.id = v4()
       batch = [...batch, val]
     }
   })
@@ -1280,26 +1287,36 @@ const pass = ()=>{
             <p style={{color:"white"}}>No property placed</p>
           )}
         </div>
-        <div className="personalMoney">
-        {moneyTable.length > 0 ? (
-          <div className="moneyTable">
 
-            {moneyTable.map((card, index)=>{
-              if(card.category == "rent"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
-              }else if(card.category == "money"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
-              }else if(card.category == "action"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
-              }      
-            }) }
-            
-          </div>
+
+        <Droppable droppableId="money">
+        {
+          (provided)=>(
+            <div className="personalMoney" {...provided.droppableProps} ref={provided.innerRef}>
+              {moneyTable.length > 0 ? (
+                <div className="moneyTable">
+
+                  {moneyTable.map((card, index)=>{
+                    if(card.category == "rent"){
+                      return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
+                    }else if(card.category == "money"){
+                      return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
+                    }else if(card.category == "action"){
+                      return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
+                    }      
+                  }) }
+                  
+                </div>
+                )
+                :
+                (<p style={{color:"white"}}>No Money</p>)
+              }
+            </div>
           )
-          :
-          (<p style={{color:"white"}}>No Money</p>)
         }
-        </div>
+        
+        </Droppable>
+        
       
       </div>
 
@@ -1315,27 +1332,39 @@ const pass = ()=>{
             <p>Pass</p>
           </div>
           
+          <Droppable droppableId="drawn-cards" direction="horizontal">
+          {
+            (provided)=>(
+              <div className="drawn-cards" {...provided.droppableProps} ref={provided.innerRef}>
 
-          <div className="drawn-cards">
-            {drawn.length > 0  ? (
-              
-              drawn.map((card, index)=>{
-                if(card.category ==="property"){
-                  return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
-                }else if(card.category === "action"){
-                  return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
-                }else if(card.category === "wildcard"){
-                  return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
-                }else if(card.category === "rent"){
-                  return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
-                }else {
-                  return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
-                }        
-              }) ):( 
-              
-              <p>No cards drawn</p>  )
-            }
-          </div>
+                {drawn.length > 0  ? (
+                  
+                  drawn.map((card, index)=>{
+                    if(card.category ==="property"){
+                      return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
+                    }else if(card.category === "action"){
+                      return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                    }else if(card.category === "wildcard"){
+                      return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                    }else if(card.category === "rent"){
+                      return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
+                    }else {
+                      return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
+                    }        
+                  }) ):( 
+                  
+                  <p>No cards drawn</p>  )
+                }
+
+                {provided.placeholder}
+
+              </div>
+            )
+            
+
+          }
+            
+          </Droppable>
         </div>
 
         <div style={{background: `${turn ? "rgb(0, 197, 0)" : "red"}`}} className="turn">
