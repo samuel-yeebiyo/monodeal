@@ -1127,16 +1127,20 @@ const pass = ()=>{
 
   const dragEndFunction = (result) =>{
     const{destination, source, draggableId} = result;
+
     if(!destination){return;}
     if(destination.droppableId == source.droppableId){
       return
     }
 
-    if(source.droppableId == "drawn-cards"){
+    if(source.droppableId == "drawn-cards" && destination.droppableId == "money"){
       if(drawn[source.index].category !== "property"){
         placeBank(source.index)
       }
-      
+    }else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property"){
+      if(drawn[source.index].category == "property"){
+        placeProperty(source.index, "none")
+      }
     }
 
   }
@@ -1270,51 +1274,80 @@ const pass = ()=>{
           }
         </div>
         <div className="opponent">
-          <div className="opProperty">
-          {opCont.length > 0 ? (
-            opCont.map((cont, index)=>{
-              return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
-            })
-          ):(
-            <p style={{color:"white"}}>No property placed</p>
-          )}
-          </div>
-          <div className="opMoney">
-          {opMoney.length > 0 ? (
-            <div className="moneyTable">
 
-              {opMoney.map((card, index)=>{
-                if(card.category == "rent"){
-                  return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/></div>
-                }else if(card.category == "money"){
-                  return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>    
-                }else if(card.category == "action"){
-                  return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
-                }  
-              }) }
-            </div>
+        <Droppable droppableId="opponent-property" direction="horizontal" type="one">
+        {
+          (provided)=>(
+            <div className="opProperty" {...provided.droppableProps} ref={provided.innerRef}>
+              {opCont.length > 0 ? (
+                opCont.map((cont, index)=>{
+                  return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+                })
+              ):(
+                <p style={{color:"white"}}>No property placed</p>
+              )}
+              </div>
+          )
+        }
+         
+        </Droppable>
+          <Droppable droppableId="op-money" direction="horizontal">
+          {
+            (provided)=>(
+              <div className="personalMoney" {...provided.droppableProps} ref={provided.innerRef} type="one">
+                {opMoney.length > 0 ? (
+
+                  <div className="moneyTable">
+
+                    {opMoney.map((card, index)=>{
+                      if(card.category == "rent"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
+                      }else if(card.category == "money"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
+                      }else if(card.category == "action"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
+                      }      
+                    }) }
+                    {provided.placeholder}
+                    
+                  </div>
+
+                  )
+                  :
+                  (<p style={{color:"white"}}>No Money</p>)
+                }
+              </div>
             )
-            :
-            (<p style={{color:"white"}}>No Money</p>)
           }
-          </div>
+          
+          </Droppable>
           
         </div>
 
         {/* personal property section */}
+
+        
         <div className="personal">
-          <div className="personalProperty">
-            {container.length > 0 ? (
-              container.map((cont, index)=>{
-                return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
-              })
-            ):(
-              <p style={{color:"white"}}>No property placed</p>
-            )}
-          </div>
+
+          <Droppable droppableId="personal-property" direction="horizontal" type="one">
+          {
+            (provided)=>(
+              <div className="personalProperty" {...provided.droppableProps} ref={provided.innerRef}>
+                {container.length > 0 ? (
+                  container.map((cont, index)=>{
+                    return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+                  })
+                ):(
+                  <p style={{color:"white"}}>No property placed</p>
+                )}
+                {provided.placeholder}
+              </div>
+            )
+          }
+          </Droppable>
 
           
-          <Droppable droppableId="money" direction="horizontal">
+          <Droppable droppableId="money" direction="horizontal" type="one">
           {
             (provided)=>(
               <div className="personalMoney" {...provided.droppableProps} ref={provided.innerRef}>
@@ -1359,7 +1392,7 @@ const pass = ()=>{
               }}}>
               <p>Pass</p>
             </div>
-            <Droppable droppableId="drawn-cards" direction="horizontal">
+            <Droppable droppableId="drawn-cards" direction="horizontal" type="one">
             {
               (provided)=>(
                 <div className="drawn-cards" {...provided.droppableProps} ref={provided.innerRef}>
