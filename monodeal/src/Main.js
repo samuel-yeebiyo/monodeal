@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { io } from 'socket.io-client'
 
-import {DragDropContext} from 'react-beautiful-dnd'
-
 import Form from './components/Form'
 import App from './App'
 
@@ -35,10 +33,8 @@ const Main = () =>{
     return(
         <div>
             {!resp ?
-                <Form create={create} join={join}/> :
-                <DragDropContext>
-                    <App resp={resp} socket={socket} room={table}/>
-                </DragDropContext>
+                <Form create={create} join={join}/> :    
+                <App resp={resp} socket={socket} room={table}/>
             }
         </div>
     )

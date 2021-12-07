@@ -14,7 +14,7 @@ const WildCard = (props) =>  {
     }
 
     return (
-      <Draggable draggableId={props.wild.id} index={props.index}>
+      <Draggable draggableId={`${props.wild.id}${props.index}`} index={props.index} key={`${props.wild.id}${props.index}`}>
       {
         (provided)=>(
           <div className="card" onClick={()=>{toggleOptions()}} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>

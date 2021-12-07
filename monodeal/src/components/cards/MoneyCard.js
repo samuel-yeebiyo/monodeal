@@ -15,7 +15,7 @@ const MoneyCard = (props) =>  {
 
 
     return (
-      <Draggable draggableId={props.money.id} index={props.index}>
+      <Draggable draggableId={`${props.money.id}${props.index}`} index={props.index} key={`${props.money.id}${props.index}`}>
       {
         (provided)=>(
           <div className="card" onClick={()=> toggleOptions()} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>

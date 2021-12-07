@@ -12,7 +12,7 @@ const PropertyCard = (props) =>  {
     }
 
     return (
-      <Draggable draggableId={props.property.id} index={props.index}>
+      <Draggable draggableId={`${props.property.id}${props.index}`} index={props.index} key={`${props.property.id}${props.index}`}>
       {
         (provided)=>(
           <div className="card" onClick={()=>{toggleOptions()}} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
