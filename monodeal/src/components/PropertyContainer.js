@@ -14,6 +14,9 @@ const PropertyContainer = (props) =>  {
 
     const [rent, setRent] = useState()
     const [complete, setComplete] = useState(false)
+    const [uniqueId, setUniqueId] = useState(v4())
+   
+
 
     useEffect(()=>{
         let rentChart = [] ;
@@ -35,7 +38,7 @@ const PropertyContainer = (props) =>  {
         }
         
         console.log("Rent: ", number)
-    },[])
+    },[]) //This will need some fixing
 
     useEffect(()=>{
         if(!props.opponent){
@@ -50,12 +53,12 @@ const PropertyContainer = (props) =>  {
     }, [rent])
 
     return (
-        <Draggable draggableId={`${props.contains.color}`} index={props.index} key={`${v4()}`}>
+        <Draggable draggableId={uniqueId} index={props.index} key={uniqueId}>
         {
             (provided)=>(
-                <div className="prop-container" {...provided.draggableProps} ref={provided.innerRef}>
+                <div className="upper-prop-container" {...provided.draggableProps} ref={provided.innerRef}>
                     <div className="container-handle" {...provided.dragHandleProps}></div>
-                    <Droppable droppableId={`${props.contains.color}`} direction="vertical" type="cards">
+                    <Droppable droppableId={`${props.contains.color}`} direction="vertical" type="one">
                         {
                             (provided)=>(
                                 <div className="prop-container" {...provided.droppableProps} ref={provided.innerRef}>
@@ -67,9 +70,9 @@ const PropertyContainer = (props) =>  {
                                         {
                                             props.contains.cards.map((card, index)=>{
                                                 if(card.category == "property"){
-                                                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><PropertyCard property={card} index={index} placed={true}/></div>
+                                                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><PropertyCard property={card} index={index} placed={true} isOpp={props.isOpp}/></div>
                                                 }else{
-                                                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><WildCard property={props.property} turn={props.turn} action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true}/></div>
+                                                    return <div className="props" style={{top: `${index == 0 ? 20 :index * 30+20}px`}}><WildCard property={props.property} turn={props.turn} action={props.action} pop={props.pop} index={index} containerIndex={props.index} flip={props.flip} wild={card} placed={true} isOpp={props.isOpp}/></div>
                                                 }
                                             })
                                             

@@ -7,12 +7,14 @@
     right:0;
     z-index: 1000;
 }
+.upper-prop-container{
+    position:relative;
+}
 .prop-container{
     position:relative;
-    min-height:49%;
+    min-height:100%;
     height:auto;
     width:138px;
-    border:1px solid red;
 }
 .props{
     position: absolute;

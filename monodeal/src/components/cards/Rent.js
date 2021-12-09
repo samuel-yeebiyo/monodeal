@@ -12,7 +12,7 @@ const RentCard = (props) =>  {
     }
 
     return (
-      <Draggable draggableId={`${props.rent.id}${props.index}`} index={props.index} key={`${props.rent.id}${props.index}`}>
+      <Draggable draggableId={`${props.rent.id}${props.index}`} index={props.index} key={`${props.rent.id}${props.index}`} isDragDisabled={props.isMoney ? true : false}>
       {
         (provided)=>(
           <div className="card" onClick={()=>{toggleOptions()}} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>

@@ -34,6 +34,10 @@ import {property, wild, rent, action, money} from './cardObjects'
 
 function App(props) {
 
+  //Drag type states
+  const dragType = useRef("one")
+  dragType.current="one"
+
   //initialization
   const [joined, setJoined] = useState([])
   const [start, setStart] = useState(false)
@@ -359,44 +363,48 @@ const initGame = ()=>{
   props.socket.emit("start-game", props.room, true)
 }
 
+const generateNewID = () =>{
+  return v4();
+}
+
 const initDeck = ()=>{
   let batch = deck;
   Object.values(property).forEach(val => {
     for(let i=0; i<val.nComplete; i++){
-      val.id = v4()
-      console.log({val})
-      batch = [...batch, val]
+      let temp = {...val, id: v4()+i}
+      batch = [...batch, temp]
     }
   })
 
   Object.values(money).forEach(val => {
     for(let i=0; i<val.num; i++){
-      val.id = v4()
-      batch = [...batch, val]
+      let temp = {...val, id: v4()+i}
+      batch = [...batch, temp]
     }
   })
 
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      val.id = v4()
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(wild).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     let temp = {...val, id: v4()+i}
+  //     batch = [...batch, temp]
+  //   }
+  // })
 
-  Object.values(rent).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      val.id = v4()
-      batch = [...batch, val]
-    }
-  })
+  // Object.values(rent).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     let temp = {...val, id: v4()+i}
+  //     batch = [...batch, temp]
+  //   }
+  // })
 
-  Object.values(action).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      val.id = v4()
-      batch = [...batch, val]
-    }
-  })
-console.log({batch})
+  // Object.values(action).forEach(val => {
+  //   for(let i=0; i<val.num; i++){
+  //     let temp = {...val, id: v4()+i}
+  //     batch = [...batch, temp]
+  //   }
+  // })
+
+  console.log({batch})
   setDeck(batch);
 }
 
@@ -1128,13 +1136,16 @@ const pass = ()=>{
   const dragEndFunction = (result) =>{
     const{destination, source, draggableId} = result;
 
+    console.log("Reverting")
+    dragType.current = "one"
+
     if(!destination){return;}
     if(destination.droppableId == source.droppableId){
       return
     }
 
     if(source.droppableId == "drawn-cards" && destination.droppableId == "money"){
-      if(drawn[source.index].category !== "property"){
+      if(drawn[source.index].category !== "property" && drawn[source.index].category !== "wildcard"){
         placeBank(source.index)
       }
     }else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property"){
@@ -1145,12 +1156,20 @@ const pass = ()=>{
 
   }
 
+  const dragStartFunction = (result)=>{
+    const {source, type} = result
+
+  }
+
+
+
 
 
 
   return (
     <div className="App">
 
+    {/*Waiting Area Modal*/}
       {!start &&
         <div className="modal">
           <div className="center">
@@ -1178,7 +1197,7 @@ const pass = ()=>{
         </div>
       }
 
-
+    {/*Distributing cards*/}
       {dist &&
         <div className="modal">
           <div className="distribute">
@@ -1188,6 +1207,7 @@ const pass = ()=>{
         </div>
       }
 
+      {/*Modal to discard extra cards*/}
       {Epop &&
         <div className="modal">
           <div className="center">
@@ -1196,18 +1216,21 @@ const pass = ()=>{
         </div>
       }
 
+      {/*Modal to flip and place wildcards*/}
       {wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
           <WildCardPopUp move={move} action={wildAction} change={flip} place={placeProperty}/>
         </div>
       }
 
+      {/*Modal to use rent cards*/}
       {rentpopUp &&
         <div className="modal">
           <RentPopUp move={move} update={updateDrawn} drawn={drawn} pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
         </div>
       }
 
+      {/*Modal to pay money*/}
       {payPopup &&
         <div className="modal">
           <PayPopUp deny={denial} drawn={drawn} pop={togglePayPopup}  update={updateDrawn} send={sendPayment} money={moneyTable} property={container}  amount={payAmount}/>
@@ -1216,7 +1239,6 @@ const pass = ()=>{
 
 
       {/*Action cards*/}
-
       {slyPopup &&
         <div className="modal">
           <SlyPopUp move={move} curr={curAction} update={updateDrawn} opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
@@ -1263,7 +1285,8 @@ const pass = ()=>{
         </div>
       }
 
-      <DragDropContext onDragEnd={dragEndFunction}>
+      {/*------------------------DRAG DROP CONTEXT STARTS HERE------------------------*/}
+      <DragDropContext onDragEnd={dragEndFunction} onDragStart={dragStartFunction}>
 
 
         {/* oppponent property section */}
@@ -1275,16 +1298,16 @@ const pass = ()=>{
         </div>
         <div className="opponent">
 
-        <Droppable droppableId="opponent-property" direction="horizontal" type="one">
+        <Droppable droppableId="opponent-property" direction="horizontal" type="two" isDropDisabled={true}>
         {
-          (provided)=>(
+          (provided, snapshot)=>(
             <div className="opProperty" {...provided.droppableProps} ref={provided.innerRef}>
               {opCont.length > 0 ? (
                 opCont.map((cont, index)=>{
-                  return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+                  return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet} isOpp={true}/>
                 })
               ):(
-                <p style={{color:"white"}}>No property placed</p>
+                <div style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white', width:'100%'}}>No Property</div>
               )}
               </div>
           )
@@ -1294,18 +1317,18 @@ const pass = ()=>{
           <Droppable droppableId="op-money" direction="horizontal">
           {
             (provided)=>(
-              <div className="personalMoney" {...provided.droppableProps} ref={provided.innerRef} type="one">
+              <div className="opMoney" {...provided.droppableProps} ref={provided.innerRef} type="one">
                 {opMoney.length > 0 ? (
 
                   <div className="moneyTable">
 
                     {opMoney.map((card, index)=>{
                       if(card.category == "rent"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors} isMoney={true}/></div>
                       }else if(card.category == "money"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true} isMoney={true}/></div>
                       }else if(card.category == "action"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true} isMoney={true}/></div>
                       }      
                     }) }
                     {provided.placeholder}
@@ -1314,7 +1337,9 @@ const pass = ()=>{
 
                   )
                   :
-                  (<p style={{color:"white"}}>No Money</p>)
+                  (
+                    <div className="moneyTable" style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white'}}>No Money</div>
+                  )
                 }
               </div>
             )
@@ -1324,21 +1349,21 @@ const pass = ()=>{
           
         </div>
 
-        {/* personal property section */}
 
         
+        {/* personal property section */}
         <div className="personal">
 
-          <Droppable droppableId="personal-property" direction="horizontal" type="one">
+          <Droppable droppableId="property-containers" direction="horizontal" type="two" isDropDisabled={false} >
           {
             (provided)=>(
               <div className="personalProperty" {...provided.droppableProps} ref={provided.innerRef}>
                 {container.length > 0 ? (
                   container.map((cont, index)=>{
-                    return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
+                    return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet} dragType={dragType}/>
                   })
                 ):(
-                  <p style={{color:"white"}}>No property placed</p>
+                  <div style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white', width:'300px'}}>No Property</div>
                 )}
                 {provided.placeholder}
               </div>
@@ -1346,37 +1371,45 @@ const pass = ()=>{
           }
           </Droppable>
 
-          
-          <Droppable droppableId="money" direction="horizontal" type="one">
+          <Droppable droppableId="personal-property" direction="horizontal" type="one">
           {
             (provided)=>(
-              <div className="personalMoney" {...provided.droppableProps} ref={provided.innerRef}>
-                {moneyTable.length > 0 ? (
-
-                  <div className="moneyTable">
-
-                    {moneyTable.map((card, index)=>{
-                      if(card.category == "rent"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
-                      }else if(card.category == "money"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
-                      }else if(card.category == "action"){
-                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
-                      }      
-                    }) }
-                    {provided.placeholder}
-                    
-                  </div>
-
-                  )
-                  :
-                  (<p style={{color:"white"}}>No Money</p>)
-                }
+              <div className="new-property" {...provided.droppableProps} ref={provided.innerRef}>
+                {provided.placeholder}
               </div>
+              
             )
           }
-          
           </Droppable>
+
+          
+          
+          <div className="personalMoney" >
+            <Droppable droppableId="money" direction="horizontal" type="one" className="dd">
+            {
+              (provided, snapshot)=>(
+                <div className="moneyTable" {...provided.droppableProps} ref={provided.innerRef} style={{backgroundColor: snapshot.isDraggingOver ? "skyblue" : "" }}>
+                  {moneyTable.length > 0 ? 
+                      moneyTable.map((card, index)=>{
+                        if(card.category == "rent"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors} isMoney={true}/></div>
+                        }else if(card.category == "money"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true} isMoney={true}/></div>
+                        }else if(card.category == "action"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true} isMoney={true}/></div>
+                        }      
+                      }) 
+                    :
+                    (
+                      <div className="moneyTable" style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white'}}>No Money</div>
+                      )
+                  }
+                </div>
+                )
+            }
+            </Droppable>
+          </div>
+           
           
         
         </div>

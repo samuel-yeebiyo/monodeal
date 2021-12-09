@@ -39,6 +39,8 @@ io.on("connection", socket =>{
         currentRoom.users.push(user);
         rooms.push(currentRoom)
 
+        console.log("Socket ",socket.id, " created room: ", room)
+
         socket.emit("get-users", currentRoom.users)
     })
 
@@ -70,12 +72,12 @@ io.on("connection", socket =>{
     })
 
     socket.on("updateProperty", (table, room) =>{
-        console.log("Deck saved in server ", table.length)
+        console.log("Property:", table.length)
         socket.to(room).emit("getOpProp", table)
     })
 
     socket.on("updateMoney", (table, room) =>{
-        console.log("Deck saved in server ", table.length)
+        console.log("Money", table.length)
         socket.to(room).emit("getMoney", table)
     })
 
