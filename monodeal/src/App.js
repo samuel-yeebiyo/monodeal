@@ -376,19 +376,19 @@ const initDeck = ()=>{
     }
   })
 
-  Object.values(money).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      let temp = {...val, id: v4()+i}
-      batch = [...batch, temp]
-    }
-  })
-
-  // Object.values(wild).forEach(val => {
+  // Object.values(money).forEach(val => {
   //   for(let i=0; i<val.num; i++){
   //     let temp = {...val, id: v4()+i}
   //     batch = [...batch, temp]
   //   }
   // })
+
+  Object.values(wild).forEach(val => {
+    for(let i=0; i<val.num; i++){
+      let temp = {...val, id: v4()+i}
+      batch = [...batch, temp]
+    }
+  })
 
   // Object.values(rent).forEach(val => {
   //   for(let i=0; i<val.num; i++){
@@ -809,6 +809,20 @@ const pass = ()=>{
     console.log("Temp: ", tempContainer)
   }
 
+  const placeWildCard = (drawnIdx, containerIdx)=>{
+    let tempContainer = container;
+    let tempDrawn = drawn;
+
+    tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
+    
+    tempDrawn.splice(drawnIdx,1);
+    setContainer(tempContainer)
+    setDrawn(tempDrawn);
+    toggleUpdate()
+
+
+  }
+
   const wildActionSet = (act, index, placed, cont)=>{
     console.log("Action set called")
     let temp;
@@ -1148,10 +1162,11 @@ const pass = ()=>{
       if(drawn[source.index].category !== "property" && drawn[source.index].category !== "wildcard"){
         placeBank(source.index)
       }
-    }else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property"){
-      if(drawn[source.index].category == "property"){
+    }else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && drawn[source.index].category == "property"){
         placeProperty(source.index, "none")
-      }
+    }else if(drawn[source.index].category == "wildcard" && 
+        (destination.droppableId == drawn[source.index].color1 || destination.droppableId == drawn[source.index].color2)){
+          placeWildCard(source.index, destination.index)
     }
 
   }
