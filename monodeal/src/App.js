@@ -809,18 +809,52 @@ const pass = ()=>{
     console.log("Temp: ", tempContainer)
   }
 
-  const placeWildCard = (drawnIdx, containerIdx)=>{
+  const placeWildCard = (drawnIdx, color, set)=>{
     let tempContainer = container;
     let tempDrawn = drawn;
 
+    let containerIdx =0 ;
+    for (let i=0; i<tempContainer.length;i++){
+      console.log({container: tempContainer[i]})
+      if(tempContainer[i].color == color && tempContainer[i].set == set){
+        console.log("Found")
+        containerIdx = i;
+        break;
+      }
+    }
+
     tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
-    
+
     tempDrawn.splice(drawnIdx,1);
     setContainer(tempContainer)
     setDrawn(tempDrawn);
     toggleUpdate()
 
 
+  }
+
+  const switchWildCard = (source, dest, cardIdx) =>{
+    let tempContainer = container;
+
+    let srcIdx = 0;
+    let destIdx = 0;
+    
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == source.srcColor && tempContainer[i].set == source.srcSet){
+        srcIdx = i
+      }
+      else if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        destIdx = i
+      }
+    }
+
+    console.log({srcIdx, destIdx})
+
+    tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
+    tempContainer[srcIdx].cards.splice(cardIdx, 1)
+
+    setContainer(tempContainer)
+    toggleUpdate()
   }
 
   const wildActionSet = (act, index, placed, cont)=>{
@@ -1147,26 +1181,49 @@ const pass = ()=>{
   destination -> droppableId index
 */
 
+
   const dragEndFunction = (result) =>{
     const{destination, source, draggableId} = result;
 
-    console.log("Reverting")
-    dragType.current = "one"
-
+    //if dropped outside of droppable
     if(!destination){return;}
+
+    //if dropped in the same place
     if(destination.droppableId == source.droppableId){
       return
     }
 
+    //if money (convertable) cards are dropped in money section
     if(source.droppableId == "drawn-cards" && destination.droppableId == "money"){
       if(drawn[source.index].category !== "property" && drawn[source.index].category !== "wildcard"){
         placeBank(source.index)
       }
-    }else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && drawn[source.index].category == "property"){
+    } //if property card dropped on personal property box (should also create a new property container)
+    else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && drawn[source.index].category == "property"){
         placeProperty(source.index, "none")
-    }else if(drawn[source.index].category == "wildcard" && 
-        (destination.droppableId == drawn[source.index].color1 || destination.droppableId == drawn[source.index].color2)){
-          placeWildCard(source.index, destination.index)
+    } //if wild card containing the same color dropped on property container
+    else if(drawn[source.index].category == "wildcard" ){
+
+      let idLength = destination.droppableId.length
+      let color = destination.droppableId.substring(0,idLength-1)
+      let set = Number(destination.droppableId.substring(idLength-1,idLength))
+      
+      if(color == drawn[source.index].color1 || color == drawn[source.index].color2 || drawn[source.index].color == 'all'){
+        console.log({color, set})
+        placeWildCard(source.index, color, set)
+      }
+    }else if(draggableId.includes("wildcard")){
+      
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      let srcIdLength = source.droppableId.length
+      let srcColor = source.droppableId.substring(0,srcIdLength-1)
+      let srcSet = Number(source.droppableId.substring(srcIdLength-1,srcIdLength))
+
+
+      switchWildCard({srcColor, srcSet}, {destColor, destSet}, source.index)
     }
 
   }

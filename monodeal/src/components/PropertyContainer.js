@@ -53,12 +53,14 @@ const PropertyContainer = (props) =>  {
     }, [rent])
 
     return (
-        <Draggable draggableId={uniqueId} index={props.index} key={uniqueId}>
+        <Draggable draggableId={uniqueId} index={props.index} key={uniqueId} isDragDisabled={props.opponent ? true : false}>
         {
             (provided)=>(
                 <div className="upper-prop-container" {...provided.draggableProps} ref={provided.innerRef}>
-                    <div className="container-handle" {...provided.dragHandleProps}></div>
-                    <Droppable droppableId={`${props.contains.color}`} direction="vertical" type="one">
+                    {!props.opponent && 
+                        <div className="container-handle" {...provided.dragHandleProps}></div>
+                    }
+                    <Droppable droppableId={`${props.contains.color}${props.contains.set}`} direction="vertical" type="one" isDropDisabled={props.opponent ? true : false}>
                         {
                             (provided)=>(
                                 <div className="prop-container" {...provided.droppableProps} ref={provided.innerRef}>
