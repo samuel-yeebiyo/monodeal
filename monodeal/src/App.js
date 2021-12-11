@@ -107,9 +107,7 @@ function App(props) {
   }, [])
 
 
-  useEffect(()=>{
-    props.socket.emit("updateDeck", deck, props.room)
-    
+  useEffect(()=>{    
     props.socket.emit("updateProperty", container, props.room)
 
     props.socket.emit("updateMoney", moneyTable, props.room)
@@ -127,19 +125,26 @@ function App(props) {
   //socket entries
 
   //Get players in the game
-  props.socket.on("get-users", (users)=>{
+  props.socket.off("get-users").on("get-users", (users)=>{
     console.log("got users")
     console.log(users)
     setJoined(users)
   })
 
   //start the game for opponent
-  props.socket.on("starting-game", fact =>{
-    setStart(fact)
+  props.socket.off("starting-game").on("starting-game", (generatedDeck, fact) =>{
+    console.log("Getting Deck")
+    setStart(true)
+  })
+
+  props.socket.off("drawing").on("drawing", (drawn)=>{
+    setDrawn(prev=>{
+      return [...prev, ...drawn]
+    })
   })
 
   //get main deck from room creator
-  props.socket.on("get-deck", roomDeck =>{
+  props.socket.off("get-deck").on("get-deck", roomDeck =>{
     setDeck(roomDeck)
   })
 
@@ -354,10 +359,6 @@ function App(props) {
   /**************INITIALIZATION PROCESS*****************/
 const initGame = ()=>{
   
-  initDeck();
- 
-  toggleUpdate()
-  
   setStart(true)
 
   props.socket.emit("start-game", props.room, true)
@@ -367,64 +368,10 @@ const generateNewID = () =>{
   return v4();
 }
 
-const initDeck = ()=>{
-  let batch = deck;
-  Object.values(property).forEach(val => {
-    for(let i=0; i<val.nComplete; i++){
-      let temp = {...val, id: v4()+i}
-      batch = [...batch, temp]
-    }
-  })
-
-  // Object.values(money).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     let temp = {...val, id: v4()+i}
-  //     batch = [...batch, temp]
-  //   }
-  // })
-
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      let temp = {...val, id: v4()+i}
-      batch = [...batch, temp]
-    }
-  })
-
-  // Object.values(rent).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     let temp = {...val, id: v4()+i}
-  //     batch = [...batch, temp]
-  //   }
-  // })
-
-  // Object.values(action).forEach(val => {
-  //   for(let i=0; i<val.num; i++){
-  //     let temp = {...val, id: v4()+i}
-  //     batch = [...batch, temp]
-  //   }
-  // })
-
-  console.log({batch})
-  setDeck(batch);
-}
 
 const draw = (num) =>{
   let newA = drawn;
-  let temp = deck;
-
-  for(let i=0; i< num;i++){
-    let n = Math.floor(Math.random() * deck.length);
-    newA.push(deck[n])
-
-    //update deck
-    temp.splice(n,1);
-  }
-  
-  setDrawn(newA)
-
-  setDeck(temp);
-
-  toggleUpdate()
+  props.socket.emit("draw", num, props.room, props.socket.id)
 }
 
 const deal = () =>{
@@ -809,6 +756,64 @@ const pass = ()=>{
     console.log("Temp: ", tempContainer)
   }
 
+
+  const appendProperty = (dest, drawnIdx) =>{
+    let tempContainer = container;
+    let tempDrawn = drawn;
+
+    let containerIdx =0 ;
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        console.log("Found")
+        containerIdx = i;
+        break;
+      }
+    }
+
+    if(tempContainer[containerIdx].complete != true){
+      tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
+      if(tempContainer[containerIdx].cards.length == tempContainer[containerIdx].nComplete){
+        tempContainer[containerIdx].complete = true;
+      }
+    }
+
+    tempDrawn.splice(drawnIdx,1);
+    setContainer(tempContainer)
+    setDrawn(tempDrawn);
+    toggleUpdate()
+  }
+
+
+  const switchProperty = (source, dest, cardIdx)=>{
+
+    let tempContainer = container;
+
+    let srcIdx = 0;
+    let destIdx = 0;
+    
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == source.srcColor && tempContainer[i].set == source.srcSet){
+        srcIdx = i
+      }
+      else if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        destIdx = i
+      }
+    }
+
+
+    let destinationColor = tempContainer[destIdx].color;
+    let sourceColor = tempContainer[srcIdx].cards[cardIdx].color
+
+    if(sourceColor == destinationColor){
+      tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
+      tempContainer[srcIdx].cards.splice(cardIdx, 1)
+
+      setContainer(tempContainer)
+      toggleUpdate()
+    }
+
+  }
+
   const placeWildCard = (drawnIdx, color, set)=>{
     let tempContainer = container;
     let tempDrawn = drawn;
@@ -848,13 +853,17 @@ const pass = ()=>{
       }
     }
 
-    console.log({srcIdx, destIdx})
 
-    tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
-    tempContainer[srcIdx].cards.splice(cardIdx, 1)
+    let destinationColor = tempContainer[destIdx].color;
+    let sourceColor = [tempContainer[srcIdx].cards[cardIdx].color1, tempContainer[srcIdx].cards[cardIdx].color2]
 
-    setContainer(tempContainer)
-    toggleUpdate()
+    if(sourceColor.includes(destinationColor) || sourceColor.includes("all")){
+      tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
+      tempContainer[srcIdx].cards.splice(cardIdx, 1)
+
+      setContainer(tempContainer)
+      toggleUpdate()
+    }
   }
 
   const wildActionSet = (act, index, placed, cont)=>{
@@ -1199,10 +1208,10 @@ const pass = ()=>{
         placeBank(source.index)
       }
     } //if property card dropped on personal property box (should also create a new property container)
-    else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && drawn[source.index].category == "property"){
+    else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && draggableId.includes("property")){
         placeProperty(source.index, "none")
     } //if wild card containing the same color dropped on property container
-    else if(drawn[source.index].category == "wildcard" ){
+    else if(draggableId.includes("wildcard") && source.droppableId == "drawn-cards"){
 
       let idLength = destination.droppableId.length
       let color = destination.droppableId.substring(0,idLength-1)
@@ -1212,7 +1221,8 @@ const pass = ()=>{
         console.log({color, set})
         placeWildCard(source.index, color, set)
       }
-    }else if(draggableId.includes("wildcard")){
+    } //if wild card is trasnferred to anothe property container
+    else if(draggableId.includes("wildcard")){
       
       let destIdLength = destination.droppableId.length
       let destColor = destination.droppableId.substring(0,destIdLength-1)
@@ -1224,6 +1234,28 @@ const pass = ()=>{
 
 
       switchWildCard({srcColor, srcSet}, {destColor, destSet}, source.index)
+    } //if property card is placed on a property container of the same color
+    else if(draggableId.includes("property") && source.droppableId == "drawn-cards"){
+
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      if(drawn[source.index].color == destColor){
+        appendProperty({destColor, destSet}, source.index)
+      }
+    }
+    else if(draggableId.includes("property")){
+      
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      let srcIdLength = source.droppableId.length
+      let srcColor = source.droppableId.substring(0,srcIdLength-1)
+      let srcSet = Number(source.droppableId.substring(srcIdLength-1,srcIdLength))
+
+      switchProperty({srcColor, srcSet}, {destColor, destSet}, source.index)
     }
 
   }
