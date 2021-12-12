@@ -585,133 +585,41 @@ const pass = ()=>{
     }
   }
 
-  const placeProperty = (index, selected)=>{
-    let tempContainer = container;
+  const newPropContainer = (index) => {
+    let tempContainer = container
+    let hand = drawn;
+
     if(tempContainer.length !=0){
-
-      let placedProp;
-      if(selected == "none"){
-        let exists = false;
-        tempContainer.map((cont)=>{
-          if(cont.color == drawn[index].color && cont.set == 1){
-            exists = true
-            if(cont.complete == true){
-              let found = false;
-              tempContainer.map((cont)=>{
-                if(cont.color == drawn[index].color && cont.set == 2){
-                  cont.cards.push(drawn[index])
-                  found=true;
-                }
-              })
-              if(found == false){
-                placedProp = {
-                  color:drawn[index].color,
-                  cards:[drawn[index]],
-                  complete:false,
-                  set:2,
-                  nComplete:drawn[index].nComplete,
-                  rent:0,
-                  house:0,
-                  hotel:0
-                }
-
-                tempContainer.push(placedProp);
+      let exists = false;
+      tempContainer.map((cont, idx)=>{
+        if(cont.color == drawn[index].color){
+          exists = true
+          if(cont.complete){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == drawn[index].color && cont.set == 2){
+                found=true;
               }
-            }else{
-              cont.cards.push(drawn[index])
-            }
-          }
-        })
-        if(exists == false){
-          placedProp = {
-            color:drawn[index].color,
-            cards:[drawn[index]],
-            complete:false,
-            set:1,
-            nComplete:drawn[index].nComplete,
-            rent:0,
-            house:0,
-            hotel:0
-          }
-
-          tempContainer.push(placedProp);
-        }
-      }else{
-        drawn[index].selected = selected;
-        let exists = false;
-        tempContainer.map((cont)=>{
-          if(cont.color == drawn[index].selected && cont.set == 1){
-            exists = true
-            if(cont.complete == true){
-              let found = false;
-              tempContainer.map((cont)=>{
-                if(cont.color == drawn[index].selected && cont.set == 2){
-                  cont.cards.push(drawn[index])
-                  found=true;
-                }
-              })
-              if(found == false){
-                let n;
-                Object.values(property).forEach(val => {
-                  if(val.color == drawn[index].selected){
-                    n = val.nComplete
-                  }
-                })
-                placedProp = {
-                  color:drawn[index].selected,
-                  cards:[drawn[index]],
-                  complete:false,
-                  set:2,
-                  nComplete:n,
-                  rent:0,
-                  house:0,
-                  hotel:0
-                }
-
-                tempContainer.push(placedProp);
+            })
+            if(found == false){
+              let placedProp = {
+                color:drawn[index].color,
+                cards:[drawn[index]],
+                complete:false,
+                set:2,
+                nComplete:drawn[index].nComplete,
+                rent:0,
+                house:0,
+                hotel:0
               }
-            }else{
-              cont.cards.push(drawn[index])
+              tempContainer.push(placedProp);
+              hand.splice(index, 1)
             }
           }
-        })
-        if(exists == false){
-          let n;
-          Object.values(property).forEach(val => {
-            if(val.color == drawn[index].selected){
-              n = val.nComplete
-            }
-          })
-
-          placedProp = {
-            color:drawn[index].selected,
-            cards:[drawn[index]],
-            complete:false,
-            set:1,
-            nComplete:n,
-            rent:0,
-            house:0,
-            hotel:0
-          }
-
-          tempContainer.push(placedProp);
-
         }
-      }
-
-      setContainer(tempContainer)
-      
-      let hand = drawn;
-      hand.splice(index, 1)
-      
-      setDrawn(hand)
-      toggleUpdate()
-      
-    }else{
-
-      let placedProp;
-      if(selected == "none"){
-        placedProp = {
+      })
+      if(!exists){
+        let placedProp = {
           color:drawn[index].color,
           cards:[drawn[index]],
           complete:false,
@@ -721,7 +629,78 @@ const pass = ()=>{
           house:0,
           hotel:0
         }
-      }else{
+
+        tempContainer.push(placedProp);
+        hand.splice(index, 1)
+      }
+    }else{
+      let placedProp = {
+        color:drawn[index].color,
+        cards:[drawn[index]],
+        complete:false,
+        set:1,
+        nComplete:drawn[index].nComplete,
+        rent:0,
+        house:0,
+        hotel:0
+      }
+
+      tempContainer.push(placedProp);
+      hand.splice(index, 1)
+    }
+
+    setContainer(tempContainer)
+    
+    setDrawn(hand)
+    toggleUpdate()
+  }
+
+  const placeProperty = (index, selected)=>{
+    let tempContainer = container;
+    let hand = drawn;
+
+    if(tempContainer.length !=0){
+
+      let placedProp;
+      drawn[index].selected = selected;
+      let exists = false;
+      tempContainer.map((cont)=>{
+        if(cont.color == drawn[index].selected && cont.set == 1){
+          exists = true
+          if(cont.complete == true){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == drawn[index].selected && cont.set == 2){
+                found=true;
+              }
+            })
+            if(found == false){
+              let n;
+              Object.values(property).forEach(val => {
+                if(val.color == drawn[index].selected){
+                  n = val.nComplete
+                }
+              })
+              placedProp = {
+                color:drawn[index].selected,
+                cards:[drawn[index]],
+                complete:false,
+                set:2,
+                nComplete:n,
+                rent:0,
+                house:0,
+                hotel:0
+              }
+
+              tempContainer.push(placedProp);
+              hand.splice(index, 1)
+
+            }
+          }
+        }
+      })
+
+      if(exists == false){
         let n;
         Object.values(property).forEach(val => {
           if(val.color == drawn[index].selected){
@@ -729,10 +708,8 @@ const pass = ()=>{
           }
         })
 
-        drawn[index].selected = selected;
-
         placedProp = {
-          color:selected,
+          color:drawn[index].selected,
           cards:[drawn[index]],
           complete:false,
           set:1,
@@ -741,13 +718,49 @@ const pass = ()=>{
           house:0,
           hotel:0
         }
+
+        tempContainer.push(placedProp);
+        hand.splice(index, 1)
+        
+
       }
+    
+
+      setContainer(tempContainer)
+
+      
+      setDrawn(hand)
+      toggleUpdate()
+      
+    }else{
+
+      let placedProp;
+    
+      let n;
+      Object.values(property).forEach(val => {
+        if(val.color == drawn[index].selected){
+          n = val.nComplete
+        }
+      })
+
+      drawn[index].selected = selected;
+
+      placedProp = {
+        color:selected,
+        cards:[drawn[index]],
+        complete:false,
+        set:1,
+        nComplete:n,
+        rent:0,
+        house:0,
+        hotel:0
+      }
+    
 
       tempContainer.push(placedProp);
 
       setContainer(tempContainer)
 
-      let hand = drawn;
       hand.splice(index, 1)
 
       setDrawn(hand)
@@ -807,6 +820,12 @@ const pass = ()=>{
     if(sourceColor == destinationColor){
       tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
       tempContainer[srcIdx].cards.splice(cardIdx, 1)
+      if(tempContainer[destIdx].cards.length == tempContainer[destIdx].nComplete){
+        tempContainer[destIdx].complete = true;
+      }
+      if(tempContainer[srcIdx].cards.length == 0){
+        tempContainer.splice(srcIdx, 1)
+      }
 
       setContainer(tempContainer)
       toggleUpdate()
@@ -823,12 +842,16 @@ const pass = ()=>{
       console.log({container: tempContainer[i]})
       if(tempContainer[i].color == color && tempContainer[i].set == set){
         console.log("Found")
+        tempDrawn[drawnIdx].selected = color
         containerIdx = i;
         break;
       }
     }
 
     tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
+    if(tempContainer[containerIdx].cards.length == tempContainer[containerIdx].nComplete){
+      tempContainer[containerIdx].complete = true;
+    }
 
     tempDrawn.splice(drawnIdx,1);
     setContainer(tempContainer)
@@ -858,9 +881,15 @@ const pass = ()=>{
     let sourceColor = [tempContainer[srcIdx].cards[cardIdx].color1, tempContainer[srcIdx].cards[cardIdx].color2]
 
     if(sourceColor.includes(destinationColor) || sourceColor.includes("all")){
+      tempContainer[srcIdx].cards[cardIdx].selected = destinationColor
       tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
       tempContainer[srcIdx].cards.splice(cardIdx, 1)
-
+      if(tempContainer[destIdx].cards.length == tempContainer[destIdx].nComplete){
+        tempContainer[destIdx].complete = true;
+      }
+      if(tempContainer[srcIdx].cards.length == 0){
+        tempContainer.splice(srcIdx, 1)
+      }
       setContainer(tempContainer)
       toggleUpdate()
     }
@@ -1209,7 +1238,9 @@ const pass = ()=>{
       }
     } //if property card dropped on personal property box (should also create a new property container)
     else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && draggableId.includes("property")){
-        placeProperty(source.index, "none")
+      if(draggableId.includes("property")){
+        newPropContainer(source.index)
+      }      
     } //if wild card containing the same color dropped on property container
     else if(draggableId.includes("wildcard") && source.droppableId == "drawn-cards"){
 
@@ -1320,7 +1351,7 @@ const pass = ()=>{
         </div>
       }
 
-      {/*Modal to flip and place wildcards*/}
+      {/*Modal to flip and place wildcard*/}
       {wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
           <WildCardPopUp move={move} action={wildAction} change={flip} place={placeProperty}/>

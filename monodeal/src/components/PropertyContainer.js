@@ -60,7 +60,7 @@ const PropertyContainer = (props) =>  {
                     {!props.opponent && 
                         <div className="container-handle" {...provided.dragHandleProps}></div>
                     }
-                    <Droppable droppableId={`${props.contains.color}${props.contains.set}`} direction="vertical" type="one" isDropDisabled={props.opponent ? true : false}>
+                    <Droppable droppableId={`${props.contains.color}${props.contains.set}${props.opponent ? "opp": ""}`} direction="vertical" type="one" isDropDisabled={props.opponent ? true : false}>
                         {
                             (provided)=>(
                                 <div className="prop-container" {...provided.droppableProps} ref={provided.innerRef}>
