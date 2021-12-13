@@ -33,12 +33,12 @@ const initDeck = ()=>{
       }
     })
   
-    // Object.values(money).forEach(val => {
-    //   for(let i=0; i<val.num; i++){
-    //     let temp = {...val, id: uuid.v4()+i}
-    //     batch = [...batch, temp]
-    //   }
-    // })
+    Object.values(money).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
   
     Object.values(wild).forEach(val => {
       for(let i=0; i<val.num; i++){
@@ -47,19 +47,19 @@ const initDeck = ()=>{
       }
     })
   
-    // Object.values(rent).forEach(val => {
-    //   for(let i=0; i<val.num; i++){
-    //     let temp = {...val, id: uuid.v4()+i}
-    //     batch = [...batch, temp]
-    //   }
-    // })
+    Object.values(rent).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
   
-    // Object.values(action).forEach(val => {
-    //   for(let i=0; i<val.num; i++){
-    //     let temp = {...val, id: uuid.v4()+i}
-    //     batch = [...batch, temp]
-    //   }
-    // })
+    Object.values(action).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
   
     return batch;
 }  
