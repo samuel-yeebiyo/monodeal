@@ -424,4 +424,4 @@ const property = {
     },
   }
   
-  export {property, wild, rent, action, money}
+  module.exports =  {property, wild, rent, action, money}

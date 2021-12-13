@@ -1,5 +1,6 @@
 import {useState, useRef, useEffect} from 'react' 
-
+import {Droppable, DragDropContext} from 'react-beautiful-dnd'
+import {v4} from 'uuid'
 
 import './App.css';
 
@@ -32,6 +33,10 @@ import {property, wild, rent, action, money} from './cardObjects'
 
 
 function App(props) {
+
+  //Drag type states
+  const dragType = useRef("one")
+  dragType.current="one"
 
   //initialization
   const [joined, setJoined] = useState([])
@@ -102,9 +107,7 @@ function App(props) {
   }, [])
 
 
-  useEffect(()=>{
-    props.socket.emit("updateDeck", deck, props.room)
-    
+  useEffect(()=>{    
     props.socket.emit("updateProperty", container, props.room)
 
     props.socket.emit("updateMoney", moneyTable, props.room)
@@ -122,19 +125,26 @@ function App(props) {
   //socket entries
 
   //Get players in the game
-  props.socket.on("get-users", (users)=>{
+  props.socket.off("get-users").on("get-users", (users)=>{
     console.log("got users")
     console.log(users)
     setJoined(users)
   })
 
   //start the game for opponent
-  props.socket.on("starting-game", fact =>{
-    setStart(fact)
+  props.socket.off("starting-game").on("starting-game", (generatedDeck, fact) =>{
+    console.log("Getting Deck")
+    setStart(true)
+  })
+
+  props.socket.off("drawing").on("drawing", (drawn)=>{
+    setDrawn(prev=>{
+      return [...prev, ...drawn]
+    })
   })
 
   //get main deck from room creator
-  props.socket.on("get-deck", roomDeck =>{
+  props.socket.off("get-deck").on("get-deck", roomDeck =>{
     setDeck(roomDeck)
   })
 
@@ -349,67 +359,19 @@ function App(props) {
   /**************INITIALIZATION PROCESS*****************/
 const initGame = ()=>{
   
-  initDeck();
- 
-  toggleUpdate()
-  
   setStart(true)
 
   props.socket.emit("start-game", props.room, true)
 }
 
-const initDeck = ()=>{
-  let batch = deck;
-  Object.values(property).forEach(val => {
-    for(let i=0; i<val.nComplete; i++){
-      batch = [...batch, val]
-    }
-  })
-
-  Object.values(money).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
-
-  Object.values(wild).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
-
-  Object.values(rent).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
-
-  Object.values(action).forEach(val => {
-    for(let i=0; i<val.num; i++){
-      batch = [...batch, val]
-    }
-  })
-
-  setDeck(batch);
+const generateNewID = () =>{
+  return v4();
 }
+
 
 const draw = (num) =>{
   let newA = drawn;
-  let temp = deck;
-
-  for(let i=0; i< num;i++){
-    let n = Math.floor(Math.random() * deck.length);
-    newA.push(deck[n])
-
-    //update deck
-    temp.splice(n,1);
-  }
-  
-  setDrawn(newA)
-
-  setDeck(temp);
-
-  toggleUpdate()
+  props.socket.emit("draw", num, props.room, props.socket.id)
 }
 
 const deal = () =>{
@@ -623,133 +585,41 @@ const pass = ()=>{
     }
   }
 
-  const placeProperty = (index, selected)=>{
-    let tempContainer = container;
+  const newPropContainer = (index) => {
+    let tempContainer = container
+    let hand = drawn;
+
     if(tempContainer.length !=0){
-
-      let placedProp;
-      if(selected == "none"){
-        let exists = false;
-        tempContainer.map((cont)=>{
-          if(cont.color == drawn[index].color && cont.set == 1){
-            exists = true
-            if(cont.complete == true){
-              let found = false;
-              tempContainer.map((cont)=>{
-                if(cont.color == drawn[index].color && cont.set == 2){
-                  cont.cards.push(drawn[index])
-                  found=true;
-                }
-              })
-              if(found == false){
-                placedProp = {
-                  color:drawn[index].color,
-                  cards:[drawn[index]],
-                  complete:false,
-                  set:2,
-                  nComplete:drawn[index].nComplete,
-                  rent:0,
-                  house:0,
-                  hotel:0
-                }
-
-                tempContainer.push(placedProp);
+      let exists = false;
+      tempContainer.map((cont, idx)=>{
+        if(cont.color == drawn[index].color){
+          exists = true
+          if(cont.complete){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == drawn[index].color && cont.set == 2){
+                found=true;
               }
-            }else{
-              cont.cards.push(drawn[index])
-            }
-          }
-        })
-        if(exists == false){
-          placedProp = {
-            color:drawn[index].color,
-            cards:[drawn[index]],
-            complete:false,
-            set:1,
-            nComplete:drawn[index].nComplete,
-            rent:0,
-            house:0,
-            hotel:0
-          }
-
-          tempContainer.push(placedProp);
-        }
-      }else{
-        drawn[index].selected = selected;
-        let exists = false;
-        tempContainer.map((cont)=>{
-          if(cont.color == drawn[index].selected && cont.set == 1){
-            exists = true
-            if(cont.complete == true){
-              let found = false;
-              tempContainer.map((cont)=>{
-                if(cont.color == drawn[index].selected && cont.set == 2){
-                  cont.cards.push(drawn[index])
-                  found=true;
-                }
-              })
-              if(found == false){
-                let n;
-                Object.values(property).forEach(val => {
-                  if(val.color == drawn[index].selected){
-                    n = val.nComplete
-                  }
-                })
-                placedProp = {
-                  color:drawn[index].selected,
-                  cards:[drawn[index]],
-                  complete:false,
-                  set:2,
-                  nComplete:n,
-                  rent:0,
-                  house:0,
-                  hotel:0
-                }
-
-                tempContainer.push(placedProp);
+            })
+            if(found == false){
+              let placedProp = {
+                color:drawn[index].color,
+                cards:[drawn[index]],
+                complete:false,
+                set:2,
+                nComplete:drawn[index].nComplete,
+                rent:0,
+                house:0,
+                hotel:0
               }
-            }else{
-              cont.cards.push(drawn[index])
+              tempContainer.push(placedProp);
+              hand.splice(index, 1)
             }
           }
-        })
-        if(exists == false){
-          let n;
-          Object.values(property).forEach(val => {
-            if(val.color == drawn[index].selected){
-              n = val.nComplete
-            }
-          })
-
-          placedProp = {
-            color:drawn[index].selected,
-            cards:[drawn[index]],
-            complete:false,
-            set:1,
-            nComplete:n,
-            rent:0,
-            house:0,
-            hotel:0
-          }
-
-          tempContainer.push(placedProp);
-
         }
-      }
-
-      setContainer(tempContainer)
-      
-      let hand = drawn;
-      hand.splice(index, 1)
-      
-      setDrawn(hand)
-      toggleUpdate()
-      
-    }else{
-
-      let placedProp;
-      if(selected == "none"){
-        placedProp = {
+      })
+      if(!exists){
+        let placedProp = {
           color:drawn[index].color,
           cards:[drawn[index]],
           complete:false,
@@ -759,7 +629,78 @@ const pass = ()=>{
           house:0,
           hotel:0
         }
-      }else{
+
+        tempContainer.push(placedProp);
+        hand.splice(index, 1)
+      }
+    }else{
+      let placedProp = {
+        color:drawn[index].color,
+        cards:[drawn[index]],
+        complete:false,
+        set:1,
+        nComplete:drawn[index].nComplete,
+        rent:0,
+        house:0,
+        hotel:0
+      }
+
+      tempContainer.push(placedProp);
+      hand.splice(index, 1)
+    }
+
+    setContainer(tempContainer)
+    
+    setDrawn(hand)
+    toggleUpdate()
+  }
+
+  const placeProperty = (index, selected)=>{
+    let tempContainer = container;
+    let hand = drawn;
+
+    if(tempContainer.length !=0){
+
+      let placedProp;
+      drawn[index].selected = selected;
+      let exists = false;
+      tempContainer.map((cont)=>{
+        if(cont.color == drawn[index].selected && cont.set == 1){
+          exists = true
+          if(cont.complete == true){
+            let found = false;
+            tempContainer.map((cont)=>{
+              if(cont.color == drawn[index].selected && cont.set == 2){
+                found=true;
+              }
+            })
+            if(found == false){
+              let n;
+              Object.values(property).forEach(val => {
+                if(val.color == drawn[index].selected){
+                  n = val.nComplete
+                }
+              })
+              placedProp = {
+                color:drawn[index].selected,
+                cards:[drawn[index]],
+                complete:false,
+                set:2,
+                nComplete:n,
+                rent:0,
+                house:0,
+                hotel:0
+              }
+
+              tempContainer.push(placedProp);
+              hand.splice(index, 1)
+
+            }
+          }
+        }
+      })
+
+      if(exists == false){
         let n;
         Object.values(property).forEach(val => {
           if(val.color == drawn[index].selected){
@@ -767,10 +708,8 @@ const pass = ()=>{
           }
         })
 
-        drawn[index].selected = selected;
-
         placedProp = {
-          color:selected,
+          color:drawn[index].selected,
           cards:[drawn[index]],
           complete:false,
           set:1,
@@ -779,19 +718,181 @@ const pass = ()=>{
           house:0,
           hotel:0
         }
+
+        tempContainer.push(placedProp);
+        hand.splice(index, 1)
+        
+
       }
+    
+
+      setContainer(tempContainer)
+
+      
+      setDrawn(hand)
+      toggleUpdate()
+      
+    }else{
+
+      let placedProp;
+    
+      let n;
+      Object.values(property).forEach(val => {
+        if(val.color == drawn[index].selected){
+          n = val.nComplete
+        }
+      })
+
+      drawn[index].selected = selected;
+
+      placedProp = {
+        color:selected,
+        cards:[drawn[index]],
+        complete:false,
+        set:1,
+        nComplete:n,
+        rent:0,
+        house:0,
+        hotel:0
+      }
+    
 
       tempContainer.push(placedProp);
 
       setContainer(tempContainer)
 
-      let hand = drawn;
       hand.splice(index, 1)
 
       setDrawn(hand)
       toggleUpdate()
     }
     console.log("Temp: ", tempContainer)
+  }
+
+
+  const appendProperty = (dest, drawnIdx) =>{
+    let tempContainer = container;
+    let tempDrawn = drawn;
+
+    let containerIdx =0 ;
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        console.log("Found")
+        containerIdx = i;
+        break;
+      }
+    }
+
+    if(tempContainer[containerIdx].complete != true){
+      tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
+      if(tempContainer[containerIdx].cards.length == tempContainer[containerIdx].nComplete){
+        tempContainer[containerIdx].complete = true;
+      }
+    }
+
+    tempDrawn.splice(drawnIdx,1);
+    setContainer(tempContainer)
+    setDrawn(tempDrawn);
+    toggleUpdate()
+  }
+
+
+  const switchProperty = (source, dest, cardIdx)=>{
+
+    let tempContainer = container;
+
+    let srcIdx = 0;
+    let destIdx = 0;
+    
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == source.srcColor && tempContainer[i].set == source.srcSet){
+        srcIdx = i
+      }
+      else if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        destIdx = i
+      }
+    }
+
+
+    let destinationColor = tempContainer[destIdx].color;
+    let sourceColor = tempContainer[srcIdx].cards[cardIdx].color
+
+    if(sourceColor == destinationColor){
+      tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
+      tempContainer[srcIdx].cards.splice(cardIdx, 1)
+      if(tempContainer[destIdx].cards.length == tempContainer[destIdx].nComplete){
+        tempContainer[destIdx].complete = true;
+      }
+      if(tempContainer[srcIdx].cards.length == 0){
+        tempContainer.splice(srcIdx, 1)
+      }
+
+      setContainer(tempContainer)
+      toggleUpdate()
+    }
+
+  }
+
+  const placeWildCard = (drawnIdx, color, set)=>{
+    let tempContainer = container;
+    let tempDrawn = drawn;
+
+    let containerIdx =0 ;
+    for (let i=0; i<tempContainer.length;i++){
+      console.log({container: tempContainer[i]})
+      if(tempContainer[i].color == color && tempContainer[i].set == set){
+        console.log("Found")
+        tempDrawn[drawnIdx].selected = color
+        containerIdx = i;
+        break;
+      }
+    }
+
+    tempContainer[containerIdx].cards.push(tempDrawn[drawnIdx]);
+    if(tempContainer[containerIdx].cards.length == tempContainer[containerIdx].nComplete){
+      tempContainer[containerIdx].complete = true;
+    }
+
+    tempDrawn.splice(drawnIdx,1);
+    setContainer(tempContainer)
+    setDrawn(tempDrawn);
+    toggleUpdate()
+
+
+  }
+
+  const switchWildCard = (source, dest, cardIdx) =>{
+    let tempContainer = container;
+
+    let srcIdx = 0;
+    let destIdx = 0;
+    
+    for (let i=0; i<tempContainer.length;i++){
+      if(tempContainer[i].color == source.srcColor && tempContainer[i].set == source.srcSet){
+        srcIdx = i
+      }
+      else if(tempContainer[i].color == dest.destColor && tempContainer[i].set == dest.destSet){
+        destIdx = i
+      }
+    }
+
+
+    let destinationColor = tempContainer[destIdx].color;
+    let sourceColor = [tempContainer[srcIdx].cards[cardIdx].color1, tempContainer[srcIdx].cards[cardIdx].color2]
+
+    if(sourceColor.includes(destinationColor) || sourceColor.includes("all")){
+      tempContainer[srcIdx].cards[cardIdx].selected = destinationColor
+      tempContainer[destIdx].cards.push(tempContainer[srcIdx].cards[cardIdx]);
+      tempContainer[srcIdx].cards.splice(cardIdx, 1)
+      if(tempContainer[destIdx].cards.length == tempContainer[destIdx].nComplete){
+        tempContainer[destIdx].complete = true;
+      }
+      if(tempContainer[srcIdx].cards.length == 0){
+        tempContainer.splice(srcIdx, 1)
+      }
+      setContainer(tempContainer)
+      toggleUpdate()
+    }
   }
 
   const wildActionSet = (act, index, placed, cont)=>{
@@ -1110,11 +1211,100 @@ const pass = ()=>{
     toggleUpdate()
   }
 
+/*
+  draggableId,
+  type,
+  reason,
+  source -> droppableId, index
+  destination -> droppableId index
+*/
+
+
+  const dragEndFunction = (result) =>{
+    const{destination, source, draggableId} = result;
+
+    //if dropped outside of droppable
+    if(!destination){return;}
+
+    //if dropped in the same place
+    if(destination.droppableId == source.droppableId){
+      return
+    }
+
+    //if money (convertable) cards are dropped in money section
+    if(source.droppableId == "drawn-cards" && destination.droppableId == "money"){
+      if(drawn[source.index].category !== "property" && drawn[source.index].category !== "wildcard"){
+        placeBank(source.index)
+      }
+    } //if property card dropped on personal property box (should also create a new property container)
+    else if(source.droppableId == "drawn-cards" && destination.droppableId == "personal-property" && draggableId.includes("property")){
+      if(draggableId.includes("property")){
+        newPropContainer(source.index)
+      }      
+    } //if wild card containing the same color dropped on property container
+    else if(draggableId.includes("wildcard") && source.droppableId == "drawn-cards"){
+
+      let idLength = destination.droppableId.length
+      let color = destination.droppableId.substring(0,idLength-1)
+      let set = Number(destination.droppableId.substring(idLength-1,idLength))
+      
+      if(color == drawn[source.index].color1 || color == drawn[source.index].color2 || drawn[source.index].color == 'all'){
+        console.log({color, set})
+        placeWildCard(source.index, color, set)
+      }
+    } //if wild card is trasnferred to anothe property container
+    else if(draggableId.includes("wildcard")){
+      
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      let srcIdLength = source.droppableId.length
+      let srcColor = source.droppableId.substring(0,srcIdLength-1)
+      let srcSet = Number(source.droppableId.substring(srcIdLength-1,srcIdLength))
+
+
+      switchWildCard({srcColor, srcSet}, {destColor, destSet}, source.index)
+    } //if property card is placed on a property container of the same color
+    else if(draggableId.includes("property") && source.droppableId == "drawn-cards"){
+
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      if(drawn[source.index].color == destColor){
+        appendProperty({destColor, destSet}, source.index)
+      }
+    }
+    else if(draggableId.includes("property")){
+      
+      let destIdLength = destination.droppableId.length
+      let destColor = destination.droppableId.substring(0,destIdLength-1)
+      let destSet = Number(destination.droppableId.substring(destIdLength-1,destIdLength))
+
+      let srcIdLength = source.droppableId.length
+      let srcColor = source.droppableId.substring(0,srcIdLength-1)
+      let srcSet = Number(source.droppableId.substring(srcIdLength-1,srcIdLength))
+
+      switchProperty({srcColor, srcSet}, {destColor, destSet}, source.index)
+    }
+
+  }
+
+  const dragStartFunction = (result)=>{
+    const {source, type} = result
+
+  }
+
+
+
+
 
 
   return (
     <div className="App">
 
+    {/*Waiting Area Modal*/}
       {!start &&
         <div className="modal">
           <div className="center">
@@ -1142,7 +1332,7 @@ const pass = ()=>{
         </div>
       }
 
-
+    {/*Distributing cards*/}
       {dist &&
         <div className="modal">
           <div className="distribute">
@@ -1152,6 +1342,7 @@ const pass = ()=>{
         </div>
       }
 
+      {/*Modal to discard extra cards*/}
       {Epop &&
         <div className="modal">
           <div className="center">
@@ -1160,18 +1351,21 @@ const pass = ()=>{
         </div>
       }
 
+      {/*Modal to flip and place wildcard*/}
       {wildpopUp &&
         <div className="modal" onClick={()=>{toggleWildPopup()}}>
           <WildCardPopUp move={move} action={wildAction} change={flip} place={placeProperty}/>
         </div>
       }
 
+      {/*Modal to use rent cards*/}
       {rentpopUp &&
         <div className="modal">
           <RentPopUp move={move} update={updateDrawn} drawn={drawn} pop={toggleRentPopup} get={requestRent} colors={colorRent} cont={container}/>
         </div>
       }
 
+      {/*Modal to pay money*/}
       {payPopup &&
         <div className="modal">
           <PayPopUp deny={denial} drawn={drawn} pop={togglePayPopup}  update={updateDrawn} send={sendPayment} money={moneyTable} property={container}  amount={payAmount}/>
@@ -1180,7 +1374,6 @@ const pass = ()=>{
 
 
       {/*Action cards*/}
-
       {slyPopup &&
         <div className="modal">
           <SlyPopUp move={move} curr={curAction} update={updateDrawn} opTable={opCont} steal={slySteal} pop={toggleSlyPopup}/>
@@ -1227,125 +1420,190 @@ const pass = ()=>{
         </div>
       }
 
+      {/*------------------------DRAG DROP CONTEXT STARTS HERE------------------------*/}
+      <DragDropContext onDragEnd={dragEndFunction} onDragStart={dragStartFunction}>
 
 
-
-      {/* oppponent property section */}
-      <div className="opUser">
-        <div className="opUser-img"></div>
-        { joined.length > 1 && (props.resp == "creator" ?
-          joined[1].name : joined[0].name )
-        }
-      </div>
-      <div className="opponent">
-        <div className="opProperty">
-        {opCont.length > 0 ? (
-          opCont.map((cont, index)=>{
-            return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
-          })
-        ):(
-          <p style={{color:"white"}}>No property placed</p>
-        )}
+        {/* oppponent property section */}
+        <div className="opUser">
+          <div className="opUser-img"></div>
+          { joined.length > 1 && (props.resp == "creator" ?
+            joined[1].name : joined[0].name )
+          }
         </div>
-        <div className="opMoney">
-        {opMoney.length > 0 ? (
-          <div className="moneyTable">
+        <div className="opponent">
 
-            {opMoney.map((card, index)=>{
-              if(card.category == "rent"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} rent={card} pop={toggleRentPopup} colors={rentColors}/></div>
-              }else if(card.category == "money"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>    
-              }else if(card.category == "action"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
-              }  
-            }) }
-          </div>
+        <Droppable droppableId="opponent-property" direction="horizontal" type="two" isDropDisabled={true}>
+        {
+          (provided, snapshot)=>(
+            <div className="opProperty" {...provided.droppableProps} ref={provided.innerRef}>
+              {opCont.length > 0 ? (
+                opCont.map((cont, index)=>{
+                  return <PropertyContainer opponent={true} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet} isOpp={true}/>
+                })
+              ):(
+                <div style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white', width:'100%'}}>No Property</div>
+              )}
+              </div>
           )
-          :
-          (<p style={{color:"white"}}>No Money</p>)
         }
+         
+        </Droppable>
+          <Droppable droppableId="op-money" direction="horizontal">
+          {
+            (provided)=>(
+              <div className="opMoney" {...provided.droppableProps} ref={provided.innerRef} type="one">
+                {opMoney.length > 0 ? (
+
+                  <div className="moneyTable">
+
+                    {opMoney.map((card, index)=>{
+                      if(card.category == "rent"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors} isMoney={true}/></div>
+                      }else if(card.category == "money"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true} isMoney={true}/></div>
+                      }else if(card.category == "action"){
+                        return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true} isMoney={true}/></div>
+                      }      
+                    }) }
+                    {provided.placeholder}
+                    
+                  </div>
+
+                  )
+                  :
+                  (
+                    <div className="moneyTable" style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white'}}>No Money</div>
+                  )
+                }
+              </div>
+            )
+          }
+          
+          </Droppable>
+          
         </div>
+
+
         
-      </div>
+        {/* personal property section */}
+        <div className="personal">
 
-      {/* personal property section */}
-      <div className="personal">
-        <div className="personalProperty">
-          {container.length > 0 ? (
-            container.map((cont, index)=>{
-              return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet}/>
-            })
-          ):(
-            <p style={{color:"white"}}>No property placed</p>
-          )}
-        </div>
-        <div className="personalMoney">
-        {moneyTable.length > 0 ? (
-          <div className="moneyTable">
+          <Droppable droppableId="property-containers" direction="horizontal" type="two" isDropDisabled={false} >
+          {
+            (provided)=>(
+              <div className="personalProperty" {...provided.droppableProps} ref={provided.innerRef}>
+                {container.length > 0 ? (
+                  container.map((cont, index)=>{
+                    return <PropertyContainer turn={turn} oppponent={false} renting={renting} completion={complete} pop={toggleWildPopup} property={property} index={index} flip={flip} contains={cont} action={wildActionSet} dragType={dragType}/>
+                  })
+                ):(
+                  <div style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white', width:'300px'}}>No Property</div>
+                )}
+                {provided.placeholder}
+              </div>
+            )
+          }
+          </Droppable>
 
-            {moneyTable.map((card, index)=>{
-              if(card.category == "rent"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors}/></div>
-              }else if(card.category == "money"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true}/></div>
-              }else if(card.category == "action"){
-                return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true}/></div>
-              }      
-            }) }
-            
+          <Droppable droppableId="personal-property" direction="horizontal" type="one">
+          {
+            (provided)=>(
+              <div className="new-property" {...provided.droppableProps} ref={provided.innerRef}>
+                {provided.placeholder}
+              </div>
+              
+            )
+          }
+          </Droppable>
+
+          
+          
+          <div className="personalMoney" >
+            <Droppable droppableId="money" direction="horizontal" type="one" className="dd">
+            {
+              (provided, snapshot)=>(
+                <div className="moneyTable" {...provided.droppableProps} ref={provided.innerRef} style={{backgroundColor: snapshot.isDraggingOver ? "skyblue" : "" }}>
+                  {moneyTable.length > 0 ? 
+                      moneyTable.map((card, index)=>{
+                        if(card.category == "rent"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><RentCard placed={true} index={index} rent={card} colors={rentColors} isMoney={true}/></div>
+                        }else if(card.category == "money"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><MoneyCard money={card} index={index} placed={true} isMoney={true}/></div>
+                        }else if(card.category == "action"){
+                          return <div className="moneyTable-money" style={{left:`${index*45}px`}}><ActionCard action={card} index={index} placed={true} isMoney={true}/></div>
+                        }      
+                      }) 
+                    :
+                    (
+                      <div className="moneyTable" style={{textAlign:'center', alignItems:'center', display:'flex', justifyContent:'center', color:'white'}}>No Money</div>
+                      )
+                  }
+                </div>
+                )
+            }
+            </Droppable>
           </div>
-          )
-          :
-          (<p style={{color:"white"}}>No Money</p>)
-        }
+           
+          
+        
         </div>
-      
-      </div>
 
-      {/* drawn cards section */}
-      <div className="draw">
+        {/* drawn cards section */}
+        <div className="draw">
 
-        <div className="draw-left">
-          <div className="skip" onClick={()=>{
-            if(turn){ if(drawn.length > 7){
-                toggleEpop()
-              }else pass()
-            }}}>
-            <p>Pass</p>
+          <div className="draw-left">
+            <div className="skip" onClick={()=>{
+              if(turn){ if(drawn.length > 7){
+                  toggleEpop()
+                }else pass()
+              }}}>
+              <p>Pass</p>
+            </div>
+            <Droppable droppableId="drawn-cards" direction="horizontal" type="one">
+            {
+              (provided)=>(
+                <div className="drawn-cards" {...provided.droppableProps} ref={provided.innerRef}>
+
+                  {drawn.length > 0  ? (
+                    
+                    drawn.map((card, index)=>{
+                      if(card.category ==="property"){
+                        return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
+                      }else if(card.category === "action"){
+                        return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
+                      }else if(card.category === "wildcard"){
+                        return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
+                      }else if(card.category === "rent"){
+                        return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
+                      }else {
+                        return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
+                      }        
+                    }) ):( 
+                    
+                    <p>No cards drawn</p>  )
+                  }
+
+                  {provided.placeholder}
+
+                </div>
+              )
+              
+
+            }
+              
+            </Droppable>
+          </div>
+
+          <div style={{background: `${turn ? "rgb(0, 197, 0)" : "red"}`}} className="turn">
+            { joined.length > 1 && (props.resp == "creator" ?
+              joined[0].name : joined[1].name )
+            }
           </div>
           
 
-          <div className="drawn-cards">
-            {drawn.length > 0  ? (
-              
-              drawn.map((card, index)=>{
-                if(card.category ==="property"){
-                  return <PropertyCard update={updateDrawn} excess={excess} moves={moves} move={move} place={placeProperty} property={card} index={index} placed={false}/>
-                }else if(card.category === "action"){
-                  return <ActionCard update={updateDrawn} excess={excess} current={currentAction} moves={moves} move={move} update={updateDrawn} bank={placeBank} index={index} popForced={toggleForcedPopup} popHotel={toggleHotel} popHouse={toggleHouse} placed={false} popSly={toggleSlyPopup} popBreak={toggleBreakerPopup} action={card} pass={passGo} get={requestRent}/>
-                }else if(card.category === "wildcard"){
-                  return <WildCard update={updateDrawn} excess={excess} turn={turn} moves={moves} move={move} index={index} property={property} wild={card} place={placeProperty} placed={false} pop={toggleWildPopup} action={wildActionSet}/>
-                }else if(card.category === "rent"){
-                  return <RentCard update={updateDrawn} excess={excess} moves={moves} move={move} bank={placeBank} index={index} rent={card} pop={toggleRentPopup} placed={false} colors={rentColors}/>
-                }else {
-                  return <MoneyCard update={updateDrawn} excess={excess} moves={moves} move={move} index={index} place={placeBank} money={card} placed={false}/>
-                }        
-              }) ):( 
-              
-              <p>No cards drawn</p>  )
-            }
-          </div>
         </div>
-
-        <div style={{background: `${turn ? "rgb(0, 197, 0)" : "red"}`}} className="turn">
-          { joined.length > 1 && (props.resp == "creator" ?
-            joined[0].name : joined[1].name )
-          }
-        </div>
-        
-
-      </div>
+      </DragDropContext>
     </div>
   );
 }

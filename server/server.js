@@ -2,6 +2,11 @@ const cors = require('cors')
 const express = require('express')
 const app = express();
 const server = require('http').createServer(app)
+const cardObjects = require('./cardObjects')
+const uuid  = require('uuid');
+
+
+const  {property, wild, rent, action, money} = cardObjects;
 
 const port = process.env.PORT || 5000
 
@@ -16,6 +21,46 @@ const io = require('socket.io')(server, {
         origin:'*',
     },
 });
+
+const initDeck = ()=>{
+    let batch = [];
+    Object.values(property).forEach(val => {
+      for(let i=0; i<val.nComplete; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
+  
+    Object.values(money).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
+  
+    Object.values(wild).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
+  
+    Object.values(rent).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
+  
+    Object.values(action).forEach(val => {
+      for(let i=0; i<val.num; i++){
+        let temp = {...val, id: uuid.v4()+i}
+        batch = [...batch, temp]
+      }
+    })
+  
+    return batch;
+}  
 
 let roomDeck = []
 let rooms = []
@@ -38,6 +83,8 @@ io.on("connection", socket =>{
 
         currentRoom.users.push(user);
         rooms.push(currentRoom)
+
+        console.log("Socket ",socket.id, " created room: ", room)
 
         socket.emit("get-users", currentRoom.users)
     })
@@ -70,17 +117,55 @@ io.on("connection", socket =>{
     })
 
     socket.on("updateProperty", (table, room) =>{
-        console.log("Deck saved in server ", table.length)
+        console.log("Property:", table.length)
         socket.to(room).emit("getOpProp", table)
     })
 
     socket.on("updateMoney", (table, room) =>{
-        console.log("Deck saved in server ", table.length)
+        console.log("Money", table.length)
         socket.to(room).emit("getMoney", table)
     })
 
     socket.on("start-game", (room, fact)=>{
-        socket.to(room).emit("starting-game", fact)
+        let idx;
+        rooms.map((item, index)=>{
+            if(item.name == room){
+                idx = index;
+            }
+        })
+
+        let deck = initDeck()
+        rooms[idx] = {...rooms[idx], deck: deck}
+
+        io.to(rooms[idx].users[0].id).to(rooms[idx].users[1].id).emit("starting-game", fact)
+
+    })
+
+    socket.on("draw", (num, room, id)=>{
+        let idx
+        rooms.map((item, index)=>{
+            if(item.name == room){
+                idx = index;
+            }
+        })
+
+        let deck = rooms[idx].deck
+        console.log({deck})
+
+        let drawing = [];
+
+        for(let i=0; i< num;i++){
+            let n = Math.floor(Math.random() * deck.length);
+            drawing.push(deck[n])
+        
+            //update deck
+            deck.splice(n,1);
+        }
+
+        rooms[idx].deck = deck;
+
+        io.to(id).emit("drawing", drawing)
+
     })
 
     socket.on("deal-cards", (room)=>{

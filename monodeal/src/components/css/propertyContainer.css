@@ -1,6 +1,18 @@
+.container-handle{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius: 50%;
+    background:red;
+    right:0;
+    z-index: 1000;
+}
+.upper-prop-container{
+    position:relative;
+}
 .prop-container{
     position:relative;
-    min-height:49%;
+    min-height:100%;
     height:auto;
     width:138px;
 }

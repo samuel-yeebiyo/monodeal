@@ -4,7 +4,7 @@ import { io } from 'socket.io-client'
 import Form from './components/Form'
 import App from './App'
 
-const socket = io('http://localhost:5000')
+const socket = io('https://monopoly-deal-server.herokuapp.com')
 socket.on("connect", ()=>{
     console.log("Connected with id: ", socket.id)
 })
@@ -33,7 +33,7 @@ const Main = () =>{
     return(
         <div>
             {!resp ?
-                <Form create={create} join={join}/> :
+                <Form create={create} join={join}/> :    
                 <App resp={resp} socket={socket} room={table}/>
             }
         </div>
