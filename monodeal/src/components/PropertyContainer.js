@@ -38,7 +38,7 @@ const PropertyContainer = (props) =>  {
         }
         
         console.log("Rent: ", number)
-    },[]) //This will need some fixing
+    }) //This will need some fixing
 
     useEffect(()=>{
         if(!props.opponent){

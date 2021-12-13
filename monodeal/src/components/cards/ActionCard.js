@@ -48,10 +48,6 @@ const ActionCard = (props) =>  {
                   props.current(props.index)
                 }
               }}>Play</div>
-              <div onClick={()=>{
-                props.bank(props.index)
-                props.move()
-              }}>Bank</div>
             </div>
           }
 

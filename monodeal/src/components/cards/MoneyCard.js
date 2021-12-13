@@ -21,7 +21,7 @@ const MoneyCard = (props) =>  {
           <div className="card" onClick={()=> toggleOptions()} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
           {show && !props.placed && props.moves > 0 &&
             <div className="property-options" onClick={()=> toggleOptions()}>
-              <div onClick={()=>{props.place(props.index); props.move()}}>A</div>
+              <div onClick={()=>{props.place(props.index)}}>A</div>
             </div>
           }
 

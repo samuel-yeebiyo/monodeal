@@ -75,7 +75,7 @@ function App(props) {
   const [forcedPopup, showForcedPopup] = useState(false);
   const [housePop, showHouse] = useState(false)
   const [hotelPop, showHotel] = useState(false)
-  const [sayNo, showSayNo] = useState(false)  //should be true
+  const [sayNo, showSayNo] = useState(true)  //should be true
   const [deny, showDenial] = useState(false)
   const denRef = useRef(deny)
   denRef.current = deny
@@ -118,9 +118,9 @@ function App(props) {
 
 
 
-  // useEffect(()=>{
-  //   toggleSayNo()
-  // }, [no])
+  useEffect(()=>{
+    toggleSayNo()
+  }, [no])
 
   //socket entries
 
@@ -650,7 +650,7 @@ const pass = ()=>{
     }
 
     setContainer(tempContainer)
-    
+    move()
     setDrawn(hand)
     toggleUpdate()
   }
@@ -762,7 +762,7 @@ const pass = ()=>{
       setContainer(tempContainer)
 
       hand.splice(index, 1)
-
+      move()
       setDrawn(hand)
       toggleUpdate()
     }
@@ -793,6 +793,7 @@ const pass = ()=>{
     tempDrawn.splice(drawnIdx,1);
     setContainer(tempContainer)
     setDrawn(tempDrawn);
+    move()
     toggleUpdate()
   }
 
@@ -856,6 +857,7 @@ const pass = ()=>{
     tempDrawn.splice(drawnIdx,1);
     setContainer(tempContainer)
     setDrawn(tempDrawn);
+    move()
     toggleUpdate()
 
 
@@ -1139,6 +1141,7 @@ const pass = ()=>{
     console.log("setting drawn")
 
     setDrawn(hand)
+    move()
 
     setMoneyTable(tempMoneyTable)
 

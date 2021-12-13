@@ -16,11 +16,6 @@ const PropertyCard = (props) =>  {
       {
         (provided)=>(
           <div className="card" onClick={()=>{toggleOptions()}} {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-            {show && !props.placed && props.moves >0 &&
-              <div className="property-options" onClick={()=> toggleOptions()}>
-                <div onClick={()=>{props.place(props.index, "none"); props.move()}}>P</div>
-              </div>
-            }
             {show && props.moves == 0 && props.excess &&
               <div className="property-options" onClick={()=> toggleOptions()}>
                 <div  onClick={()=>{props.update(props.index)}}>X</div>
