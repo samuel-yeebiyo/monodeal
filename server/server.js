@@ -4,8 +4,6 @@ const app = express();
 const server = require('http').createServer(app)
 const cardObjects = require('./cardObjects')
 const uuid  = require('uuid');
-const { SocketAddress } = require('net');
-
 
 
 const  {property, wild, rent, action, money} = cardObjects;
